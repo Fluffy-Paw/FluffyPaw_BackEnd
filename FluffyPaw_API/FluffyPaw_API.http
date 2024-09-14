@@ -1,0 +1,6 @@
+@FluffyPaw_API_HostAddress = http://localhost:5245
+
+GET {{FluffyPaw_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
