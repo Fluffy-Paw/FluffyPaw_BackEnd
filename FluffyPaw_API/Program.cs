@@ -1,6 +1,7 @@
 ﻿using FluffyPaw_Infrastructure.DependencyInjection;
 using FluffyPaw_API.Middleware;
 using Microsoft.OpenApi.Models;
+using FluffyPaw_Domain.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,11 @@ app.UseAuthentication();
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapHub<NotiHub>("/noti");
+//});
 
 app.MapControllers();
 

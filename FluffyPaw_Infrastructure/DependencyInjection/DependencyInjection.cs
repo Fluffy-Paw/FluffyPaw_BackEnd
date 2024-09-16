@@ -7,6 +7,7 @@ using FluffyPaw_Infrastructure.Authentication;
 using FluffyPaw_Infrastructure.Data;
 using FluffyPaw_Infrastructure.Hashing;
 using FluffyPaw_Infrastructure.Intergrations.Firebase;
+using FluffyPaw_Infrastructure.Intergrations.SignalR;
 using FluffyPaw_Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
 
             services.AddService();
 
-            //services.AddSignalR();
+            services.AddSignalR();
 
             services.AddAuthen(configuration);
 
@@ -79,6 +80,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
         public static void AddService(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<INotificationService, NotificationService>();
             
         }
 
@@ -87,6 +89,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
         public static void AddExternalServices(this IServiceCollection services)
         {
             services.AddScoped<IFirebaseConfiguration, FirebaseConfiguration>();
+            services.AddScoped<ISignalRConfiguration, SignalRConfiguration>();
         }
 
         /*public static void AddPayOS(this IServiceCollection services, IConfiguration configuration)
