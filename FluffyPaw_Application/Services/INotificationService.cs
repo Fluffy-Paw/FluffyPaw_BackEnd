@@ -1,4 +1,5 @@
 ﻿using FluffyPaw_Application.DTO.Request.NotificationRequest;
+using FluffyPaw_Application.DTO.Response.NotificationResponse;
 using FluffyPaw_Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace FluffyPaw_Application.Services
 {
     public interface INotificationService
     {
-        Task<bool> CreateNotification(NotificationRequest notificationRequest);
+        Task<NotificationResponse> CreateNotification(NotificationRequest notificationRequest);
         Task<bool> DeleteNotification(long notificationId);
-        Task<bool> ChangeNotificationStatus(long notificationId);
-        Task<List<Notification>> GetNotifications();
+        Task<bool> ChangeNotificationStatus(long receiverId);
+        Task<IEnumerable<NotificationResponse>> GetNotifications(long receiverId);
     }
 }
