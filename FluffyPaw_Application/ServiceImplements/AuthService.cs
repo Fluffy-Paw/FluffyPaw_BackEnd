@@ -70,6 +70,36 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
+        public async Task<bool> RegisterSM(RegisterAccountSMRequest registerAccountSMRequest)
+        {
+            if (registerAccountSMRequest.ComfirmPassword != registerAccountSMRequest.Password)
+            {
+                throw new CustomException.InvalidDataException("Password và ConfirmPassword không trùng khớp.");
+            }
+
+            var account = _mapper.Map<Account>(registerAccountSMRequest);
+            account.RoleName = RoleName.StoreManager.ToString();
+            account.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
+            account.Password = _hashing.SHA512Hash(registerAccountSMRequest.Password);
+            account.Status = true;
+            _unitOfWork.AccountRepository.Insert(account);
+            _unitOfWork.Save();
+
+            var wallet = new Wallet
+            {
+                AccountId = account.Id,
+                Balance = 0
+            };
+            _unitOfWork.WalletRepository.Insert(wallet);
+
+            var sm = _mapper.Map<StoreManager>(registerAccountSMRequest);
+            sm.AccountId = account.Id;
+            sm.Status = false;
+            _unitOfWork.StoreManagerRepository.Insert(sm);
+
+            return true;
+        }
+
         public async Task<string> Login(LoginRequest loginRequest)
         {
             string hashedPass = _hashing.SHA512Hash(loginRequest.Password);
@@ -79,14 +109,17 @@ namespace FluffyPaw_Application.ServiceImplements
             );
             if (!check.Any())
             {
-                throw new CustomException.InvalidDataException(HttpStatusCode.BadRequest.ToString(), $"Username or Password error");
+                throw new CustomException.InvalidDataException(HttpStatusCode.BadRequest.ToString(), $"Tài khoản hoặc mật khẩu không đúng.");
             }
 
             Account account = check.First();
             if (account.Status == false)
             {
-                throw new CustomException.InvalidDataException(HttpStatusCode.BadRequest.ToString(), $"Account is not active");
+                throw new CustomException.InvalidDataException(HttpStatusCode.BadRequest.ToString(), $"Tài khoản chưa được kích hoạt.");
             }
+
+
+
 
             string token = _authentication.GenerateJWTToken(account);
             return token;

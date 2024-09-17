@@ -7,18 +7,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 //Build CORS
-builder.Services.AddCors(p => p.AddPolicy("MyCors", build =>
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(options =>
 {
-    // Dòng ở dưới là đường cứng
-    //build.WithOrigins("https:localhost:3000", "https:localhost:7022");
-
-    //Dòng dưới là nhận hết
-    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "FluffyPaw_API", Version = "v1" });
@@ -74,7 +75,7 @@ else
 
 
 app.UseHttpsRedirection();
-app.UseCors("MyCors");
+app.UseCors("CorsPolicy");
 
 //Middleware
 app.UseRouting();
