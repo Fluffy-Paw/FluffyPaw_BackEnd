@@ -13,6 +13,6 @@ namespace FluffyPaw_Application.Services
         Task<bool> CreateNotification(NotificationRequest notificationRequest);
         Task<bool> DeleteNotification(long notificationId);
         Task<bool> ChangeNotificationStatus(long notificationId);
-        Task<List<Notification>> GetNotifications();
+        //Task<List<Notification>> GetNotifications();
     }
 }
