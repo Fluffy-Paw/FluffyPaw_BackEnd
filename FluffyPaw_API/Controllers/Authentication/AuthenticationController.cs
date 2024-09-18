@@ -23,14 +23,21 @@ namespace FluffyPaw_API.Controllers.Authentication
         public async Task<IActionResult> RegisterPO([FromBody] RegisterAccountPORequest registerAccountPORequest)
         {
             var user = await _authService.RegisterPO(registerAccountPORequest);
-            return CustomResult("Register Success", user);
+            return CustomResult("Đăng ký thành công.", user);
+        }
+
+        [HttpPost("RegisterSM")]
+        public async Task<IActionResult> RegisterSM([FromBody] RegisterAccountSMRequest registerAccountSMRequest)
+        {
+            var user = await _authService.RegisterSM(registerAccountSMRequest);
+            return CustomResult("Đăng ký thành công. Vui lòng đợi hệ thống xác thực thông tin đăng ký.", user);
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             string tuple = await _authService.Login(loginRequest);
-            return CustomResult("Login Success", tuple);
+            return CustomResult("Đăng nhập thành công", tuple);
         }
     }
 }
