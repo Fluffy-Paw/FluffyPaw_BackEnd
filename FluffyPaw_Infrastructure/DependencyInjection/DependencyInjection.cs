@@ -10,9 +10,11 @@ using FluffyPaw_Infrastructure.Intergrations.Firebase;
 using FluffyPaw_Infrastructure.Intergrations.SignalR;
 using FluffyPaw_Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,6 +75,25 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
 
         public static void AddAuthen(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey
+                    (Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                };
+            });
+
             services.AddScoped<IAuthentication, Authen>();
             services.AddScoped<IHashing, Hash>();
         }
@@ -82,6 +103,8 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<INotificationService, NotificationService>();
             
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IServiceTypeService, ServiceTypeService>();
         }
 
 

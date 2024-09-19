@@ -1,6 +1,8 @@
 ﻿using FluffyPaw_Domain.CustomException;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using System.Text.Json;
 using static FluffyPaw_Domain.CustomException.CustomException;
 
@@ -21,6 +23,41 @@ namespace FluffyPaw_API.Middleware
         {
             try
             {
+                var endpoint = context.GetEndpoint();
+
+                if (endpoint?.Metadata?.GetMetadata<IAuthorizeData>() != null)
+                {
+                    var authorizeData = endpoint.Metadata.GetMetadata<IAuthorizeData>();
+                    if (authorizeData.Roles != null)
+                    {
+                        var roles = authorizeData.Roles.Split(',');
+
+                        // Lấy token từ header Authorization
+                        var authHeader = context.Request.Headers["Authorization"].ToString();
+                        if (authHeader != null && authHeader.StartsWith("Bearer "))
+                        {
+                            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+                            // Decode token
+                            var handler = new JwtSecurityTokenHandler();
+                            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+                            // Lấy danh sách role từ token
+                            var tokenRoles = jwtToken.Claims
+                                .Where(c => c.Type == ClaimTypes.Role || c.Type == "roles")
+                                .Select(c => c.Value);
+
+                            // Kiểm tra role
+                            if (!roles.Any(role => tokenRoles.Contains(role)))
+                            {
+                                throw new ForbbidenException("Bạn không có quyền truy cập vào tài nguyên này.");
+                            }
+                        }
+                        else
+                        {
+                            throw new UnAuthorizedException("Bạn chưa đăng nhập.");
+                        }
+                    }
+                }
 
                 await _next(context);
             }
@@ -29,6 +66,7 @@ namespace FluffyPaw_API.Middleware
                 await HandleExceptionAsync(context, ex);
             }
         }
+
 
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
