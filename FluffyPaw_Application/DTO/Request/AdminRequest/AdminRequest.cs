@@ -6,16 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluffyPaw_Application.DTO.Request.AuthRequest
+namespace FluffyPaw_Application.DTO.Request.AdminRequest
 {
-    public class RegisterAccountSMRequest : IMapFrom<Account>, IMapFrom<StoreManager>
+    public class AdminRequest : IMapFrom<Account>
     {
         public string UserName { get; set; }
         public string Password { get; set; }
         public string ComfirmPassword { get; set; }
-        public string Name { get; set; }
         public string Email { get; set; }
-        public string Logo { get; set; }
-        public string BusinessLicense { get; set; }
     }
 }

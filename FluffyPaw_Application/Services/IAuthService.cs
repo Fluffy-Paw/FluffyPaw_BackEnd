@@ -12,7 +12,7 @@ namespace FluffyPaw_Application.Services
     {
         Task<bool> RegisterPO(RegisterAccountPORequest registerAccountPORequest);
 
-        //Task<bool> RegisterSM(RegisterAccountSMRequest registerAccountSMRequest);
+        Task<bool> RegisterSM(RegisterAccountSMRequest registerAccountSMRequest);
 
         Task<string> Login(LoginRequest loginRequest);
     }

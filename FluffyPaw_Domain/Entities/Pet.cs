@@ -31,11 +31,11 @@ namespace FluffyPaw_Domain.Entities
 
         public DateTimeOffset Dob { get; set; }
             
-        public string Allergy { get; set; }
+        public string? Allergy { get; set; }
 
         public string MicrochipNumber { get; set; }
 
-        public string Decription { get; set; }
+        public string? Decription { get; set; }
 
         public bool IsNeuter { get; set; }
 

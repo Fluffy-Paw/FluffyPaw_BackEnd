@@ -6,15 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluffyPaw_Application.DTO.Request.NotificationRequest
+namespace FluffyPaw_Application.DTO.Request.ServiceTypeRequest
 {
-    public class NotificationRequest : IMapFrom<Notification>
+    public class ServiceTypeRequest : IMapFrom<ServiceType>
     {
-        public long ReceiverId { get; set; }
-
         public string Name { get; set; }
-
-        public string Description { get; set; }
-
     }
 }

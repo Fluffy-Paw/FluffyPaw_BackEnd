@@ -3,6 +3,7 @@ using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Response.NotificationResponse;
 using FluffyPaw_Application.Services;
+using FluffyPaw_Application.Utils.Pagination;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
@@ -55,11 +56,9 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var notification = _mapper.Map<Notification>(notificationRequest);
+
             notification.IsSeen = false;
-            notification.Status = "Unread";
-            notification.CreateDate = DateTime.Now;
-            notification.StartTime = DateTime.Now;
-            notification.EndTime = DateTime.Now;
+            notification.Status = NotificationStatus.Unread.ToString();
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
             return _mapper.Map<NotificationResponse>(notification);
@@ -80,13 +79,14 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public async Task<IEnumerable<NotificationResponse>> GetNotifications(long receiverId)
+        public async Task<PaginatedList<NotificationResponse>> GetNotifications(long userId, int numberNoti)
         {
-            var noti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == receiverId && s.Status != "Deleted");
+            var noti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == userId && s.Status != "Deleted", orderBy: ob=>ob.OrderByDescending(o=>o.CreateDate)).AsQueryable();
 
             if ( noti.Any())
             {
-                return _mapper.Map<IEnumerable<NotificationResponse>>(noti);
+                var result = _unitOfWork.NotificationRepository.GetPagging(noti, 1, numberNoti * 5);
+                return _mapper.Map<PaginatedList<NotificationResponse>>(result);
             }
             throw new CustomException.DataNotFoundException("Bạn không có thông báo.");
         }
