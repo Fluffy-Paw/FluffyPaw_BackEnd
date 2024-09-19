@@ -79,14 +79,14 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public async Task<PaginatedList<NotificationResponse>> GetNotifications(long userId, int numberNoti)
+        public async Task<IPaginatedList<Notification>> GetNotifications(long userId, int numberNoti)
         {
             var noti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == userId && s.Status != "Deleted", orderBy: ob=>ob.OrderByDescending(o=>o.CreateDate)).AsQueryable();
 
             if ( noti.Any())
             {
-                var result = _unitOfWork.NotificationRepository.GetPagging(noti, 1, numberNoti * 5);
-                return _mapper.Map<PaginatedList<NotificationResponse>>(result);
+                var result = await _unitOfWork.NotificationRepository.GetPagging(noti, 1, numberNoti * 5);
+                return result;
             }
             throw new CustomException.DataNotFoundException("Bạn không có thông báo.");
         }
