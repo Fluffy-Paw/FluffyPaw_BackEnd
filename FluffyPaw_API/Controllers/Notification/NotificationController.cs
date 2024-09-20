@@ -38,7 +38,7 @@ namespace FluffyPaw_API.Controllers.Notification
             return CustomResult("Xóa thông báo thành công.", noti);
         }
 
-        [HttpPost("Change Noti Status")]
+        [HttpPatch("Change Noti Status")]
         public async Task<IActionResult> ChangeNotificationStatus(long receiverId)
         {
             var noti = await _notificationService.ChangeNotificationStatus(receiverId);

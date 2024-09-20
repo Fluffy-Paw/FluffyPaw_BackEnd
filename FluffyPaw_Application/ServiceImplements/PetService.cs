@@ -3,6 +3,8 @@ using FluffyPaw_Application.DTO.Request.PetRequest;
 using FluffyPaw_Application.DTO.Response.PetResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
+using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -26,29 +28,57 @@ namespace FluffyPaw_Application.ServiceImplements
             _configuration = configuration;
         }
 
-        public Task<bool> CreateNewPet(PetRequest petRequest)
+        public async Task<bool> CreateNewPet(PetRequest petRequest)
         {
-            throw new NotImplementedException();
+            var existingPet = _unitOfWork.PetRepository.Get(po=>po.PetOwnerId == petRequest.PetOwnerId && po.Status == PetStatus.Available.ToString());
+            if (existingPet.Count() >= 5)
+            {
+                throw new CustomException.InvalidDataException("Bạn chỉ được lưu tối đa 5 thú cưng.");
+            }
+
+            var pet = _mapper.Map<Pet>(petRequest);
+            pet.Status = PetStatus.Available.ToString();
+            _unitOfWork.PetRepository.Insert(pet);
+            _unitOfWork.Save();
+
+            return true;
         }
 
-        public Task<bool> DeletePet(long petId)
+        public async Task<bool> DeletePet(long petId)
         {
-            throw new NotImplementedException();
+            var existingPet = _unitOfWork.PetRepository.GetByID(petId);
+            if (existingPet == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
+            }
+            existingPet.Status = PetStatus.Deleted.ToString();
+            _unitOfWork.Save();
+
+            return true;
         }
 
         public async Task<IEnumerable<PetResponse>> GetAllPetOfUser(long userId)
         {
-            var existingPet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == userId);
+            var existingPet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == userId && p.Status == PetStatus.Available.ToString());
             if(!existingPet.Any())
             {
-                throw new CustomException.DataNotFoundException("Bạn chưa nhập thú cưng.");
+                throw new CustomException.DataNotFoundException("Bạn chưa nhập thông tin thú cưng.");
             }
             return _mapper.Map<IEnumerable<PetResponse>>(existingPet);
         }
 
-        public Task<bool> UpdatePet(PetRequest petRequest)
+        public async Task<PetResponse> UpdatePet(long petId, PetRequest petRequest)
         {
-            throw new NotImplementedException();
+            var existingPet = _unitOfWork.PetRepository.GetByID(petId);
+            if(existingPet == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
+            }
+
+            _mapper.Map(petRequest, existingPet);
+            _unitOfWork.Save();
+
+            return _mapper.Map<PetResponse>(existingPet);
         }
     }
 }

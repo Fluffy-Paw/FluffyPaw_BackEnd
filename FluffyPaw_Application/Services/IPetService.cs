@@ -11,7 +11,7 @@ namespace FluffyPaw_Application.Services
     public interface IPetService
     {
         Task<bool> CreateNewPet(PetRequest petRequest);
-        Task<bool> UpdatePet(PetRequest petRequest);
+        Task<PetResponse> UpdatePet(long petId, PetRequest petRequest);
         Task<bool> DeletePet(long petId);
         Task<IEnumerable<PetResponse>> GetAllPetOfUser(long userId);
 
