@@ -86,10 +86,10 @@ app.UseAuthentication();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapHub<NotiHub>("/noti");
-//});
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<NotiHub>("/noti");
+});
 
 app.MapControllers();
 
