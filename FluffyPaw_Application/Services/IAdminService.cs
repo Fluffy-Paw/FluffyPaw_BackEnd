@@ -17,6 +17,8 @@ namespace FluffyPaw_Application.Services
         Task<bool> CreateAdmin(AdminRequest adminRequest);
         IEnumerable<StoreManagerResponse> GetAllStoreManagerFalse();
         Task<bool> AcceptStoreManager(long id);
+        Task<bool> ActiveDeactiveAccount(long userId);
+        Task<IEnumerable<Account>> GetAllAccounts();
     }
 }
     

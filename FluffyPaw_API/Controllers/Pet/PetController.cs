@@ -3,6 +3,7 @@ using CoreApiResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.DTO.Request.PetRequest;
+using FluffyPaw_Application.DTO.Request.FileRequest;
 
 namespace FluffyPaw_API.Controllers.Pet
 {
@@ -43,6 +44,14 @@ namespace FluffyPaw_API.Controllers.Pet
         {
             var pet = await _petService.DeletePet(petId);
             return CustomResult("Xóa thú cưng thành công.", pet);
+        }
+
+        [HttpPost]
+        private async Task<IActionResult> UploadImage(AddFilesRequest file)
+        {
+            
+
+            return CustomResult("Ảnh đã tải lên thành công.");
         }
     }
 }

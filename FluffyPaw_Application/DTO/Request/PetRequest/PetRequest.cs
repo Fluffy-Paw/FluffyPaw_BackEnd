@@ -1,5 +1,6 @@
 ﻿using FluffyPaw_Application.Mapper;
 using FluffyPaw_Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace FluffyPaw_Application.DTO.Request.PetRequest
 {
     public class PetRequest : IMapFrom<Pet>, IMapFrom<PetCategory>, IMapFrom<PetType>, IMapFrom<PetOwner>, IMapFrom<BehaviorCategory>
     {
+        public IFormFile? Image {  get; set; }
         public long PetOwnerId { get; set; }
 
         public long PetCategoryId { get; set; }

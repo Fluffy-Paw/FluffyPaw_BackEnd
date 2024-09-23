@@ -6,6 +6,7 @@ using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -19,13 +20,13 @@ namespace FluffyPaw_Application.ServiceImplements
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
+        private readonly IFirebaseConfiguration _firebaseConfiguration;
 
-        public PetService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration)
+        public PetService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseConfiguration firebaseConfiguration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _configuration = configuration;
+            _firebaseConfiguration = firebaseConfiguration;
         }
 
         public async Task<bool> CreateNewPet(PetRequest petRequest)
@@ -37,6 +38,10 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var pet = _mapper.Map<Pet>(petRequest);
+            if(petRequest.Image != null)
+            {
+                pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
+            }
             pet.Status = PetStatus.Available.ToString();
             _unitOfWork.PetRepository.Insert(pet);
             _unitOfWork.Save();
@@ -75,7 +80,12 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
 
-            _mapper.Map(petRequest, existingPet);
+            var pet = _mapper.Map<Pet>(petRequest);
+            if (petRequest.Image != null)
+            {
+                pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
+            }
+            existingPet = pet;
             _unitOfWork.Save();
 
             return _mapper.Map<PetResponse>(existingPet);

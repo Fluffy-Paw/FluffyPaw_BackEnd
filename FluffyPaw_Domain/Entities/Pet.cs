@@ -17,6 +17,8 @@ namespace FluffyPaw_Domain.Entities
 
         public long PetOwnerId { get; set; }
 
+        public string? Image {  get; set; }
+
         public long PetCategoryId { get; set; }
 
         public long PetTypeId { get; set; }
