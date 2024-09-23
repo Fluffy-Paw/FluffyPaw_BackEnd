@@ -18,28 +18,28 @@ namespace FluffyPaw_API.Controllers.Pet
             _petService = petService;
         }
 
-        [HttpGet("Get Your Pet")]
+        [HttpGet("GetYourPet")]
         public async Task<IActionResult> GetPet(long ownerId)
         {
             var pet = await _petService.GetAllPetOfUser(ownerId);
             return CustomResult("Thú cưng của bạn:", pet);
         }
 
-        [HttpPost("Add Your Pet")]
+        [HttpPost("AddYourPet")]
         public async Task<IActionResult> AddPet([FromBody] PetRequest petRequest)
         {
             var pet = await _petService.CreateNewPet(petRequest);
             return CustomResult("Thêm thú cưng thành công.", pet);
         }
 
-        [HttpPatch("Update Your Pet")]
+        [HttpPatch("UpdateYourPet")]
         public async Task<IActionResult> UpdatePet(long petId, [FromBody] PetRequest petRequest)
         {
             var pet = await _petService.UpdatePet(petId, petRequest);
             return CustomResult("Cập nhật thú cưng thành công.", pet);
         }
 
-        [HttpDelete("Delete Your Pet")]
+        [HttpDelete("DeleteYourPet")]
         public async Task<IActionResult> DeletePet(long petId)
         {
             var pet = await _petService.DeletePet(petId);
