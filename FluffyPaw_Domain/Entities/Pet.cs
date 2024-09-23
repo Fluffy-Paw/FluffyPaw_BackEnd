@@ -17,6 +17,8 @@ namespace FluffyPaw_Domain.Entities
 
         public long PetOwnerId { get; set; }
 
+        public string? Image {  get; set; }
+
         public long PetCategoryId { get; set; }
 
         public long PetTypeId { get; set; }
@@ -31,11 +33,11 @@ namespace FluffyPaw_Domain.Entities
 
         public DateTimeOffset Dob { get; set; }
             
-        public string Allergy { get; set; }
+        public string? Allergy { get; set; }
 
         public string MicrochipNumber { get; set; }
 
-        public string Decription { get; set; }
+        public string? Decription { get; set; }
 
         public bool IsNeuter { get; set; }
 

@@ -31,7 +31,6 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Pet> Pets { get; set; }
         public DbSet<PetCategory> PetCategories { get; set; }
-        public DbSet<PetFile> PetFiles { get; set; }
         public DbSet<PetOwner> PetOwners { get; set; }
         public DbSet<PetType> PetTypes { get; set; }
         public DbSet<Service> Services { get; set; }
@@ -107,8 +106,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Pet>().HasData(
-                new Pet { Id = 1, PetOwnerId = 1, PetCategoryId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test", IsNeuter = true, Status = "test" },
-                new Pet { Id = 2, PetOwnerId = 1, PetCategoryId = 2, PetTypeId = 1, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test1", IsNeuter = false, Status = "test1" }
+                new Pet { Id = 1, PetOwnerId = 1, PetCategoryId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test", IsNeuter = true, Status = "Available" },
+                new Pet { Id = 2, PetOwnerId = 1, PetCategoryId = 2, PetTypeId = 1, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
                 );
 
             modelBuilder.Entity<Certificate>().HasData(

@@ -24,7 +24,7 @@ namespace FluffyPaw_Domain.Entities
 
         public DateTimeOffset NextVaccineDate { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public string Status { get; set; }
 

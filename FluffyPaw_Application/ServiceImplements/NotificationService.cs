@@ -3,10 +3,13 @@ using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Response.NotificationResponse;
 using FluffyPaw_Application.Services;
+using FluffyPaw_Application.Utils.Pagination;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Domain.Utils;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -20,25 +23,25 @@ namespace FluffyPaw_Application.ServiceImplements
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
+        private readonly IHubContext<NotiHub> _notiHub;
 
-        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration)
+        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<NotiHub> notiHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _configuration = configuration;
+            _notiHub = notiHub;
         }
 
-        public async Task<bool> ChangeNotificationStatus(long receiverId)
+        public async Task<bool> ChangeNotificationStatus(long userId)
         {
-            var ListNoti = _unitOfWork.NotificationRepository.Get(n => n.ReceiverId == receiverId);
+            var ListNoti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == userId && s.Status != NotificationStatus.Deleted.ToString());
             if (!ListNoti.Any())
             {
-                throw new CustomException.DataNotFoundException("Thông báo không tồn tại.");
+                throw new CustomException.DataNotFoundException("Bạn không có thông báo.");
             }
             foreach (var Notification in ListNoti)
             {
-                Notification.Status = "Readed";
+                Notification.Status = NotificationStatus.Readed.ToString();
                 Notification.IsSeen = true;
                 _unitOfWork.NotificationRepository.Update(Notification);
                 _unitOfWork.Save();
@@ -55,38 +58,36 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var notification = _mapper.Map<Notification>(notificationRequest);
+
             notification.IsSeen = false;
-            notification.Status = "Unread";
-            notification.CreateDate = DateTime.Now;
-            notification.StartTime = DateTime.Now;
-            notification.EndTime = DateTime.Now;
+            notification.Status = NotificationStatus.Unread.ToString();
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
+
+            await _notiHub.Clients.All.SendAsync("displayNotification","");
+
             return _mapper.Map<NotificationResponse>(notification);
         }
 
         public async Task<bool> DeleteNotification(long notificationId)
         {
-            var existingNoti = _unitOfWork.NotificationRepository.GetByID(notificationId);
-            if (existingNoti == null)
-            {
-                throw new CustomException.DataNotFoundException("Thông báo không tồn tại.");
-            }
-
-            existingNoti.Status = "Deleted";
+            var existingNoti = _unitOfWork.NotificationRepository.GetByID(notificationId) ?? throw new CustomException.DataNotFoundException("Thông báo không tồn tại.");
+            
+            existingNoti.Status = NotificationStatus.Deleted.ToString();
             _unitOfWork.NotificationRepository.Update(existingNoti);
             _unitOfWork.Save();
 
             return true;
         }
 
-        public async Task<IEnumerable<NotificationResponse>> GetNotifications(long receiverId)
+        public async Task<IPaginatedList<Notification>> GetNotifications(long userId, int numberNoti)
         {
-            var noti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == receiverId && s.Status != "Deleted");
+            var noti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == userId && s.Status != NotificationStatus.Deleted.ToString(), orderBy: ob=>ob.OrderByDescending(o=>o.CreateDate)).AsQueryable();
 
             if ( noti.Any())
             {
-                return _mapper.Map<IEnumerable<NotificationResponse>>(noti);
+                var result = await _unitOfWork.NotificationRepository.GetPagging(noti, 1, numberNoti * 5);
+                return result;
             }
             throw new CustomException.DataNotFoundException("Bạn không có thông báo.");
         }

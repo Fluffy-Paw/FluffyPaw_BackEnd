@@ -68,5 +68,27 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.Save();
             return true;
         }
+
+        public async Task<bool> ActiveDeactiveAccount(long userId)
+        {
+            var user = _unitOfWork.AccountRepository.GetByID(userId);
+            if(user == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy người dùng");
+            }
+
+            if (user.Status == true)
+            {
+                user.Status = false;
+            } else user.Status = true;
+            _unitOfWork.Save();
+
+            return user.Status;
+        }
+
+        public async Task<IEnumerable<Account>> GetAllAccounts()
+        {
+            return _unitOfWork.AccountRepository.Get(orderBy: ob => ob.OrderByDescending(a => a.RoleName));
+        }
     }
 }

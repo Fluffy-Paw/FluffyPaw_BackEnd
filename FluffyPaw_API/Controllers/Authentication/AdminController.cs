@@ -44,5 +44,22 @@ namespace FluffyPaw_API.Controllers.Authentication
             var storemanager = await _adminService.AcceptStoreManager(id);
             return CustomResult("Xác thực hoàn tất.", storemanager);
         }
+
+        [HttpGet("GetAllAccount")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult GetAllAccount()
+        {
+            var account = _adminService.GetAllAccounts();
+            return CustomResult("Tải dữ liệu thành công.", account);
+        }
+
+        [HttpPatch("ActiveDeactiveAccount/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ActiveDeactiveAccount(long id)
+        {
+            var storemanager = await _adminService.ActiveDeactiveAccount(id);
+            if (storemanager) return CustomResult("Đã chuyển thành Active.");
+            else return CustomResult("Đã chuyển thành Deactive");
+        }
     }
 }

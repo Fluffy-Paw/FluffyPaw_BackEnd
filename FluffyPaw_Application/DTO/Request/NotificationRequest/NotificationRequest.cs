@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Request.NotificationRequest
 {
-    public class NotificationRequest : IMapFrom<Notification>, IMapFrom<Account>
+    public class NotificationRequest : IMapFrom<Notification>
     {
         public long ReceiverId { get; set; }
 

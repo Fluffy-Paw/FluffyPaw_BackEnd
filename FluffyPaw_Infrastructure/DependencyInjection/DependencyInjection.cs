@@ -2,6 +2,7 @@
 using FluffyPaw_Application.Mapper;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
+using FluffyPaw_Application.Utils.Pagination;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Infrastructure.Authentication;
 using FluffyPaw_Infrastructure.Data;
@@ -100,10 +101,10 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
         public static void AddService(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<INotificationService, NotificationService>();
-            
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IServiceTypeService, ServiceTypeService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IPetService, PetService>();
         }
 
 

@@ -23,10 +23,6 @@ namespace FluffyPaw_Domain.Entities
 
         public DateTimeOffset CreateDate { get; set; }
 
-        public DateTimeOffset StartTime { get; set; }
-
-        public DateTimeOffset EndTime { get; set; }
-
         public bool IsSeen { get; set; }
 
         public string Status { get; set; }
