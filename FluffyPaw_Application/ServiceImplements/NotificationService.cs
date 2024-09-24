@@ -23,9 +23,9 @@ namespace FluffyPaw_Application.ServiceImplements
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IHubContext<NotiHub> _notiHub;
+        private readonly ISignalRConfiguration _notiHub;
 
-        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<NotiHub> notiHub)
+        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, ISignalRConfiguration notiHub)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -64,7 +64,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
 
-            await _notiHub.Clients.All.SendAsync("displayNotification","");
+            await _notiHub.SendNotification("displayNotification");
 
             return _mapper.Map<NotificationResponse>(notification);
         }

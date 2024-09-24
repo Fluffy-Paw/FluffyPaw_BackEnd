@@ -24,20 +24,30 @@ namespace FluffyPaw_Application.ServiceImplements
             _mapper = mapper;
         }
 
-        public async Task<PetOwnerResponse> GetPetOwnerDetail(long accountId)
+        public async Task<PetOwner> GetPetOwnerDetail(long accountId)
         {
-            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties: "Account");
+            var po = _unitOfWork.PetOwnerRepository.GetByID(accountId);
+            po.Account = _unitOfWork.AccountRepository.GetByID(po.AccountId);
             if(po == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
             }
-
-            return _mapper.Map<PetOwnerResponse>(po);
+            return po;
         }
 
-        public async Task<bool> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
+        public async Task<PetOwner> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
         {
-            throw new NotImplementedException();
+            var po = _unitOfWork.PetOwnerRepository.GetByID(petOwnerRequest.Id);
+            po.Account = _unitOfWork.AccountRepository.GetByID(po.AccountId);
+            if (po == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy user.");
+            }
+
+            var result = _mapper.Map(petOwnerRequest, po);
+            _unitOfWork.Save();
+
+            return result;
         }
     }
 }

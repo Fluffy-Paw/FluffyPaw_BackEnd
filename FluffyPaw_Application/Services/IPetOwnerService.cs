@@ -11,7 +11,7 @@ namespace FluffyPaw_Application.Services
 {
     public interface IPetOwnerService
     {
-        Task<bool> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest);
-        Task<PetOwnerResponse> GetPetOwnerDetail(long accountId);
+        Task<PetOwner> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest);
+        Task<PetOwner> GetPetOwnerDetail(long accountId);
     }
 }

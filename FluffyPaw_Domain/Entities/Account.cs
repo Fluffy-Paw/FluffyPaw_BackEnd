@@ -19,7 +19,7 @@ namespace FluffyPaw_Domain.Entities
 
         public string Password { get; set; }
 
-        public string Avatar { get; set; }
+        public string? Avatar { get; set; }
 
         public string RoleName { get; set; }
 
