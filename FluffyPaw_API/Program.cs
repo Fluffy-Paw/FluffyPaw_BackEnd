@@ -2,6 +2,7 @@
 using FluffyPaw_API.Middleware;
 using Microsoft.OpenApi.Models;
 using FluffyPaw_Domain.Utils;
+using FluffyPaw_Infrastructure.Intergrations.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 

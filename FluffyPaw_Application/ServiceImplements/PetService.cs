@@ -80,12 +80,11 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
 
-            var pet = _mapper.Map<Pet>(petRequest);
             if (petRequest.Image != null)
             {
-                pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
+                existingPet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
             }
-            existingPet = pet;
+            _mapper.Map(petRequest, existingPet);
             _unitOfWork.Save();
 
             return _mapper.Map<PetResponse>(existingPet);

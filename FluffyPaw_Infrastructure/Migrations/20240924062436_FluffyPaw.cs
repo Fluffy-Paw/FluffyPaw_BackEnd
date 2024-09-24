@@ -27,7 +27,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Avatar = table.Column<string>(type: "longtext", nullable: false)
+                    Avatar = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RoleName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -767,13 +767,13 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "Avatar", "CreateDate", "Email", "Password", "RoleName", "Status", "Username" },
                 values: new object[,]
                 {
-                    { 1L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8504), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", "Admin", true, "FluffyPaw" },
-                    { 2L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8507), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "StoreManager", true, "test" },
-                    { 3L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8510), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "StoreManager", true, "test" },
-                    { 4L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8513), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "Staff", true, "test" },
-                    { 5L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8516), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "Staff", true, "test" },
-                    { 6L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8518), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "PetOwner", true, "test" },
-                    { 7L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8520), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "PetOwner", true, "test" }
+                    { 1L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9464), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", "Admin", true, "FluffyPaw" },
+                    { 2L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9467), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "StoreManager", true, "test" },
+                    { 3L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9470), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "StoreManager", true, "test" },
+                    { 4L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9473), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "Staff", true, "test" },
+                    { 5L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9476), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "Staff", true, "test" },
+                    { 6L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9478), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "PetOwner", true, "test" },
+                    { 7L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9481), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "1", "PetOwner", true, "test" }
                 });
 
             migrationBuilder.InsertData(
@@ -829,8 +829,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "AccountId", "Address", "Dob", "FullName", "Gender", "Phone", "Status" },
                 values: new object[,]
                 {
-                    { 1L, 6L, "test", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8750), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "1234567890", "Active" },
-                    { 2L, 7L, "test", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8753), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "0123456789", "Active" }
+                    { 1L, 6L, "test", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9704), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "1234567890", "Active" },
+                    { 2L, 7L, "test", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9707), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "0123456789", "Active" }
                 });
 
             migrationBuilder.InsertData(
@@ -879,8 +879,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "Allergy", "BehaviorCategoryId", "Decription", "Dob", "Image", "IsNeuter", "MicrochipNumber", "Name", "PetCategoryId", "PetOwnerId", "PetTypeId", "Sex", "Status", "Weight" },
                 values: new object[,]
                 {
-                    { 1L, "None", 1L, "test", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8812), new TimeSpan(0, 7, 0, 0, 0)), null, true, "None", "LuLu", 1L, 1L, 1L, "Male", "test", 6.5f },
-                    { 2L, "None", 2L, "test1", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8816), new TimeSpan(0, 7, 0, 0, 0)), null, false, "None", "MeowMeow", 2L, 1L, 1L, "FeMale", "test1", 5f }
+                    { 1L, "None", 1L, "test", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9784), new TimeSpan(0, 7, 0, 0, 0)), null, true, "None", "LuLu", 1L, 1L, 1L, "Male", "Available", 6.5f },
+                    { 2L, "None", 2L, "test1", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9788), new TimeSpan(0, 7, 0, 0, 0)), null, false, "None", "MeowMeow", 2L, 1L, 1L, "FeMale", "Unavailable", 5f }
                 });
 
             migrationBuilder.InsertData(
@@ -897,14 +897,14 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "CurrentPetOwner", "LimitPetOwner", "ServiceId", "StaffAddressId", "StartTime", "Status", "TotalRating" },
                 values: new object[,]
                 {
-                    { 1L, 0, 5, 1L, 1L, new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8972), new TimeSpan(0, 7, 0, 0, 0)), "Aceepted", 5f },
-                    { 2L, 0, 10, 2L, 2L, new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8975), new TimeSpan(0, 7, 0, 0, 0)), "Aceepted", 5f }
+                    { 1L, 0, 5, 1L, 1L, new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9966), new TimeSpan(0, 7, 0, 0, 0)), "Aceepted", 5f },
+                    { 2L, 0, 10, 2L, 2L, new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 595, DateTimeKind.Unspecified).AddTicks(9969), new TimeSpan(0, 7, 0, 0, 0)), "Aceepted", 5f }
                 });
 
             migrationBuilder.InsertData(
                 table: "Bookings",
                 columns: new[] { "Id", "CheckinTime", "Cost", "CreateDate", "Description", "EndTime", "PaymentMethod", "PetId", "StaffAddressServiceId", "StartTime", "Status" },
-                values: new object[] { 1L, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 100000.0, new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8998), new TimeSpan(0, 7, 0, 0, 0)), "test", new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8999), new TimeSpan(0, 7, 0, 0, 0)), "PayOS", 1L, 1L, new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(8998), new TimeSpan(0, 7, 0, 0, 0)), "Accept" });
+                values: new object[] { 1L, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 100000.0, new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 596, DateTimeKind.Unspecified).AddTicks(25), new TimeSpan(0, 7, 0, 0, 0)), "test", new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 596, DateTimeKind.Unspecified).AddTicks(27), new TimeSpan(0, 7, 0, 0, 0)), "PayOS", 1L, 1L, new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 596, DateTimeKind.Unspecified).AddTicks(26), new TimeSpan(0, 7, 0, 0, 0)), "Accept" });
 
             migrationBuilder.InsertData(
                 table: "BookingRatings",
@@ -914,7 +914,7 @@ namespace FluffyPaw_Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Trackings",
                 columns: new[] { "Id", "BookingId", "Description", "Status", "UploadDate" },
-                values: new object[] { 1L, 1L, "test", true, new DateTimeOffset(new DateTime(2024, 9, 22, 20, 33, 28, 792, DateTimeKind.Unspecified).AddTicks(9039), new TimeSpan(0, 7, 0, 0, 0)) });
+                values: new object[] { 1L, 1L, "test", true, new DateTimeOffset(new DateTime(2024, 9, 24, 13, 24, 35, 596, DateTimeKind.Unspecified).AddTicks(71), new TimeSpan(0, 7, 0, 0, 0)) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookingRatings_BookingId",
