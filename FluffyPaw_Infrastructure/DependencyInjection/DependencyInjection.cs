@@ -37,7 +37,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
 
             services.AddService();
 
-            //services.AddSignalR();
+            services.AddSignalR();
 
             services.AddAuthen(configuration);
 
