@@ -64,7 +64,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
 
-            await _notiHub.SendNoti("displayNotification");
+            await _notiHub.SendNotification("displayNotification");
 
             return _mapper.Map<NotificationResponse>(notification);
         }

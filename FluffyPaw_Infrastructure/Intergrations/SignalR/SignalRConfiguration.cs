@@ -13,17 +13,17 @@ namespace FluffyPaw_Infrastructure.Intergrations.SignalR
     public class SignalRConfiguration : ISignalRConfiguration
     {
         private readonly IConfiguration _configuration;
-        private readonly IHubContext<NotiHub> _notiHub;
+        private readonly IHubContext<NotificationHub> _notificationHub;
 
-        public SignalRConfiguration(IConfiguration configuration, IHubContext<NotiHub> notiHub)
+        public SignalRConfiguration(IConfiguration configuration, IHubContext<NotificationHub> notificationHub)
         {
             _configuration = configuration;
-            _notiHub = notiHub;
+            _notificationHub = notificationHub;
         }
 
-        public async Task SendNoti(string noti)
+        public async Task SendNotification(string noti)
         {
-            await _notiHub.Clients.All.SendAsync("ReceiveNoti", noti);
+            await _notificationHub.Clients.All.SendAsync("ReceiveNoti", noti);
         }
     }
 }

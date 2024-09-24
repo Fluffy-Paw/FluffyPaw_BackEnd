@@ -8,6 +8,6 @@ namespace FluffyPaw_Domain.Interfaces
 {
     public interface ISignalRConfiguration
     {
-        public Task SendNoti(string message);
+        public Task SendNotification(string message);
     }
 }

@@ -89,7 +89,7 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<NotiHub>("/noti");
+    endpoints.MapHub<NotificationHub>("/noti");
 });
 
 app.MapControllers();

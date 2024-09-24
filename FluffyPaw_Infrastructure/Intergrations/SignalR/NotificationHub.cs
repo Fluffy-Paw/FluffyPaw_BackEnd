@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace FluffyPaw_Infrastructure.Intergrations.SignalR
 {
-    public class NotiHub : Hub
+    public class NotificationHub : Hub
     {
 
     }
