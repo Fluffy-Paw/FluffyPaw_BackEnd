@@ -23,12 +23,14 @@ namespace FluffyPaw_Infrastructure.Authentication
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<Authen> _logger;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public Authen(IUnitOfWork unitOfWork, IConfiguration configuration, ILogger<Authen> logger)
+        public Authen(IUnitOfWork unitOfWork, IConfiguration configuration, ILogger<Authen> logger, IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _logger = logger;
+            _contextAccessor = contextAccessor;
         }
 
         public string GenerateJWTToken(Account account)
