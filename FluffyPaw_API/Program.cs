@@ -52,7 +52,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
-
+builder.Services.AddHttpContextAccessor();
 // Add custom services and dependencies
 builder.Services.InfrastructureService(builder.Configuration);
 

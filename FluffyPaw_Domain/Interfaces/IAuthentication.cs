@@ -11,6 +11,6 @@ namespace FluffyPaw_Domain.Interfaces
     public interface IAuthentication
     {
         string GenerateJWTToken(Account account);
-        Guid GetUserIdFromHttpContext(HttpContext httpContext);
+        long GetUserIdFromHttpContext(HttpContext httpContext);
     }
 }
