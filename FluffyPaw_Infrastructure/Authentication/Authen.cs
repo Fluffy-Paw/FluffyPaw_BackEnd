@@ -57,7 +57,7 @@ namespace FluffyPaw_Infrastructure.Authentication
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public Guid GetUserIdFromHttpContext(HttpContext httpContext)
+        public long GetUserIdFromHttpContext(HttpContext httpContext)
         {
             if (!httpContext.Request.Headers.ContainsKey("Authorization"))
             {
@@ -89,7 +89,7 @@ namespace FluffyPaw_Infrastructure.Authentication
                     throw new CustomException.InternalServerErrorException("User ID claim not found in token.");
                 }
 
-                return Guid.Parse(idClaim.Value);
+                return long.Parse(idClaim.Value);
             }
             catch (Exception ex)
             {

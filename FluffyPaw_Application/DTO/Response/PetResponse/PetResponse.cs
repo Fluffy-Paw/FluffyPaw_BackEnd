@@ -38,5 +38,6 @@ namespace FluffyPaw_Application.DTO.Response.PetResponse
 
         public bool IsNeuter { get; set; }
 
+        public string Status { get; set; }
     }
 }

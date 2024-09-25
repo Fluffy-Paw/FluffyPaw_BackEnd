@@ -31,7 +31,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> CreateNewPet(PetRequest petRequest)
         {
-            var existingPet = _unitOfWork.PetRepository.Get(po=>po.PetOwnerId == petRequest.PetOwnerId && po.Status == PetStatus.Available.ToString());
+            var existingPet = _unitOfWork.PetRepository.Get(po=>po.PetOwnerId == petRequest.PetOwnerId && po.Status != PetStatus.Deleted.ToString());
             if (existingPet.Count() >= 5)
             {
                 throw new CustomException.InvalidDataException("Bạn chỉ được lưu tối đa 5 thú cưng.");
@@ -64,7 +64,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<IEnumerable<PetResponse>> GetAllPetOfUser(long userId)
         {
-            var existingPet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == userId && p.Status == PetStatus.Available.ToString());
+            var existingPet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == userId && p.Status != PetStatus.Deleted.ToString());
             if(!existingPet.Any())
             {
                 throw new CustomException.DataNotFoundException("Bạn chưa nhập thông tin thú cưng.");
@@ -80,10 +80,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
 
-            if (petRequest.Image != null)
-            {
-                existingPet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
-            }
+            if (petRequest.Image != null) existingPet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
             _mapper.Map(petRequest, existingPet);
             _unitOfWork.Save();
 
