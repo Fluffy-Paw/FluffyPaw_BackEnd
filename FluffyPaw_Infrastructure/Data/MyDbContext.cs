@@ -22,7 +22,6 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingRating> BookingRatings { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
-        public DbSet<CertificateFile> CertificateFiles { get; set; }
         public DbSet<CertificateService> CertificateServices { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ConversationMessage> ConversationMessages { get; set; }
