@@ -105,6 +105,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IServiceTypeService, ServiceTypeService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IPetService, PetService>();
