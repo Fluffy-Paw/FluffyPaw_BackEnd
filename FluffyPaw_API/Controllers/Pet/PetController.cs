@@ -3,7 +3,6 @@ using CoreApiResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.DTO.Request.PetRequest;
-using FluffyPaw_Application.DTO.Request.FileRequest;
 
 namespace FluffyPaw_API.Controllers.Pet
 {
