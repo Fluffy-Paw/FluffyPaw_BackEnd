@@ -137,8 +137,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<StaffAddress>().HasData(
-                new StaffAddress { Id = 1, AccountId = 6, StoreManagerId = 1, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f},
-                new StaffAddress { Id = 2, AccountId = 7, StoreManagerId = 2, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f}
+                new StaffAddress { Id = 1, AccountId = 6, StoreManagerId = 1, Address = "aaa", StaffAddressName = "Name" , Phone = "0192837465", TotalRating = 5.0f},
+                new StaffAddress { Id = 2, AccountId = 7, StoreManagerId = 2, Address = "aaa", StaffAddressName = "Name" , Phone = "0192837465", TotalRating = 5.0f}
                 );
 
             modelBuilder.Entity<StaffAddressService>().HasData(
