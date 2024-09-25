@@ -31,7 +31,6 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Pet> Pets { get; set; }
         public DbSet<PetCategory> PetCategories { get; set; }
-        public DbSet<PetFile> PetFiles { get; set; }
         public DbSet<PetOwner> PetOwners { get; set; }
         public DbSet<PetType> PetTypes { get; set; }
         public DbSet<Service> Services { get; set; }
@@ -112,8 +111,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Certificate>().HasData(
-                new Certificate { Id = 1, Name = "Certificate of Excellence in Pet Grooming", Description = "None" },
-                new Certificate { Id = 2, Name = "Certificate of Excellence in Pet Grooming", Description = "None" }
+                new Certificate { Id = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
+                new Certificate { Id = 2, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" }
                 );
 
             modelBuilder.Entity<ServiceType>().HasData(
@@ -121,16 +120,16 @@ namespace FluffyPaw_Infrastructure.Data
                 new ServiceType { Id = 2, Name = "Service Reservation" }
                 );
 
-            modelBuilder.Entity<Service>().HasData(
-                new Service { Id = 1, ServiceTypeId = 1, Name = "Grooming", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", Status = true },
-                new Service { Id = 2, ServiceTypeId = 2, Name = "Vaccine", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", Status = true },
-                new Service { Id = 3, ServiceTypeId = 1, Name = "Hotel", Duration = TimeSpan.Zero, Cost = 100000, Description = "test", Status = true },
-                new Service { Id = 4, ServiceTypeId = 2, Name = "Training", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", Status = true }
-                );
-
             modelBuilder.Entity<StoreManager>().HasData(
                 new StoreManager { Id = 1, AccountId = 2, Name = "StoreA", BusinessLicense = "None", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", Status = true },
                 new StoreManager { Id = 2, AccountId = 3, Name = "StoreB", BusinessLicense = "None", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Status = true }
+                );
+
+            modelBuilder.Entity<Service>().HasData(
+                new Service { Id = 1, ServiceTypeId = 1, StoreManagerId = 1, Name = "Grooming", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", Status = true },
+                new Service { Id = 2, ServiceTypeId = 2, StoreManagerId = 1, Name = "Vaccine", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", Status = true },
+                new Service { Id = 3, ServiceTypeId = 1, StoreManagerId = 1, Name = "Hotel", Duration = TimeSpan.Zero, Cost = 100000, Description = "test", Status = true },
+                new Service { Id = 4, ServiceTypeId = 2, StoreManagerId = 1, Name = "Training", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", Status = true }
                 );
 
             modelBuilder.Entity<CertificateService>().HasData(

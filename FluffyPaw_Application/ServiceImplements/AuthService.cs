@@ -23,14 +23,12 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IAuthentication _authentication;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
 
-        public AuthService(IAuthentication authentication, IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IHashing hashing)
+        public AuthService(IAuthentication authentication, IUnitOfWork unitOfWork, IMapper mapper, IHashing hashing)
         {
             _authentication = authentication;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _configuration = configuration;
             _hashing = hashing;
         }
 

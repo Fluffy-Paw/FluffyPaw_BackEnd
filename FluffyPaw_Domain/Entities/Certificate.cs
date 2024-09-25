@@ -16,8 +16,8 @@ namespace FluffyPaw_Domain.Entities
 
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string File { get; set; }
 
-        public bool Status { get; set; }
+        public string Description { get; set; }
     }
 }

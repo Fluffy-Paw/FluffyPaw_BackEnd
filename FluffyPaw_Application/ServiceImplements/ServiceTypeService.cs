@@ -69,7 +69,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (existingServiceType == null)
             {
-                throw new CustomException.DataNotFoundException($"Không tìm thấy dịch vụ.");
+                throw new CustomException.DataNotFoundException($"Không tìm thấy loại dịch vụ.");
             }
 
             var duplicateExists = _unitOfWork.ServiceTypeRepository.Exists(p =>

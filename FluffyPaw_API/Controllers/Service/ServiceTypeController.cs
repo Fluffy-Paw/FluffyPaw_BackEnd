@@ -40,7 +40,7 @@ namespace FluffyPaw_API.Controllers.Service
         public async Task<IActionResult> CreateServiceType(ServiceTypeRequest serviceTypeRequest)
         {
             ServiceTypeResponse serviceType = await _serviceTypeService.CreateServiceType(serviceTypeRequest);
-            return CustomResult("Tạo dịch vụ thành công.", serviceType);
+            return CustomResult("Tạo loại dịch vụ thành công.", serviceType);
         }
 
         [HttpPatch("UpdateServiceType/{id}")]
@@ -48,7 +48,7 @@ namespace FluffyPaw_API.Controllers.Service
         public async Task<IActionResult> UpdateServiceType(long id, ServiceTypeRequest serviceTypeRequest)
         {
             var serviceType = await _serviceTypeService.UpdateServiceType(id, serviceTypeRequest);
-            return CustomResult("Cập nhật dịch vụ thành công.", serviceType);
+            return CustomResult("Cập nhật loại dịch vụ thành công.", serviceType);
         }
 
         [HttpDelete("DeleteServiceType/{id}")]
@@ -56,7 +56,7 @@ namespace FluffyPaw_API.Controllers.Service
         public async Task<IActionResult> DeleteServiceType(long id)
         {
             var serviceType = await _serviceTypeService.DeleteServiceType(id);
-            return CustomResult("Xóa dịch vụ thành công.");
+            return CustomResult("Xóa loại dịch vụ thành công.");
         }
     }
 }

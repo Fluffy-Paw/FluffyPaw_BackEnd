@@ -27,7 +27,6 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<Notification> _notificationRepository;
         private IGenericRepository<Pet> _petRepository;
         private IGenericRepository<PetCategory> _petCategoryRepository;
-        private IGenericRepository<PetFile> _petFileRepository;
         private IGenericRepository<PetOwner> _petOwnerRepository;
         private IGenericRepository<PetType> _petTypeRepository;
         private IGenericRepository<Service> _serviceRepository;
@@ -229,19 +228,6 @@ namespace FluffyPaw_Infrastructure.Repository
                 return _petCategoryRepository;
             }
         }
-        
-        public IGenericRepository<PetFile> PetFileRepository
-        {
-            get
-            {
-
-                if (_petFileRepository == null)
-                {
-                    _petFileRepository = new GenericRepository<PetFile>(_context);
-                }
-                return _petFileRepository;
-            }
-        }
 
         public IGenericRepository<PetOwner> PetOwnerRepository
         {
@@ -428,6 +414,11 @@ namespace FluffyPaw_Infrastructure.Repository
         public void Save()
         {
             _context.SaveChanges();
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
         }
 
         private bool disposed = false;

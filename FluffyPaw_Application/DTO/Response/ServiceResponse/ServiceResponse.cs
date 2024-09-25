@@ -1,17 +1,16 @@
-﻿using System;
+﻿using FluffyPaw_Application.DTO.Response.CertificateResponse;
+using FluffyPaw_Application.Mapper;
+using FluffyPaw_Domain.Entities;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluffyPaw_Domain.Entities
+namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 {
-    public class Service
+    public class ServiceResponse : IMapFrom<Service>
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
         public long ServiceTypeId { get; set; }
@@ -32,10 +31,6 @@ namespace FluffyPaw_Domain.Entities
 
         public bool Status { get; set; }
 
-        [ForeignKey("ServiceTypeId")]
-        public virtual ServiceType ServiceType { get; set; }
-
-        [ForeignKey("StoreManagerId")]
-        public virtual StoreManager StoreManager { get; set; }
+        public ICollection<CertificatesResponse> Certificates { get; set; }
     }
 }
