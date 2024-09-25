@@ -15,7 +15,6 @@ namespace FluffyPaw_Domain.Interfaces
         public IGenericRepository<Booking> BookingRepository { get; }
         public IGenericRepository<BookingRating> BookingRatingRepository { get; }
         public IGenericRepository<Certificate> CertificateRepository { get; }
-        public IGenericRepository<CertificateFile> CertificateFileRepository { get; }
         public IGenericRepository<CertificateService> CertificateServiceRepository { get; }
         public IGenericRepository<Conversation> ConversationRepository { get; }
         public IGenericRepository<ConversationMessage> ConversationMessageRepository { get; }

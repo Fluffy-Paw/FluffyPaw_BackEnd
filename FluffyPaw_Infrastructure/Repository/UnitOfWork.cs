@@ -18,7 +18,6 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<Booking> _bookingRepository;
         private IGenericRepository<BookingRating> _bookingRatingRepository;
         private IGenericRepository<Certificate> _certificateRepository;
-        private IGenericRepository<CertificateFile> _certificateFileRepository;
         private IGenericRepository<CertificateService> _certificateServiceRepository;
         private IGenericRepository<Conversation> _conversationRepository;
         private IGenericRepository<ConversationMessage> _conversationMessageRepository;
@@ -109,19 +108,6 @@ namespace FluffyPaw_Infrastructure.Repository
                     _certificateRepository = new GenericRepository<Certificate>(_context);
                 }
                 return _certificateRepository;
-            }
-        }
-
-        public IGenericRepository<CertificateFile> CertificateFileRepository
-        {
-            get
-            {
-
-                if (_certificateFileRepository == null)
-                {
-                    _certificateFileRepository = new GenericRepository<CertificateFile>(_context);
-                }
-                return _certificateFileRepository;
             }
         }
 
