@@ -23,12 +23,14 @@ namespace FluffyPaw_Infrastructure.Authentication
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<Authen> _logger;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public Authen(IUnitOfWork unitOfWork, IConfiguration configuration, ILogger<Authen> logger)
+        public Authen(IUnitOfWork unitOfWork, IConfiguration configuration, ILogger<Authen> logger, IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _logger = logger;
+            _contextAccessor = contextAccessor;
         }
 
         public string GenerateJWTToken(Account account)
@@ -57,7 +59,7 @@ namespace FluffyPaw_Infrastructure.Authentication
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public Guid GetUserIdFromHttpContext(HttpContext httpContext)
+        public long GetUserIdFromHttpContext(HttpContext httpContext)
         {
             if (!httpContext.Request.Headers.ContainsKey("Authorization"))
             {
@@ -89,7 +91,7 @@ namespace FluffyPaw_Infrastructure.Authentication
                     throw new CustomException.InternalServerErrorException("User ID claim not found in token.");
                 }
 
-                return Guid.Parse(idClaim.Value);
+                return long.Parse(idClaim.Value);
             }
             catch (Exception ex)
             {

@@ -12,9 +12,11 @@ using FluffyPaw_Infrastructure.Intergrations.SignalR;
 using FluffyPaw_Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -96,6 +98,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             });
 
             services.AddScoped<IAuthentication, Authen>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IHashing, Hash>();
         }
 
@@ -107,6 +110,9 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<IPetOwnerService, PetOwnerService>();
+            services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<ICertificateService, CertificatesService>();
+            services.AddScoped<IFilesService, FilesService>();
         }
 
 

@@ -416,6 +416,11 @@ namespace FluffyPaw_Infrastructure.Repository
             _context.SaveChanges();
         }
 
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)

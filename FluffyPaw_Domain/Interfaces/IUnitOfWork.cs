@@ -39,6 +39,7 @@ namespace FluffyPaw_Domain.Interfaces
         public IGenericRepository<Voucher> VoucherRepository { get; }
         public IGenericRepository<Wallet> WalletRepository { get; }
         void Save();
+        Task SaveAsync();
         void Dispose();
     }
 }
