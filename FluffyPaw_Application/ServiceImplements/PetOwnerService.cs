@@ -48,14 +48,14 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<PetOwner> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
         {
-            var po = _unitOfWork.PetOwnerRepository.GetByID(petOwnerRequest.Id);
-            po.Account = _unitOfWork.AccountRepository.GetByID(po.AccountId);
+            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties : "Account").FirstOrDefault();
             if (po == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
             }
 
-            po.Account.Password = _hashing.SHA512Hash(petOwnerRequest.Password);
+            if(petOwnerRequest.Password != null) po.Account.Password = _hashing.SHA512Hash(petOwnerRequest.Password);
             po.Account.Email = petOwnerRequest.Email;
             if(petOwnerRequest.Avatar != null ) po.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
 
