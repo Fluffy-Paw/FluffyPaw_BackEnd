@@ -15,6 +15,6 @@ namespace FluffyPaw_Application.Services
         Task<bool> CreateNewPet(PetRequest petRequest);
         Task<PetResponse> UpdatePet(long petId, PetRequest pet);
         Task<bool> DeletePet(long petId);
-        Task<IEnumerable<PetResponse>> GetAllPetOfUser(long userId);
+        Task<IEnumerable<PetResponse>> GetAllPetOfUser();
     }
 }

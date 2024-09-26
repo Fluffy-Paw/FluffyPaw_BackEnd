@@ -21,23 +21,37 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHashing _hashing;
+        private readonly IAuthentication _authentication;
 
-        public PetService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseConfiguration firebaseConfiguration)
+        public PetService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseConfiguration firebaseConfiguration, IHttpContextAccessor httpContextAccessor, IHashing hashing, IAuthentication authentication)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _firebaseConfiguration = firebaseConfiguration;
+            _httpContextAccessor = httpContextAccessor;
+            _hashing = hashing;
+            _authentication = authentication;
         }
 
         public async Task<bool> CreateNewPet(PetRequest petRequest)
         {
-            var existingPet = _unitOfWork.PetRepository.Get(po=>po.PetOwnerId == petRequest.PetOwnerId && po.Status != PetStatus.Deleted.ToString());
+            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Account.Status == true, includeProperties: "Account").FirstOrDefault();
+            if (po == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy user.");
+            }
+
+            var existingPet = _unitOfWork.PetRepository.Get(p=>p.PetOwnerId == po.Id && p.Status != PetStatus.Deleted.ToString());
             if (existingPet.Count() >= 5)
             {
                 throw new CustomException.InvalidDataException("Bạn chỉ được lưu tối đa 5 thú cưng.");
             }
 
             var pet = _mapper.Map<Pet>(petRequest);
+            pet.PetOwnerId = po.Id;
             if(petRequest.Image != null)
             {
                 pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
@@ -62,10 +76,17 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public async Task<IEnumerable<PetResponse>> GetAllPetOfUser(long userId)
+        public async Task<IEnumerable<PetResponse>> GetAllPetOfUser()
         {
-            var existingPet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == userId && p.Status != PetStatus.Deleted.ToString());
-            if(!existingPet.Any())
+            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Account.Status == true, includeProperties: "Account").FirstOrDefault();
+            if (po == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy user.");
+            }
+
+            var existingPet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status != PetStatus.Deleted.ToString());
+            if (!existingPet.Any())
             {
                 throw new CustomException.DataNotFoundException("Bạn chưa nhập thông tin thú cưng.");
             }
