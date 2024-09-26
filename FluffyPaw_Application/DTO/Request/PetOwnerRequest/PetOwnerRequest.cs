@@ -11,15 +11,9 @@ namespace FluffyPaw_Application.DTO.Request.PetOwnerRequest
 {
     public class PetOwnerRequest : IMapFrom<Account>, IMapFrom<PetOwner>
     {
-        public long Id { get; set; }
-
-        public long AccountId { get; set; }
-
         public string FullName { get; set; }
 
         public string Gender { get; set; }
-
-        public DateTimeOffset Dob { get; set; }
 
         public string Phone { get; set; }
 
@@ -27,7 +21,7 @@ namespace FluffyPaw_Application.DTO.Request.PetOwnerRequest
 
         public string Email { get; set; }
 
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         public IFormFile? Avatar { get; set; }
     }

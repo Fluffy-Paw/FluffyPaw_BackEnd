@@ -18,9 +18,9 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetPet")]
-        public async Task<IActionResult> GetPet(long ownerId)
+        public async Task<IActionResult> GetPet()
         {
-            var pet = await _petService.GetAllPetOfUser(ownerId);
+            var pet = await _petService.GetAllPetOfUser();
             return CustomResult("Thú cưng của bạn:", pet);
         }
 
