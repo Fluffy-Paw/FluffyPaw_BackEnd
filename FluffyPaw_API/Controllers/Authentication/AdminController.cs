@@ -16,12 +16,10 @@ namespace FluffyPaw_API.Controllers.Authentication
     public class AdminController : BaseController
     {
         private readonly IAdminService _adminService;
-        private readonly IAccountService _accountService;
 
-        public AdminController(IAdminService adminService, IAccountService accountService)
+        public AdminController(IAdminService adminService)
         {
             _adminService = adminService;
-            _accountService = accountService;
         }
 
         [HttpPost("CreateAdmin")]
@@ -45,38 +43,6 @@ namespace FluffyPaw_API.Controllers.Authentication
         {
             var storemanager = await _adminService.AcceptStoreManager(id);
             return CustomResult("Xác thực hoàn tất.", storemanager);
-        }
-
-        [HttpGet("GetAllAccount")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GetAllAccount()
-        {
-            var account = _adminService.GetAllAccounts();
-            return CustomResult("Tải dữ liệu thành công.", account);
-        }
-
-        [HttpGet("GetStoreManagers")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GetStoreManagers()
-        {
-            var account = _accountService.GetStoreManagers();
-            return CustomResult("Tải dữ liệu thành công.", account);
-        }
-
-        [HttpGet("GetStaffAddresses")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GetStaffAddresses()
-        {
-            var account = _accountService.GetStaffAddresses();
-            return CustomResult("Tải dữ liệu thành công.", account);
-        }
-
-        [HttpGet("GetPetOwners")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GetPetOwners()
-        {
-            var account = _accountService.GetPetOwners();
-            return CustomResult("Tải dữ liệu thành công.", account);
         }
 
         [HttpPatch("ActiveDeactiveAccount/{id}")]

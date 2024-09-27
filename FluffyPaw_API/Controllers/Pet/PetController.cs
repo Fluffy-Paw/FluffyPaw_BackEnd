@@ -17,10 +17,17 @@ namespace FluffyPaw_API.Controllers.Pet
             _petService = petService;
         }
 
-        [HttpGet("GetPet")]
-        public async Task<IActionResult> GetPet()
+        [HttpGet("GetAllPets")]
+        public async Task<IActionResult> GetAllPets()
         {
             var pet = await _petService.GetAllPetOfUser();
+            return CustomResult("Thú cưng của bạn:", pet);
+        }
+
+        [HttpGet("GetPet")]
+        public async Task<IActionResult> GetPet(long petId)
+        {
+            var pet = await _petService.GetPet(petId);
             return CustomResult("Thú cưng của bạn:", pet);
         }
 
@@ -45,5 +52,46 @@ namespace FluffyPaw_API.Controllers.Pet
             return CustomResult("Xóa thú cưng thành công.", pet);
         }
 
+        [HttpGet("GetAllPetCategory")]
+        public async Task<IActionResult> GetAllPetCategory()
+        {
+            var pet = await _petService.GetAllPetCategory();
+            return CustomResult("Loại pet:", pet);
+        }
+
+        [HttpGet("GetPetCategory")]
+        public async Task<IActionResult> GetPetCategory(long petCategoryId)
+        {
+            var pet = await _petService.GetPetCategory(petCategoryId);
+            return CustomResult("Loại pet:", pet);
+        }
+
+        [HttpGet("GetAllPetType")]
+        public async Task<IActionResult> GetAllPetType()
+        {
+            var pet = await _petService.GetAllPetType();
+            return CustomResult("Giống loài:", pet);
+        }
+
+        [HttpGet("GetPetType")]
+        public async Task<IActionResult> GetPetType(long petTypeID)
+        {
+            var pet = await _petService.GetPetType(petTypeID);
+            return CustomResult("Giống loài:", pet);
+        }
+
+        [HttpGet("GetAllBehavior")]
+        public async Task<IActionResult> GetAllBehavior()
+        {
+            var pet = await _petService.GetAllBehavior();
+            return CustomResult("Sở thích:", pet);
+        }
+
+        [HttpGet("GetBehavior")]
+        public async Task<IActionResult> GetBehavior(long behaviorId)
+        {
+            var pet = await _petService.GetBehavior(behaviorId);
+            return CustomResult("Sở thích:", pet);
+        }
     }
 }

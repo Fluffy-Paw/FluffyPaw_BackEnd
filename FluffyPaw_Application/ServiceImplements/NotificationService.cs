@@ -9,6 +9,7 @@ using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -24,16 +25,21 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ISignalRConfiguration _notiHub;
+        private readonly IAuthentication _authentication;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, ISignalRConfiguration notiHub)
+        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, ISignalRConfiguration notiHub, IAuthentication authentication, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _notiHub = notiHub;
+            _authentication = authentication;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<bool> ChangeNotificationStatus(long userId)
+        public async Task<bool> ChangeNotificationStatus()
         {
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var ListNoti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == userId && s.Status != NotificationStatus.Deleted.ToString());
             if (!ListNoti.Any())
             {
@@ -80,16 +86,18 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public async Task<IPaginatedList<Notification>> GetNotifications(long userId, int numberNoti)
+        public async Task<IPaginatedList<Notification>> GetNotifications(int numberNoti)
         {
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var noti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == userId && s.Status != NotificationStatus.Deleted.ToString(), orderBy: ob=>ob.OrderByDescending(o=>o.CreateDate)).AsQueryable();
 
-            if ( noti.Any())
+            if (!noti.Any())
             {
-                var result = await _unitOfWork.NotificationRepository.GetPagging(noti, 1, numberNoti * 5);
-                return result;
+                throw new CustomException.DataNotFoundException("Bạn không có thông báo.");
             }
-            throw new CustomException.DataNotFoundException("Bạn không có thông báo.");
+
+            var result = await _unitOfWork.NotificationRepository.GetPagging(noti, 1, numberNoti * 5);
+            return result;
         }
     }
 }

@@ -21,8 +21,6 @@ namespace FluffyPaw_Application.DTO.Request.PetOwnerRequest
 
         public string Email { get; set; }
 
-        public string? Password { get; set; }
-
         public IFormFile? Avatar { get; set; }
     }
 }

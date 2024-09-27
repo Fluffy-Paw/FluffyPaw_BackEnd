@@ -1411,7 +1411,7 @@ namespace FluffyPaw_Infrastructure.Migrations
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Pet", b =>
                 {
-                    b.HasOne("FluffyPaw_Domain.Entities.BehaviorCategory", "BehavoirCategory")
+                    b.HasOne("FluffyPaw_Domain.Entities.BehaviorCategory", "BehaviorCategory")
                         .WithMany()
                         .HasForeignKey("BehaviorCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1435,7 +1435,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BehavoirCategory");
+                    b.Navigation("BehaviorCategory");
 
                     b.Navigation("PetCategory");
 

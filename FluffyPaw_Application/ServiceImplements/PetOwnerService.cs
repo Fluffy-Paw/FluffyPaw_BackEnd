@@ -46,7 +46,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return po;
         }
 
-        public async Task<PetOwner> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
+        public async Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties : "Account").FirstOrDefault();
@@ -55,7 +55,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
             }
 
-            if(petOwnerRequest.Password != null) po.Account.Password = _hashing.SHA512Hash(petOwnerRequest.Password);
             po.Account.Email = petOwnerRequest.Email;
             if(petOwnerRequest.Avatar != null ) po.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
 
@@ -63,7 +62,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             _unitOfWork.Save();
 
-            return result;
+            return _mapper.Map<PetOwnerResponse>(result);
         }
     }
 }

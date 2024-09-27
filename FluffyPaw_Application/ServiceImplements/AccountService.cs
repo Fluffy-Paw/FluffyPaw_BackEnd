@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.Services;
+using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +17,50 @@ namespace FluffyPaw_Application.ServiceImplements
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAuthentication _authentication;
+        private readonly IHashing _hashing;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountService(IMapper mapper, IUnitOfWork unitOfWork)
+        public AccountService(IMapper mapper, IUnitOfWork unitOfWork, IAuthentication authentication, IHashing hashing, IHttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _authentication = authentication;
+            _hashing = hashing;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        //Email CreateDate Username
+        public async Task<bool> ChangePassword(string oldPassword, string newPassword)
+        {
+            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var user = _unitOfWork.AccountRepository.GetByID(accountId);
+
+            if (user == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy user.");
+            }
+
+            if (_hashing.SHA512Hash(oldPassword) != user.Password)
+            {
+                throw new CustomException.InvalidDataException("Sai mật khẩu cũ.");
+            }
+
+            if (oldPassword == newPassword)
+            {
+                throw new CustomException.InvalidDataException("Mật khẩu mới trùng với mật khẩu cũ");
+            }
+            
+            if (newPassword.Length < 8)
+            {
+                throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
+            }
+
+            user.Password = _hashing.SHA512Hash(newPassword);
+            _unitOfWork.Save();
+
+            return true;
+        }
+
         public async Task<IEnumerable<AccountResponse>> GetPetOwners()
         {
             var user = _unitOfWork.PetOwnerRepository.Get(includeProperties: "Account");
@@ -85,6 +123,11 @@ namespace FluffyPaw_Application.ServiceImplements
                 result.Add(temp);
             }
             return result;
+        }
+
+        public async Task<IEnumerable<Account>> GetAllAccounts()
+        {
+            return _unitOfWork.AccountRepository.Get(orderBy: ob => ob.OrderByDescending(a => a.RoleName));
         }
     }
 }
