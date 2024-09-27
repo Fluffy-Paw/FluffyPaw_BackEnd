@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Request.PetRequest
 {
-    public class PetRequest : IMapFrom<Pet>, IMapFrom<PetCategory>, IMapFrom<PetType>, IMapFrom<PetOwner>, IMapFrom<BehaviorCategory>
+    public class PetRequest : IMapFrom<PetCategory>, IMapFrom<PetType>, IMapFrom<BehaviorCategory>
     {
         public IFormFile? Image {  get; set; }
-        public long PetOwnerId { get; set; }
 
         public long PetCategoryId { get; set; }
 

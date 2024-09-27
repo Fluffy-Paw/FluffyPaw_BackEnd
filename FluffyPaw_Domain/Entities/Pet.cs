@@ -53,6 +53,6 @@ namespace FluffyPaw_Domain.Entities
         public virtual PetType PetType { get; set; }
 
         [ForeignKey("BehaviorCategoryId")]
-        public virtual BehaviorCategory BehavoirCategory { get; set; }
+        public virtual BehaviorCategory BehaviorCategory { get; set; }
     }
 }

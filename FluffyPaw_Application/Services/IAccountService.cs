@@ -1,4 +1,5 @@
-﻿using FluffyPaw_Domain.Entities;
+﻿using FluffyPaw_Application.DTO.Response;
+using FluffyPaw_Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,10 @@ namespace FluffyPaw_Application.Services
 {
     public interface IAccountService
     {
-        Task<IEnumerable<PetOwner>> GetPetOwners();
-        Task<IEnumerable<StoreManager>> GetStoreManagers();
-        Task<IEnumerable<StaffAddress>> GetStaffAddresses();
+        Task<IEnumerable<AccountResponse>> GetPetOwners();
+        Task<IEnumerable<AccountResponse>> GetStoreManagers();
+        Task<IEnumerable<AccountResponse>> GetStaffAddresses();
+        Task<IEnumerable<Account>> GetAllAccounts();
+        Task<bool> ChangePassword(string oldPassword, string newPassword);
     }
 }

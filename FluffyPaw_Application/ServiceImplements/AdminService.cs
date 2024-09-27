@@ -86,9 +86,6 @@ namespace FluffyPaw_Application.ServiceImplements
             return user.Status;
         }
 
-        public async Task<IEnumerable<Account>> GetAllAccounts()
-        {
-            return _unitOfWork.AccountRepository.Get(orderBy: ob => ob.OrderByDescending(a => a.RoleName));
-        }
+        
     }
 }

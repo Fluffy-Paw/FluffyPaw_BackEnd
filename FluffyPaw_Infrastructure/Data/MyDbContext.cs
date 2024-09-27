@@ -65,12 +65,12 @@ namespace FluffyPaw_Infrastructure.Data
 
             modelBuilder.Entity<Account>().HasData(
                 new Account { Id = 1, Username = "FluffyPaw", Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", RoleName = "Admin", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 2, Username = "test", Password = "1", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 3, Username = "test", Password = "1", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 4, Username = "test", Password = "1", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 5, Username = "test", Password = "1", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 6, Username = "test", Password = "1", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 7, Username = "test", Password = "1", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true }
+                new Account { Id = 2, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 3, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 4, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 5, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 6, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 7, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true }
                 );
 
             modelBuilder.Entity<Wallet>().HasData(
@@ -82,11 +82,11 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<BehaviorCategory>().HasData(
-                new BehaviorCategory { Id = 1, Name = "Chạy vòng tròn trước khi nằm xuống" },
-                new BehaviorCategory { Id = 2, Name = "Liếm mặt chủ" },
-                new BehaviorCategory { Id = 3, Name = "Rung lắc đuôi khi vui mừng" },
-                new BehaviorCategory { Id = 4, Name = "Gầm gừ khi cảm thấy bị đe dọa" },
-                new BehaviorCategory { Id = 5, Name = "Cào móng để đánh dấu lãnh thổ" }
+                new BehaviorCategory { Id = 1, Name = "Chạy vòng tròn trước khi nằm xuống", Status = true},
+                new BehaviorCategory { Id = 2, Name = "Liếm mặt chủ", Status = true },
+                new BehaviorCategory { Id = 3, Name = "Rung lắc đuôi khi vui mừng", Status = true },
+                new BehaviorCategory { Id = 4, Name = "Gầm gừ khi cảm thấy bị đe dọa", Status = true },
+                new BehaviorCategory { Id = 5, Name = "Cào móng để đánh dấu lãnh thổ", Status = true }
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(
@@ -137,8 +137,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<StaffAddress>().HasData(
-                new StaffAddress { Id = 1, AccountId = 6, StoreManagerId = 1, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f},
-                new StaffAddress { Id = 2, AccountId = 7, StoreManagerId = 2, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f}
+                new StaffAddress { Id = 1, AccountId = 6, StoreManagerId = 1, Address = "aaa", StaffAddressName = "Name" , Phone = "0192837465", TotalRating = 5.0f},
+                new StaffAddress { Id = 2, AccountId = 7, StoreManagerId = 2, Address = "aaa", StaffAddressName = "Name" , Phone = "0192837465", TotalRating = 5.0f}
                 );
 
             modelBuilder.Entity<StaffAddressService>().HasData(
