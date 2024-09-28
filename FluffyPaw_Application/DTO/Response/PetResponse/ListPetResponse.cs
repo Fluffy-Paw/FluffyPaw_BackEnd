@@ -14,11 +14,11 @@ namespace FluffyPaw_Application.DTO.Response.PetResponse
 
         public string? Image { get; set; }
 
+        public string Name { get; set; }
+
         public string PetCategory { get; set; }
 
         public string BehaviorCategory { get; set; }
-
-        public string Name { get; set; }
 
         public string Sex { get; set; }
 

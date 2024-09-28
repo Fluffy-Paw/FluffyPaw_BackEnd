@@ -56,8 +56,9 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             po.Account.Email = petOwnerRequest.Email;
-            if(petOwnerRequest.Avatar != null ) po.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
-
+            if (petOwnerRequest.Avatar == "" && petOwnerRequest.Avatar == null) po.Account.Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg";
+            else po.Account.Avatar = petOwnerRequest.Avatar;
+            
             var result = _mapper.Map(petOwnerRequest, po);
 
             _unitOfWork.Save();

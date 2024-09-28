@@ -22,6 +22,8 @@ namespace FluffyPaw_Application.DTO.Response.PetResponse
 
         public DateTimeOffset Dob { get; set; }
 
+        public int Age { get; set; }
+
         public string? Allergy { get; set; }
 
         public string MicrochipNumber { get; set; }
