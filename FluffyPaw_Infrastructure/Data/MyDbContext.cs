@@ -65,12 +65,12 @@ namespace FluffyPaw_Infrastructure.Data
 
             modelBuilder.Entity<Account>().HasData(
                 new Account { Id = 1, Username = "FluffyPaw", Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", RoleName = "Admin", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 2, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 3, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 4, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 5, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 6, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 7, Username = "test", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true }
+                new Account { Id = 2, Username = "test1", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 3, Username = "test2", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 4, Username = "test3", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 5, Username = "test4", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 6, Username = "test5", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 7, Username = "test6", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true }
                 );
 
             modelBuilder.Entity<Wallet>().HasData(
@@ -90,23 +90,23 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(
-                new PetOwner { Id = 1, AccountId = 6, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow, Phone = "1234567890", Address = "test", Status = "Active" },
-                new PetOwner { Id = 2, AccountId = 7, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow, Phone = "0123456789", Address = "test", Status = "Active" }
+                new PetOwner { Id = 1, AccountId = 6, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow, Phone = "1234567890", Address = "test", Status = "Tốt" },
+                new PetOwner { Id = 2, AccountId = 7, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow, Phone = "0123456789", Address = "test", Status = "Tốt" }
                 );
 
             modelBuilder.Entity<PetCategory>().HasData(
-                new PetCategory { Id = 1, Name = "Dog" },
-                new PetCategory { Id = 2, Name = "Cat" }
+                new PetCategory { Id = 1, Name = "Chó" },
+                new PetCategory { Id = 2, Name = "Mèo" }
                 );
 
             modelBuilder.Entity<PetType>().HasData(
-                new PetType { Id = 1, Name = "Cho Phu Quoc", Image = "None", Status = true },
-                new PetType { Id = 2, Name = "Meo Tam The", Image = "None", Status = true }
+                new PetType { Id = 1, Name = "Chó Phú Quốc", Image = "None", Status = true },
+                new PetType { Id = 2, Name = "Mèo Tam Thể", Image = "None", Status = true }
                 );
 
             modelBuilder.Entity<Pet>().HasData(
-                new Pet { Id = 1, PetOwnerId = 1, PetCategoryId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test", IsNeuter = true, Status = "Available" },
-                new Pet { Id = 2, PetOwnerId = 1, PetCategoryId = 2, PetTypeId = 1, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
+                new Pet { Id = 1, PetOwnerId = 1, PetCategoryId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTime.Parse("2022-08-23"), Allergy = "None", MicrochipNumber = "None", Decription = "test", IsNeuter = true, Status = "Available" },
+                new Pet { Id = 2, PetOwnerId = 1, PetCategoryId = 2, PetTypeId = 1, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = DateTime.Parse("2022-10-23"), Allergy = "None", MicrochipNumber = "None", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
                 );
 
             modelBuilder.Entity<Certificate>().HasData(

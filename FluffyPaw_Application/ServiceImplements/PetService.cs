@@ -50,10 +50,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var pet = _mapper.Map<Pet>(petRequest);
             pet.PetOwnerId = po.Id;
-            if(petRequest.Image != null)
-            {
-                pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
-            }
+            if (petRequest.Image != null && petRequest.Image != "") pet.Image = petRequest.Image;
+            
             pet.Status = PetStatus.Available.ToString();
             _unitOfWork.PetRepository.Insert(pet);
             _unitOfWork.Save();
@@ -137,6 +135,11 @@ namespace FluffyPaw_Application.ServiceImplements
             result.PetCategoryName = pet.PetCategory.Name;
             result.BehaviorCategoryName = pet.BehaviorCategory.Name;
             result.PetTypeName = pet.PetType.Name;
+            result.Age = DateTime.Now.Year - pet.Dob.Year;
+            if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
+            {
+                result.Age--;
+            }
             return result;
         }
 
@@ -152,20 +155,20 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<PetResponse> UpdatePet(long petId, PetRequest petRequest)
         {
-            var pet = _unitOfWork.PetRepository.GetByID(petId);
-            if(pet == null)
+            var pet = _unitOfWork.PetRepository.Get(p => p.Id == petId, includeProperties: "BehaviorCategory,PetCategory,PetType").FirstOrDefault();
+            if (pet == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
 
-            if (petRequest.Image != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
+            if (petRequest.Image != null && petRequest.Image != "") pet.Image = petRequest.Image;
             _mapper.Map(petRequest, pet);
             _unitOfWork.Save();
 
             var result = _mapper.Map<PetResponse>(pet);
-            //result.PetCategoryName = pet.PetCategory.Name;
-            //result.BehaviorCategoryName = pet.BehaviorCategory.Name;
-            //result.PetTypeName = pet.PetType.Name;
+            result.PetCategoryName = pet.PetCategory.Name;
+            result.BehaviorCategoryName = pet.BehaviorCategory.Name;
+            result.PetTypeName = pet.PetType.Name;
             return result;
         }
     }
