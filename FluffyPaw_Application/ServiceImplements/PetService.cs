@@ -116,9 +116,9 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<IEnumerable<PetType>> GetAllPetType()
+        public async Task<IEnumerable<PetType>> GetAllPetType(long categoryId)
         {
-            return _unitOfWork.PetTypeRepository.Get(includeProperties: "PetCategory");
+            return _unitOfWork.PetTypeRepository.Get(c => c.PetCategoryId == categoryId,includeProperties: "PetCategory");
         }
 
         public async Task<BehaviorCategory> GetBehavior(long behaviorId)

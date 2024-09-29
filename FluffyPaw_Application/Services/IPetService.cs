@@ -17,7 +17,7 @@ namespace FluffyPaw_Application.Services
         Task<bool> DeletePet(long petId);
         Task<IEnumerable<ListPetResponse>> GetAllPetOfUser();
         Task<PetResponse> GetPet(long petId);
-        Task<IEnumerable<PetType>> GetAllPetType();
+        Task<IEnumerable<PetType>> GetAllPetType(long categoryId);
         Task<IEnumerable<BehaviorCategory>> GetAllBehavior();
         Task<PetType> GetPetType(long petTypeId);
         Task<BehaviorCategory> GetBehavior(long behaviorId);

@@ -53,9 +53,9 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetAllPetType")]
-        public async Task<IActionResult> GetAllPetType()
+        public async Task<IActionResult> GetAllPetType(long id)
         {
-            var pet = await _petService.GetAllPetType();
+            var pet = await _petService.GetAllPetType(id);
             return CustomResult("Giống loài:", pet);
         }
 
