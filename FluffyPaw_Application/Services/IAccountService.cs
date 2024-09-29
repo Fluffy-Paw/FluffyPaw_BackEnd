@@ -12,7 +12,7 @@ namespace FluffyPaw_Application.Services
     {
         Task<IEnumerable<AccountResponse>> GetPetOwners();
         Task<IEnumerable<AccountResponse>> GetStoreManagers();
-        Task<IEnumerable<AccountResponse>> GetStaffAddresses();
+        Task<IEnumerable<AccountResponse>> GetStores();
         Task<IEnumerable<Account>> GetAllAccounts();
         Task<bool> ChangePassword(string oldPassword, string newPassword);
     }

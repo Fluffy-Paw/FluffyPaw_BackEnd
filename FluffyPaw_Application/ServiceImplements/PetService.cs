@@ -36,7 +36,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<bool> CreateNewPet(PetRequest petRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Account.Status == true, includeProperties: "Account").FirstOrDefault();
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Account.Status == (int)AccountStatus.Active, includeProperties: "Account").FirstOrDefault();
             if (po == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
@@ -48,9 +48,18 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Bạn chỉ được lưu tối đa 5 thú cưng.");
             }
 
+            if(petRequest.MicrochipNumber != null)
+            {
+                var duplicatePet = _unitOfWork.PetRepository.Get(m => m.MicrochipNumber == petRequest.MicrochipNumber).FirstOrDefault();
+                if(duplicatePet != null)
+                {
+                    throw new CustomException.InvalidDataException($"Đã tồn tại pet với số microchip {petRequest.MicrochipNumber}");
+                }
+            }
+
             var pet = _mapper.Map<Pet>(petRequest);
             pet.PetOwnerId = po.Id;
-            if (petRequest.Image != null && petRequest.Image != "") pet.Image = petRequest.Image;
+            if (petRequest.Image != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
             
             pet.Status = PetStatus.Available.ToString();
             _unitOfWork.PetRepository.Insert(pet);
@@ -77,20 +86,18 @@ namespace FluffyPaw_Application.ServiceImplements
             return _unitOfWork.BehaviorCategoryRepository.GetAll();
         }
 
-        public async Task<IEnumerable<PetCategory>> GetAllPetCategory()
-        {
-            return _unitOfWork.PetCategoryRepository.GetAll();
-        }
-
         public async Task<IEnumerable<ListPetResponse>> GetAllPetOfUser()
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Account.Status == true, includeProperties: "Account").FirstOrDefault();
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Account.Status == (int)AccountStatus.Active, includeProperties: "Account").FirstOrDefault();
             if (po == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
             }
-
+            if (po.Reputation == AccountReputation.Ban.ToString())
+            {
+                throw new CustomException.ForbbidenException("Bạn đã bị cấm.");
+            }
             var pet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status != PetStatus.Deleted.ToString(), includeProperties: "BehaviorCategory,PetCategory");
             if (!pet.Any())
             {
@@ -101,7 +108,7 @@ namespace FluffyPaw_Application.ServiceImplements
             foreach (var item in pet)
             {
                 var p = _mapper.Map<ListPetResponse>(item);
-                p.PetCategory = item.PetCategory.Name;
+                p.PetCategory = item.PetType.PetCategory.Name;
                 p.BehaviorCategory = item.BehaviorCategory.Name;
                 result.Add(p);
             }
@@ -121,7 +128,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<PetResponse> GetPet(long petId)
         {
-            var pet = _unitOfWork.PetRepository.Get(p => p.Id == petId, includeProperties : "BehaviorCategory,PetCategory,PetType").FirstOrDefault();
+            var pet = _unitOfWork.PetRepository.Get(p => p.Id == petId, includeProperties : "BehaviorCategory,PetType.PetCategory,PetType").FirstOrDefault();
             if (pet == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
@@ -132,20 +139,15 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var result = _mapper.Map<PetResponse>(pet);
-            result.PetCategoryName = pet.PetCategory.Name;
-            result.BehaviorCategoryName = pet.BehaviorCategory.Name;
-            result.PetTypeName = pet.PetType.Name;
+            //result.PetCategory = pet.PetType.PetCategory;
+            //result.BehaviorCategoryName = pet.BehaviorCategory.Name;
+            //result.PetTypeName = pet.PetType.Name;
             result.Age = DateTime.Now.Year - pet.Dob.Year;
             if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
             {
                 result.Age--;
             }
             return result;
-        }
-
-        public async Task<PetCategory> GetPetCategory(long petCategoryId)
-        {
-            return _unitOfWork.PetCategoryRepository.GetByID(petCategoryId);
         }
 
         public async Task<PetType> GetPetType(long petTypeId)
@@ -161,14 +163,14 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
 
-            if (petRequest.Image != null && petRequest.Image != "") pet.Image = petRequest.Image;
+            if (petRequest.Image != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
             _mapper.Map(petRequest, pet);
             _unitOfWork.Save();
 
             var result = _mapper.Map<PetResponse>(pet);
-            result.PetCategoryName = pet.PetCategory.Name;
-            result.BehaviorCategoryName = pet.BehaviorCategory.Name;
-            result.PetTypeName = pet.PetType.Name;
+            //result.PetCategoryName = pet.PetCategory.Name;
+            //result.BehaviorCategoryName = pet.BehaviorCategory.Name;
+            //result.PetTypeName = pet.PetType.Name;
             return result;
         }
     }

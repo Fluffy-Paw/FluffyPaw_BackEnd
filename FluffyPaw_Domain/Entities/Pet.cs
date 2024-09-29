@@ -17,15 +17,13 @@ namespace FluffyPaw_Domain.Entities
 
         public long PetOwnerId { get; set; }
 
-        public string? Image {  get; set; }
-
-        public long PetCategoryId { get; set; }
-
         public long PetTypeId { get; set; }
 
         public long BehaviorCategoryId { get; set; }
 
         public string Name { get; set; }
+
+        public string? Image { get; set; }
 
         public string Sex { get; set; }
 
@@ -35,7 +33,7 @@ namespace FluffyPaw_Domain.Entities
             
         public string? Allergy { get; set; }
 
-        public string MicrochipNumber { get; set; }
+        public string? MicrochipNumber { get; set; }
 
         public string? Decription { get; set; }
 
@@ -45,9 +43,6 @@ namespace FluffyPaw_Domain.Entities
 
         [ForeignKey("PetOwnerId")]
         public virtual PetOwner PetOwner { get; set; }
-
-        [ForeignKey("PetCategoryId")]
-        public virtual PetCategory PetCategory { get; set; }
 
         [ForeignKey("PetTypeId")]
         public virtual PetType PetType { get; set; }

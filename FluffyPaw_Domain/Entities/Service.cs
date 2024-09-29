@@ -16,7 +16,7 @@ namespace FluffyPaw_Domain.Entities
 
         public long ServiceTypeId { get; set; }
 
-        public long StoreManagerId { get; set; }
+        public long BrandId { get; set; }
 
         public string Name { get; set; }
 
@@ -35,7 +35,7 @@ namespace FluffyPaw_Domain.Entities
         [ForeignKey("ServiceTypeId")]
         public virtual ServiceType ServiceType { get; set; }
 
-        [ForeignKey("StoreManagerId")]
-        public virtual StoreManager StoreManager { get; set; }
+        [ForeignKey("BrandId")]
+        public virtual Brand Brand { get; set; }
     }
 }

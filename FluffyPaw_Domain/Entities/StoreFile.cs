@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Domain.Entities
 {
-    public class StaffAddressFile
+    public class StoreFile
     {
         public long Id { get; set; }
 
@@ -19,6 +19,6 @@ namespace FluffyPaw_Domain.Entities
         public virtual Files Files { get; set; }
 
         [ForeignKey("StaffAddressId")]
-        public virtual StaffAddress StaffAddress { get; set; }
+        public virtual Store StaffAddress { get; set; }
     }
 }

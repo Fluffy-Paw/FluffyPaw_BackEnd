@@ -48,8 +48,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -64,78 +64,78 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 1L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(559), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1340), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176",
                             RoleName = "Admin",
-                            Status = true,
+                            Status = 0,
                             Username = "FluffyPaw"
                         },
                         new
                         {
                             Id = 2L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(562), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1343), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
-                            Password = "1",
+                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "StoreManager",
-                            Status = true,
-                            Username = "test"
+                            Status = 0,
+                            Username = "test1"
                         },
                         new
                         {
                             Id = 3L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(565), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1345), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
-                            Password = "1",
+                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "StoreManager",
-                            Status = true,
-                            Username = "test"
+                            Status = 0,
+                            Username = "test2"
                         },
                         new
                         {
                             Id = 4L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(568), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1348), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
-                            Password = "1",
+                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "Staff",
-                            Status = true,
-                            Username = "test"
+                            Status = 0,
+                            Username = "test3"
                         },
                         new
                         {
                             Id = 5L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(571), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1351), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
-                            Password = "1",
+                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "Staff",
-                            Status = true,
-                            Username = "test"
+                            Status = 0,
+                            Username = "test4"
                         },
                         new
                         {
                             Id = 6L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(573), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1353), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
-                            Password = "1",
+                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "PetOwner",
-                            Status = true,
-                            Username = "test"
+                            Status = 0,
+                            Username = "test5"
                         },
                         new
                         {
                             Id = 7L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(576), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1356), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
-                            Password = "1",
+                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "PetOwner",
-                            Status = true,
-                            Username = "test"
+                            Status = 0,
+                            Username = "test6"
                         });
                 });
 
@@ -151,9 +151,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
                     b.HasKey("Id");
 
                     b.ToTable("BehaviorCategories");
@@ -162,32 +159,27 @@ namespace FluffyPaw_Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
-                            Name = "Chạy vòng tròn trước khi nằm xuống",
-                            Status = false
+                            Name = "Chạy vòng tròn trước khi nằm xuống"
                         },
                         new
                         {
                             Id = 2L,
-                            Name = "Liếm mặt chủ",
-                            Status = false
+                            Name = "Liếm mặt chủ"
                         },
                         new
                         {
                             Id = 3L,
-                            Name = "Rung lắc đuôi khi vui mừng",
-                            Status = false
+                            Name = "Rung lắc đuôi khi vui mừng"
                         },
                         new
                         {
                             Id = 4L,
-                            Name = "Gầm gừ khi cảm thấy bị đe dọa",
-                            Status = false
+                            Name = "Gầm gừ khi cảm thấy bị đe dọa"
                         },
                         new
                         {
                             Id = 5L,
-                            Name = "Cào móng để đánh dấu lãnh thổ",
-                            Status = false
+                            Name = "Cào móng để đánh dấu lãnh thổ"
                         });
                 });
 
@@ -198,6 +190,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("Checkin")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTimeOffset>("CheckinTime")
                         .HasColumnType("datetime(6)");
@@ -222,9 +217,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Property<long>("PetId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("StaffAddressServiceId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTimeOffset>("StartTime")
                         .HasColumnType("datetime(6)");
 
@@ -232,11 +224,14 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<long>("StoreServiceId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PetId");
 
-                    b.HasIndex("StaffAddressServiceId");
+                    b.HasIndex("StoreServiceId");
 
                     b.ToTable("Bookings");
 
@@ -244,16 +239,17 @@ namespace FluffyPaw_Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
+                            Checkin = false,
                             CheckinTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Cost = 100000.0,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(1139), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1955), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "test",
-                            EndTime = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(1141), new TimeSpan(0, 7, 0, 0, 0)),
+                            EndTime = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1957), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethod = "PayOS",
                             PetId = 1L,
-                            StaffAddressServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(1140), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Accept"
+                            StartTime = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1956), new TimeSpan(0, 7, 0, 0, 0)),
+                            Status = "Accept",
+                            StoreServiceId = 1L
                         });
                 });
 
@@ -298,6 +294,71 @@ namespace FluffyPaw_Infrastructure.Migrations
                             PetOwnerId = 1L,
                             Status = true,
                             Vote = 0
+                        });
+                });
+
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.Brand", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("BusinessLicense")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Hotline")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("MST")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("Brands");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AccountId = 2L,
+                            BusinessLicense = "None",
+                            Hotline = "0123456789",
+                            Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s",
+                            MST = "None",
+                            Name = "StoreA",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            AccountId = 3L,
+                            BusinessLicense = "None",
+                            Hotline = "0123456789",
+                            Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s",
+                            MST = "None",
+                            Name = "StoreB",
+                            Status = true
                         });
                 });
 
@@ -518,6 +579,10 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ReceiverId");
@@ -552,15 +617,11 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("MicrochipNumber")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<long>("PetCategoryId")
-                        .HasColumnType("bigint");
 
                     b.Property<long>("PetOwnerId")
                         .HasColumnType("bigint");
@@ -583,8 +644,6 @@ namespace FluffyPaw_Infrastructure.Migrations
 
                     b.HasIndex("BehaviorCategoryId");
 
-                    b.HasIndex("PetCategoryId");
-
                     b.HasIndex("PetOwnerId");
 
                     b.HasIndex("PetTypeId");
@@ -598,11 +657,10 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Allergy = "None",
                             BehaviorCategoryId = 1L,
                             Decription = "test",
-                            Dob = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(928), new TimeSpan(0, 7, 0, 0, 0)),
+                            Dob = new DateTimeOffset(new DateTime(2022, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
                             IsNeuter = true,
                             MicrochipNumber = "None",
                             Name = "LuLu",
-                            PetCategoryId = 1L,
                             PetOwnerId = 1L,
                             PetTypeId = 1L,
                             Sex = "Male",
@@ -615,13 +673,12 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Allergy = "None",
                             BehaviorCategoryId = 2L,
                             Decription = "test1",
-                            Dob = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(931), new TimeSpan(0, 7, 0, 0, 0)),
+                            Dob = new DateTimeOffset(new DateTime(2022, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
                             IsNeuter = false,
                             MicrochipNumber = "None",
                             Name = "MeowMeow",
-                            PetCategoryId = 2L,
-                            PetOwnerId = 1L,
-                            PetTypeId = 1L,
+                            PetOwnerId = 2L,
+                            PetTypeId = 18L,
                             Sex = "FeMale",
                             Status = "Unavailable",
                             Weight = 5f
@@ -669,7 +726,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTimeOffset>("Dob")
@@ -687,7 +743,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("Reputation")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -703,22 +759,22 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Id = 1L,
                             AccountId = 6L,
                             Address = "test",
-                            Dob = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(853), new TimeSpan(0, 7, 0, 0, 0)),
+                            Dob = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1550), new TimeSpan(0, 7, 0, 0, 0)),
                             FullName = "Test",
                             Gender = "Male",
                             Phone = "1234567890",
-                            Status = "Active"
+                            Reputation = "Good"
                         },
                         new
                         {
                             Id = 2L,
                             AccountId = 7L,
                             Address = "test",
-                            Dob = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(857), new TimeSpan(0, 7, 0, 0, 0)),
+                            Dob = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1552), new TimeSpan(0, 7, 0, 0, 0)),
                             FullName = "Test",
                             Gender = "Male",
                             Phone = "0123456789",
-                            Status = "Active"
+                            Reputation = "Good"
                         });
                 });
 
@@ -738,10 +794,12 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<long>("PetCategoryId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PetCategoryId");
 
                     b.ToTable("PetTypes");
 
@@ -750,15 +808,253 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 1L,
                             Image = "None",
-                            Name = "Cho Phu Quoc",
-                            Status = true
+                            Name = "Chó Chihuahua",
+                            PetCategoryId = 1L
                         },
                         new
                         {
                             Id = 2L,
                             Image = "None",
-                            Name = "Meo Tam The",
-                            Status = true
+                            Name = "Chó Bắc Kinh",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Image = "None",
+                            Name = "Chó Bắc Kinh lai Nhật",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Image = "None",
+                            Name = "Chó Dachshund (Lạp Xưởng/Xúc Xích)",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Image = "None",
+                            Name = "Chó Phú Quốc",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Image = "None",
+                            Name = "Chó Poodle",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Image = "None",
+                            Name = "Chó Pug",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Image = "None",
+                            Name = "Chó Alaska",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Image = "None",
+                            Name = "Chó Husky",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            Image = "None",
+                            Name = "Chó Samoyed",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            Image = "None",
+                            Name = "Chó Pomeranian (Phốc sóc)",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            Image = "None",
+                            Name = "Chó Beagle",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            Image = "None",
+                            Name = "Chó Shiba Inu",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            Image = "None",
+                            Name = "Chó Golden Retriever",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            Image = "None",
+                            Name = "Chó Becgie",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            Image = "None",
+                            Name = "Chó Corgi",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            Image = "None",
+                            Name = "Chó Mông Cộc",
+                            PetCategoryId = 1L
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            Image = "None",
+                            Name = "Mèo Xiêm",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            Image = "None",
+                            Name = "Mèo Anh lông ngắn",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            Image = "None",
+                            Name = "Mèo Anh lông dài",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            Image = "None",
+                            Name = "Mèo Ai Cập",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            Image = "None",
+                            Name = "Mèo Ba Tư",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            Image = "None",
+                            Name = "Mèo Bali",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 24L,
+                            Image = "None",
+                            Name = "Mèo Bengal",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 25L,
+                            Image = "None",
+                            Name = "Mèo Scottish Fold",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 26L,
+                            Image = "None",
+                            Name = "Mèo Munchkin",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 27L,
+                            Image = "None",
+                            Name = "Mèo mướp",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 28L,
+                            Image = "None",
+                            Name = "Mèo Ragdoll",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 29L,
+                            Image = "None",
+                            Name = "Mèo Maine Coon",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 30L,
+                            Image = "None",
+                            Name = "Mèo Angora",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 31L,
+                            Image = "None",
+                            Name = "Mèo Laperm",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 32L,
+                            Image = "None",
+                            Name = "Mèo Somali",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 33L,
+                            Image = "None",
+                            Name = "Mèo Toyger",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 34L,
+                            Image = "None",
+                            Name = "Mèo Turkish Van",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 35L,
+                            Image = "None",
+                            Name = "Mèo Miến Điện",
+                            PetCategoryId = 2L
+                        },
+                        new
+                        {
+                            Id = 36L,
+                            Image = "None",
+                            Name = "Mèo Exotic",
+                            PetCategoryId = 2L
                         });
                 });
 
@@ -772,6 +1068,9 @@ namespace FluffyPaw_Infrastructure.Migrations
 
                     b.Property<int>("BookingCount")
                         .HasColumnType("int");
+
+                    b.Property<long>("BrandId")
+                        .HasColumnType("bigint");
 
                     b.Property<double>("Cost")
                         .HasColumnType("double");
@@ -793,17 +1092,14 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<long>("StoreManagerId")
-                        .HasColumnType("bigint");
-
                     b.Property<float>("TotalRating")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceTypeId");
+                    b.HasIndex("BrandId");
 
-                    b.HasIndex("StoreManagerId");
+                    b.HasIndex("ServiceTypeId");
 
                     b.ToTable("Services");
 
@@ -812,52 +1108,52 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 1L,
                             BookingCount = 0,
+                            BrandId = 1L,
                             Cost = 100000.0,
                             Description = "test",
                             Duration = new TimeSpan(0, 0, 30, 0, 0),
                             Name = "Grooming",
                             ServiceTypeId = 1L,
                             Status = true,
-                            StoreManagerId = 1L,
                             TotalRating = 0f
                         },
                         new
                         {
                             Id = 2L,
                             BookingCount = 0,
+                            BrandId = 1L,
                             Cost = 200000.0,
                             Description = "test",
                             Duration = new TimeSpan(0, 1, 0, 0, 0),
                             Name = "Vaccine",
                             ServiceTypeId = 2L,
                             Status = true,
-                            StoreManagerId = 1L,
                             TotalRating = 0f
                         },
                         new
                         {
                             Id = 3L,
                             BookingCount = 0,
+                            BrandId = 1L,
                             Cost = 100000.0,
                             Description = "test",
                             Duration = new TimeSpan(0, 0, 0, 0, 0),
                             Name = "Hotel",
                             ServiceTypeId = 1L,
                             Status = true,
-                            StoreManagerId = 1L,
                             TotalRating = 0f
                         },
                         new
                         {
                             Id = 4L,
                             BookingCount = 0,
+                            BrandId = 1L,
                             Cost = 500000.0,
                             Description = "test",
                             Duration = new TimeSpan(0, 1, 30, 0, 0),
                             Name = "Training",
                             ServiceTypeId = 2L,
                             Status = true,
-                            StoreManagerId = 1L,
                             TotalRating = 0f
                         });
                 });
@@ -914,7 +1210,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FluffyPaw_Domain.Entities.StaffAddress", b =>
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.Store", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -929,16 +1225,16 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<long>("BrandId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<string>("StaffAddressName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("StoreManagerId")
-                        .HasColumnType("bigint");
 
                     b.Property<float>("TotalRating")
                         .HasColumnType("float");
@@ -947,9 +1243,9 @@ namespace FluffyPaw_Infrastructure.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("StoreManagerId");
+                    b.HasIndex("BrandId");
 
-                    b.ToTable("StaffAddresses");
+                    b.ToTable("Stores");
 
                     b.HasData(
                         new
@@ -957,9 +1253,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Id = 1L,
                             AccountId = 6L,
                             Address = "aaa",
+                            BrandId = 1L,
+                            Name = "Name",
                             Phone = "0192837465",
-                            StaffAddressName = "Name",
-                            StoreManagerId = 1L,
                             TotalRating = 5f
                         },
                         new
@@ -967,14 +1263,14 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Id = 2L,
                             AccountId = 7L,
                             Address = "aaa",
+                            BrandId = 2L,
+                            Name = "Name",
                             Phone = "0192837465",
-                            StaffAddressName = "Name",
-                            StoreManagerId = 2L,
                             TotalRating = 5f
                         });
                 });
 
-            modelBuilder.Entity("FluffyPaw_Domain.Entities.StaffAddressFile", b =>
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreFile", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -994,10 +1290,10 @@ namespace FluffyPaw_Infrastructure.Migrations
 
                     b.HasIndex("StaffAddressId");
 
-                    b.ToTable("StaffAddressFiles");
+                    b.ToTable("StoreFiles");
                 });
 
-            modelBuilder.Entity("FluffyPaw_Domain.Entities.StaffAddressService", b =>
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreService", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1014,9 +1310,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Property<long>("ServiceId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("StaffAddressId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTimeOffset>("StartTime")
                         .HasColumnType("datetime(6)");
 
@@ -1024,16 +1317,16 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<float>("TotalRating")
-                        .HasColumnType("float");
+                    b.Property<long>("StoreId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ServiceId");
 
-                    b.HasIndex("StaffAddressId");
+                    b.HasIndex("StoreId");
 
-                    b.ToTable("StaffAddressServices");
+                    b.ToTable("StoreServices");
 
                     b.HasData(
                         new
@@ -1042,10 +1335,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 5,
                             ServiceId = 1L,
-                            StaffAddressId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(1109), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Aceepted",
-                            TotalRating = 5f
+                            StartTime = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1929), new TimeSpan(0, 7, 0, 0, 0)),
+                            Status = "Acepted",
+                            StoreId = 1L
                         },
                         new
                         {
@@ -1053,63 +1345,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 10,
                             ServiceId = 2L,
-                            StaffAddressId = 2L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(1112), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Aceepted",
-                            TotalRating = 5f
-                        });
-                });
-
-            modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreManager", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("AccountId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("BusinessLicense")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Logo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("StoreManagers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            AccountId = 2L,
-                            BusinessLicense = "None",
-                            Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s",
-                            Name = "StoreA",
-                            Status = true
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            AccountId = 3L,
-                            BusinessLicense = "None",
-                            Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s",
-                            Name = "StoreB",
-                            Status = true
+                            StartTime = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(1932), new TimeSpan(0, 7, 0, 0, 0)),
+                            Status = "Acepted",
+                            StoreId = 2L
                         });
                 });
 
@@ -1147,7 +1385,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             BookingId = 1L,
                             Description = "test",
                             Status = true,
-                            UploadDate = new DateTimeOffset(new DateTime(2024, 9, 26, 15, 17, 8, 428, DateTimeKind.Unspecified).AddTicks(1182), new TimeSpan(0, 7, 0, 0, 0))
+                            UploadDate = new DateTimeOffset(new DateTime(2024, 9, 29, 16, 14, 38, 795, DateTimeKind.Unspecified).AddTicks(2027), new TimeSpan(0, 7, 0, 0, 0))
                         });
                 });
 
@@ -1186,7 +1424,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTimeOffset>("NextVaccineDate")
@@ -1297,9 +1534,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FluffyPaw_Domain.Entities.StaffAddressService", "StaffAddressService")
+                    b.HasOne("FluffyPaw_Domain.Entities.StoreService", "StaffAddressService")
                         .WithMany()
-                        .HasForeignKey("StaffAddressServiceId")
+                        .HasForeignKey("StoreServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1325,6 +1562,17 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Navigation("Booking");
 
                     b.Navigation("PetOwner");
+                });
+
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.Brand", b =>
+                {
+                    b.HasOne("FluffyPaw_Domain.Entities.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.CertificateService", b =>
@@ -1354,7 +1602,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FluffyPaw_Domain.Entities.StaffAddress", "StaffAdddress")
+                    b.HasOne("FluffyPaw_Domain.Entities.Store", "StaffAdddress")
                         .WithMany()
                         .HasForeignKey("StaffAddressId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1414,12 +1662,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FluffyPaw_Domain.Entities.PetCategory", "PetCategory")
-                        .WithMany()
-                        .HasForeignKey("PetCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FluffyPaw_Domain.Entities.PetOwner", "PetOwner")
                         .WithMany()
                         .HasForeignKey("PetOwnerId")
@@ -1433,8 +1675,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("BehaviorCategory");
-
-                    b.Navigation("PetCategory");
 
                     b.Navigation("PetOwner");
 
@@ -1452,23 +1692,34 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.PetType", b =>
+                {
+                    b.HasOne("FluffyPaw_Domain.Entities.PetCategory", "PetCategory")
+                        .WithMany()
+                        .HasForeignKey("PetCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PetCategory");
+                });
+
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Service", b =>
                 {
+                    b.HasOne("FluffyPaw_Domain.Entities.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FluffyPaw_Domain.Entities.ServiceType", "ServiceType")
                         .WithMany()
                         .HasForeignKey("ServiceTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FluffyPaw_Domain.Entities.StoreManager", "StoreManager")
-                        .WithMany()
-                        .HasForeignKey("StoreManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Brand");
 
                     b.Navigation("ServiceType");
-
-                    b.Navigation("StoreManager");
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.ServiceFile", b =>
@@ -1490,7 +1741,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("FluffyPaw_Domain.Entities.StaffAddress", b =>
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.Store", b =>
                 {
                     b.HasOne("FluffyPaw_Domain.Entities.Account", "Account")
                         .WithMany()
@@ -1498,18 +1749,18 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FluffyPaw_Domain.Entities.StoreManager", "StoreManager")
+                    b.HasOne("FluffyPaw_Domain.Entities.Brand", "Brand")
                         .WithMany()
-                        .HasForeignKey("StoreManagerId")
+                        .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
 
-                    b.Navigation("StoreManager");
+                    b.Navigation("Brand");
                 });
 
-            modelBuilder.Entity("FluffyPaw_Domain.Entities.StaffAddressFile", b =>
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreFile", b =>
                 {
                     b.HasOne("FluffyPaw_Domain.Entities.Files", "Files")
                         .WithMany()
@@ -1517,7 +1768,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FluffyPaw_Domain.Entities.StaffAddress", "StaffAddress")
+                    b.HasOne("FluffyPaw_Domain.Entities.Store", "StaffAddress")
                         .WithMany()
                         .HasForeignKey("StaffAddressId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1528,7 +1779,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Navigation("StaffAddress");
                 });
 
-            modelBuilder.Entity("FluffyPaw_Domain.Entities.StaffAddressService", b =>
+            modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreService", b =>
                 {
                     b.HasOne("FluffyPaw_Domain.Entities.Service", "Service")
                         .WithMany()
@@ -1536,26 +1787,15 @@ namespace FluffyPaw_Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FluffyPaw_Domain.Entities.StaffAddress", "StaffAddress")
+                    b.HasOne("FluffyPaw_Domain.Entities.Store", "Store")
                         .WithMany()
-                        .HasForeignKey("StaffAddressId")
+                        .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Service");
 
-                    b.Navigation("StaffAddress");
-                });
-
-            modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreManager", b =>
-                {
-                    b.HasOne("FluffyPaw_Domain.Entities.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Tracking", b =>

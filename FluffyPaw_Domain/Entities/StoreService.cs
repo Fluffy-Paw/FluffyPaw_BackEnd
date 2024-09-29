@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Domain.Entities
 {
-    public class StaffAddressService
+    public class StoreService
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        public long StaffAddressId { get; set; }
+        public long StoreId { get; set; }
 
         public long ServiceId { get; set; }
 
@@ -24,12 +24,10 @@ namespace FluffyPaw_Domain.Entities
 
         public int CurrentPetOwner { get; set; }
 
-        public float TotalRating { get; set; }
-
         public string Status { get; set; }
 
-        [ForeignKey("StaffAddressId")]
-        public virtual StaffAddress StaffAddress { get; set; }
+        [ForeignKey("StoreId")]
+        public virtual Store Store { get; set; }
 
         [ForeignKey("ServiceId")]
         public virtual Service Service { get; set; }

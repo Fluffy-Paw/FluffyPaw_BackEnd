@@ -33,11 +33,11 @@ namespace FluffyPaw_API.Controllers.Account
             return CustomResult("Tải dữ liệu thành công.", account);
         }
 
-        [HttpGet("GetStaffAddresses")]
+        [HttpGet("GetStores")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetStaffAddresses()
         {
-            var account = _accountService.GetStaffAddresses();
+            var account = _accountService.GetStores();
             return CustomResult("Tải dữ liệu thành công.", account);
         }
 

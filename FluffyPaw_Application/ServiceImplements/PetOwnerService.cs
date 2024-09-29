@@ -38,10 +38,10 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<PetOwner> GetPetOwnerDetail()
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Status == AccountStatus.Active.ToString(), includeProperties: "Account").FirstOrDefault();
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Reputation != AccountReputation.Ban.ToString(), includeProperties: "Account").FirstOrDefault();
             if(po == null)
             {
-                throw new CustomException.DataNotFoundException("Không tìm thấy user.");
+                throw new CustomException.DataNotFoundException("Bạn đã bị cấm, liên hệ admin để biết thêm thông tin.");
             }
             return po;
         }
@@ -56,8 +56,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             po.Account.Email = petOwnerRequest.Email;
-            if (petOwnerRequest.Avatar == "" && petOwnerRequest.Avatar == null) po.Account.Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg";
-            else po.Account.Avatar = petOwnerRequest.Avatar;
+            if(petOwnerRequest.Avatar != null) po.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
             
             var result = _mapper.Map(petOwnerRequest, po);
 

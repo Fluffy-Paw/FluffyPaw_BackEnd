@@ -15,6 +15,6 @@ namespace FluffyPaw_Application.DTO.Response
         public string? Phone { get; set; }
         public DateTimeOffset? Dob { get; set; }
         public string? Reputation { get; set; }
-        public bool Status { get; set; }
+        public int Status { get; set; }
     }
 }

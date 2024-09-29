@@ -6,6 +6,7 @@ using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Repository.Enum;
 using System;
@@ -40,7 +41,7 @@ namespace FluffyPaw_Application.ServiceImplements
             account.RoleName = RoleName.Admin.ToString();
             account.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             account.Password = _hashing.SHA512Hash(adminRequest.Password);
-            account.Status = true;
+            account.Status = (int) AccountStatus.Active;
             _unitOfWork.AccountRepository.Insert(account);
             _unitOfWork.Save();
 
@@ -77,15 +78,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy người dùng");
             }
 
-            if (user.Status == true)
+            if (user.Status == (int)AccountStatus.Active)
             {
-                user.Status = false;
-            } else user.Status = true;
+                user.Status = (int)AccountStatus.Deactive;
+            } else user.Status = (int)AccountStatus.Active;
             _unitOfWork.Save();
 
-            return user.Status;
+            return true;
         }
-
-        
     }
 }

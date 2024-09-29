@@ -16,6 +16,5 @@ namespace FluffyPaw_Domain.Entities
 
         public string Name { get; set; }
 
-        public bool Status { get; set; }
     }
 }

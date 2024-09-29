@@ -27,7 +27,7 @@ namespace FluffyPaw_Domain.Entities
 
         public DateTimeOffset CreateDate { get; set; }
 
-        public bool Status { get; set; }
+        public int Status { get; set; }
 
         public Account()
         {

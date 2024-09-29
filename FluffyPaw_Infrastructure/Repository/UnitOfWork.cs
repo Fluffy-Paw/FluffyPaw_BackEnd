@@ -31,10 +31,10 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<Service> _serviceRepository;
         private IGenericRepository<ServiceFile> _serviceFileRepository;
         private IGenericRepository<ServiceType> _serviceTypeRepository;
-        private IGenericRepository<StaffAddress> _staffAddressRepository;
-        private IGenericRepository<StaffAddressFile> _staffAddressFileRepository;
-        private IGenericRepository<StaffAddressService> _staffAddressServiceRepository;
-        private IGenericRepository<StoreManager> _storeManagerRepository;
+        private IGenericRepository<Store> _staffAddressRepository;
+        private IGenericRepository<StoreFile> _staffAddressFileRepository;
+        private IGenericRepository<StoreService> _staffAddressServiceRepository;
+        private IGenericRepository<Brand> _storeManagerRepository;
         private IGenericRepository<Tracking> _trackingRepository;
         private IGenericRepository<TrackingFile> _trackingFileRepository;
         private IGenericRepository<VaccineHistory> _vaccineHistoryRepository;
@@ -280,53 +280,53 @@ namespace FluffyPaw_Infrastructure.Repository
             }
         }
 
-        public IGenericRepository<StaffAddress> StaffAddressRepository
+        public IGenericRepository<Store> StaffAddressRepository
         {
             get
             {
 
                 if (_staffAddressRepository == null)
                 {
-                    _staffAddressRepository = new GenericRepository<StaffAddress>(_context);
+                    _staffAddressRepository = new GenericRepository<Store>(_context);
                 }
                 return _staffAddressRepository;
             }
         }
 
-        public IGenericRepository<StaffAddressFile> StaffAddressFileRepository
+        public IGenericRepository<StoreFile> StaffAddressFileRepository
         {
             get
             {
 
                 if (_staffAddressFileRepository == null)
                 {
-                    _staffAddressFileRepository = new GenericRepository<StaffAddressFile>(_context);
+                    _staffAddressFileRepository = new GenericRepository<StoreFile>(_context);
                 }
                 return _staffAddressFileRepository;
             }
         }
 
-        public IGenericRepository<StaffAddressService> StaffAddressServiceRepository
+        public IGenericRepository<StoreService> StaffAddressServiceRepository
         {
             get
             {
 
                 if (_staffAddressServiceRepository == null)
                 {
-                    _staffAddressServiceRepository = new GenericRepository<StaffAddressService>(_context);
+                    _staffAddressServiceRepository = new GenericRepository<StoreService>(_context);
                 }
                 return _staffAddressServiceRepository;
             }
         }
 
-        public IGenericRepository<StoreManager> StoreManagerRepository
+        public IGenericRepository<Brand> StoreManagerRepository
         {
             get
             {
 
                 if (_storeManagerRepository == null)
                 {
-                    _storeManagerRepository = new GenericRepository<StoreManager>(_context);
+                    _storeManagerRepository = new GenericRepository<Brand>(_context);
                 }
                 return _storeManagerRepository;
             }

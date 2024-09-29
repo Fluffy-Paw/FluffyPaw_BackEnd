@@ -76,7 +76,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     Email = account.Account.Email,
                     Phone = account.Phone,
                     Dob = account.Dob,
-                    Reputation = account.Status,
+                    Reputation = account.Reputation,
                     Status = account.Account.Status
                 };
                 result.Add(temp);
@@ -84,7 +84,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<IEnumerable<AccountResponse>> GetStaffAddresses()
+        public async Task<IEnumerable<AccountResponse>> GetStores()
         {
             var user = _unitOfWork.StaffAddressRepository.Get(includeProperties: "Account");
             List<AccountResponse> result = new List<AccountResponse>();
@@ -95,7 +95,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     UserId = account.Account.Id,
                     Username = account.Account.Username,
-                    Fullname = account.StaffAddressName,
+                    Fullname = account.Name,
                     Email = account.Account.Email,
                     Phone = account.Phone,
                     Status = account.Account.Status

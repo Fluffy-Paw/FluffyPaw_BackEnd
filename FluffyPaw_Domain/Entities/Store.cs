@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Domain.Entities
 {
-    public class StaffAddress
+    public class Store
     {
         public long Id { get; set; }
 
         public long AccountId { get; set; }
 
-        public long StoreManagerId { get; set; }
+        public long BrandId { get; set; }
 
-        public string StaffAddressName { get; set; }
+        public string Name { get; set; }
 
         public string Address { get; set; }
 
@@ -26,7 +26,7 @@ namespace FluffyPaw_Domain.Entities
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }
 
-        [ForeignKey("StoreManagerId")]
-        public virtual StoreManager StoreManager { get; set; }
+        [ForeignKey("BrandId")]
+        public virtual Brand Brand { get; set; }
     }
 }

@@ -33,9 +33,9 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public IEnumerable<ServiceResponse> GetAllServiceBySM()
         {
-            var storeManagerId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var brandId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
 
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.StoreManagerId == storeManagerId).ToList();
+            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == brandId).ToList();
 
             if (storeService == null)
             {
@@ -48,7 +48,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public ServiceResponse GetAllServiceBySMId(long id)
         {
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.StoreManagerId == id).ToList();
+            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
 
             if (storeService == null)
             {
@@ -73,7 +73,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var newService = _mapper.Map<Service>(serviceRequest);
-            newService.StoreManagerId = storeManagerId.Id;
+            newService.BrandId = storeManagerId.Id;
 
             _unitOfWork.ServiceRepository.Insert(newService);
             await _unitOfWork.SaveAsync();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.PetResponse
 {
-    public class PetResponse : IMapFrom<Pet>
+    public class PetResponse : IMapFrom<Pet>, IMapFrom<PetType>, IMapFrom<PetCategory>, IMapFrom<BehaviorCategory>
     {
         public long Id { get; set; }
 
@@ -26,22 +26,22 @@ namespace FluffyPaw_Application.DTO.Response.PetResponse
 
         public string? Allergy { get; set; }
 
-        public string MicrochipNumber { get; set; }
+        public string? MicrochipNumber { get; set; }
 
         public string? Decription { get; set; }
 
         public bool IsNeuter { get; set; }
 
-        public string PetCategoryName { get; set; }
-
-        public string PetTypeName { get; set; }
-
-        public string BehaviorCategoryName { get; set; }
-
         public long PetCategoryId { get; set; }
+
+        public PetCategory? PetCategory { get; set; }
 
         public long PetTypeId { get; set; }
 
+        public PetType? PetType { get; set; }
+
         public long BehaviorCategoryId { get; set; }
+
+        public BehaviorCategory? BehaviorCategory { get; set; }
     }
 }
