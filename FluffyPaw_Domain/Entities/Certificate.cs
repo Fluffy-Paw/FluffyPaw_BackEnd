@@ -14,10 +14,15 @@ namespace FluffyPaw_Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
+        public long ServiceId { get; set; } 
+
         public string Name { get; set; }
 
         public string File { get; set; }
 
         public string Description { get; set; }
+
+        [ForeignKey("ServiceId")]
+        public virtual Service Service { get; set; }
     }
 }

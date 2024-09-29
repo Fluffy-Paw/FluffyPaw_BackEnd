@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.AdminRequest;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
+using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.ServiceTypeResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.Services;
@@ -65,6 +66,27 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var storeManager = _unitOfWork.StoreManagerRepository.GetByID(id);
             storeManager.Status = true;
+            _unitOfWork.Save();
+            return true;
+        }
+
+        public async Task<List<ServiceResponse>> GetAllServiceFalseBySMId(long id)
+        {
+            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.StoreManagerId == id && ss.Status == false).ToList();
+
+            if (storeService == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
+            }
+
+            var serviceResponse = _mapper.Map<List<ServiceResponse>>(storeService);
+            return serviceResponse;
+        }
+
+        public async Task<bool> AcceptStoreManagerService(long id)
+        {
+            var service = _unitOfWork.ServiceRepository.GetByID(id);
+            service.Status = true;
             _unitOfWork.Save();
             return true;
         }

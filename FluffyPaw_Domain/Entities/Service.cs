@@ -37,5 +37,7 @@ namespace FluffyPaw_Domain.Entities
 
         [ForeignKey("StoreManagerId")]
         public virtual StoreManager StoreManager { get; set; }
+
+        public ICollection<Certificate> Certificate { get; set; }
     }
 }

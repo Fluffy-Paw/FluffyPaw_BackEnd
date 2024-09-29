@@ -22,7 +22,6 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingRating> BookingRatings { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
-        public DbSet<CertificateService> CertificateServices { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ConversationMessage> ConversationMessages { get; set; }
         public DbSet<Files> Files { get; set; }
@@ -62,14 +61,13 @@ namespace FluffyPaw_Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-
             modelBuilder.Entity<Account>().HasData(
                 new Account { Id = 1, Username = "FluffyPaw", Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", RoleName = "Admin", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 2, Username = "test", Password = "1", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 2, Username = "storemanager1", Password = "6AF8C5285915B1B2B7BE8A61F8F51C9A8B92A71F948F341A4D2F83E49907B2A24E98C5DBA2207AF595AEB471105EE887DC358248D70CF4FF2AFDDDDE9A217FE9", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
                 new Account { Id = 3, Username = "test", Password = "1", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
                 new Account { Id = 4, Username = "test", Password = "1", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
                 new Account { Id = 5, Username = "test", Password = "1", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 6, Username = "test", Password = "1", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
+                new Account { Id = 6, Username = "petowner1", Password = "01D0BA2CB22BF015BECA5E3991ED900ABD6C7A754E0B75EFCF15B79748DDDD6A490C896176898DBCE5B2327D42F6926E69A59871BEE22AEAFA49B5155F6E4C43", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
                 new Account { Id = 7, Username = "test", Password = "1", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true }
                 );
 
@@ -109,11 +107,6 @@ namespace FluffyPaw_Infrastructure.Data
                 new Pet { Id = 2, PetOwnerId = 1, PetCategoryId = 2, PetTypeId = 1, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
                 );
 
-            modelBuilder.Entity<Certificate>().HasData(
-                new Certificate { Id = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
-                new Certificate { Id = 2, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" }
-                );
-
             modelBuilder.Entity<ServiceType>().HasData(
                 new ServiceType { Id = 1, Name = "Service Booking" },
                 new ServiceType { Id = 2, Name = "Service Reservation" }
@@ -131,14 +124,14 @@ namespace FluffyPaw_Infrastructure.Data
                 new Service { Id = 4, ServiceTypeId = 2, StoreManagerId = 1, Name = "Training", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", Status = true }
                 );
 
-            modelBuilder.Entity<CertificateService>().HasData(
-                new CertificateService { Id = 1, CertificateId = 1, ServiceId = 1 },
-                new CertificateService { Id = 2, CertificateId = 2, ServiceId = 4 }
+            modelBuilder.Entity<Certificate>().HasData(
+                new Certificate { Id = 1, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
+                new Certificate { Id = 2, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" }
                 );
 
             modelBuilder.Entity<StaffAddress>().HasData(
-                new StaffAddress { Id = 1, AccountId = 6, StoreManagerId = 1, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f},
-                new StaffAddress { Id = 2, AccountId = 7, StoreManagerId = 2, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f}
+                new StaffAddress { Id = 1, AccountId = 6, StoreManagerId = 1, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f },
+                new StaffAddress { Id = 2, AccountId = 7, StoreManagerId = 2, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f }
                 );
 
             modelBuilder.Entity<StaffAddressService>().HasData(

@@ -45,6 +45,22 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Xác thực hoàn tất.", storemanager);
         }
 
+        [HttpGet("GetAllServiceFalseBySMId/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllServiceFalseBySMId(long id)
+        {
+            var services = await _adminService.GetAllServiceFalseBySMId(id);
+            return CustomResult("Tải dữ liệu thành công.", services);
+        }
+
+        [HttpPatch("AcceptStoreManagerService/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AcceptStoreManagerService(long id)
+        {
+            var storemanagerService = await _adminService.AcceptStoreManagerService(id);
+            return CustomResult("Xác thực hoàn tất.", storemanagerService);
+        }
+
         [HttpGet("GetAllAccount")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllAccount()
