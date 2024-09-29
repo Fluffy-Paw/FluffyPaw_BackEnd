@@ -35,9 +35,9 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
 
-            var storeManagerId = _unitOfWork.StoreManagerRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
+            var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
 
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.StoreManagerId == storeManagerId.Id,
+            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == BrandId.Id,
                 includeProperties: "Certificate").ToList();
 
             if (!storeService.Any())
@@ -51,7 +51,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<ServiceResponse>> GetAllServiceBySMId(long id)
         {
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.StoreManagerId == id).ToList();
+            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
 
             if (storeService == null)
             {
@@ -66,10 +66,10 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
 
-            var storeManagerId = _unitOfWork.StoreManagerRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
+            var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
 
             var existingService = _unitOfWork.ServiceRepository.Get(p => p.Name.ToLower() == serviceRequest.Name.ToLower() 
-            && p.StoreManagerId == storeManagerId.Id).FirstOrDefault();
+            && p.BrandId == BrandId.Id).FirstOrDefault();
 
             if (existingService != null)
             {
@@ -77,7 +77,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var newService = _mapper.Map<Service>(serviceRequest);
-            newService.StoreManagerId = storeManagerId.Id;
+            newService.BrandId = BrandId.Id;
 
             _unitOfWork.ServiceRepository.Insert(newService);
             await _unitOfWork.SaveAsync();

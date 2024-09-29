@@ -24,9 +24,9 @@ namespace FluffyPaw_Domain.Entities
 
         public string Phone { get; set; }
 
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
-        public string Status { get; set; }
+        public string Reputation { get; set; }
 
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }

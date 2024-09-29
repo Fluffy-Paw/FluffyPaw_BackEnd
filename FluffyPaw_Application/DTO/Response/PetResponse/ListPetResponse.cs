@@ -1,0 +1,27 @@
+﻿using FluffyPaw_Application.Mapper;
+using FluffyPaw_Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FluffyPaw_Application.DTO.Response.PetResponse
+{
+    public class ListPetResponse : IMapFrom<Pet>
+    {
+        public long Id { get; set; }
+
+        public string? Image { get; set; }
+
+        public string Name { get; set; }
+
+        public string PetCategory { get; set; }
+
+        public string BehaviorCategory { get; set; }
+
+        public string Sex { get; set; }
+
+        public float Weight { get; set; }
+    }
+}

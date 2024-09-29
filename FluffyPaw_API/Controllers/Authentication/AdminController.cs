@@ -1,7 +1,7 @@
 ﻿using CoreApiResponse;
 using FluffyPaw_Application.DTO.Request.AdminRequest;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
-using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
+using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.Interfaces;
@@ -29,52 +29,52 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Đăng ký thành công.", admin);
         }
 
-        [HttpGet("GetAllStoreManagerFalse")]
+        [HttpGet("GetAllBrandFalse")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetAllStoreManagerFalse()
+        public IActionResult GetAllBrandFalse()
         {
-            var storeManagerResponse = _adminService.GetAllStoreManagerFalse();
-            return CustomResult("Tải dữ liệu thành công.", storeManagerResponse);
+            var BrandResponse = _adminService.GetAllBrandFalse();
+            return CustomResult("Tải dữ liệu thành công.", BrandResponse);
         }
 
-        [HttpPatch("AcceptStoreManager/{id}")]
+        [HttpPatch("AcceptBrand/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AcceptStoreManager(long id)
+        public async Task<IActionResult> AcceptBrand(long id)
         {
-            var storemanager = await _adminService.AcceptStoreManager(id);
-            return CustomResult("Xác thực hoàn tất.", storemanager);
+            var Brand = await _adminService.AcceptBrand(id);
+            return CustomResult("Xác thực hoàn tất.", Brand);
         }
 
-        [HttpGet("GetAllServiceFalseBySMId/{id}")]
+        [HttpGet("GetAllServiceFalseByBrandId/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllServiceFalseBySMId(long id)
+        public async Task<IActionResult> GetAllServiceFalseByBrandId(long id)
         {
-            var services = await _adminService.GetAllServiceFalseBySMId(id);
+            var services = await _adminService.GetAllServiceFalseByBrandId(id);
             return CustomResult("Tải dữ liệu thành công.", services);
         }
 
-        [HttpPatch("AcceptStoreManagerService/{id}")]
+        [HttpPatch("AcceptBrandService/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AcceptStoreManagerService(long id)
+        public async Task<IActionResult> AcceptBrandService(long id)
         {
-            var storemanagerService = await _adminService.AcceptStoreManagerService(id);
-            return CustomResult("Xác thực hoàn tất.", storemanagerService);
+            var BrandService = await _adminService.AcceptBrandService(id);
+            return CustomResult("Xác thực hoàn tất.", BrandService);
         }
 
-        [HttpGet("GetAllAccount")]
+        /*[HttpGet("GetAllAccount")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllAccount()
         {
             var account = _adminService.GetAllAccounts();
             return CustomResult("Tải dữ liệu thành công.", account);
-        }
+        }*/
 
         [HttpPatch("ActiveDeactiveAccount/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActiveDeactiveAccount(long id)
         {
-            var storemanager = await _adminService.ActiveDeactiveAccount(id);
-            if (storemanager) return CustomResult("Đã chuyển thành Active.");
+            var Brand = await _adminService.ActiveDeactiveAccount(id);
+            if (Brand) return CustomResult("Đã chuyển thành Active.");
             else return CustomResult("Đã chuyển thành Deactive");
         }
     }

@@ -26,6 +26,6 @@ namespace FluffyPaw_Domain.Entities
         public virtual PetOwner PetOwner { get; set; }
 
         [ForeignKey("StaffAddressId")]
-        public virtual StaffAddress StaffAdddress { get; set; }
+        public virtual Store StaffAdddress { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,10 +35,10 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceFile> ServiceFiles { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
-        public DbSet<StaffAddress> StaffAddresses { get; set; }
-        public DbSet<StaffAddressFile> StaffAddressFiles { get; set; }
-        public DbSet<StaffAddressService> StaffAddressServices { get; set; }
-        public DbSet<StoreManager> StoreManagers { get; set; }
+        public DbSet<Store> Stores { get; set; }
+        public DbSet<StoreFile> StoreFiles { get; set; }
+        public DbSet<StoreService> StoreServices { get; set; }
+        public DbSet<Brand> Brands { get; set; }
         public DbSet<Tracking> Trackings { get; set; }
         public DbSet<TrackingFile> TrackingFiles { get; set; }
         public DbSet<VaccineHistory> VaccineHistories { get; set; }
@@ -62,13 +63,13 @@ namespace FluffyPaw_Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Account>().HasData(
-                new Account { Id = 1, Username = "FluffyPaw", Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", RoleName = "Admin", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 2, Username = "storemanager1", Password = "6AF8C5285915B1B2B7BE8A61F8F51C9A8B92A71F948F341A4D2F83E49907B2A24E98C5DBA2207AF595AEB471105EE887DC358248D70CF4FF2AFDDDDE9A217FE9", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 3, Username = "test", Password = "1", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 4, Username = "test", Password = "1", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 5, Username = "test", Password = "1", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 6, Username = "petowner1", Password = "01D0BA2CB22BF015BECA5E3991ED900ABD6C7A754E0B75EFCF15B79748DDDD6A490C896176898DBCE5B2327D42F6926E69A59871BEE22AEAFA49B5155F6E4C43", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true },
-                new Account { Id = 7, Username = "test", Password = "1", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = true }
+                new Account { Id = 1, Username = "FluffyPaw", Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", RoleName = "Admin", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 2, Username = "test1", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Brand", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 3, Username = "test2", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Brand", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 4, Username = "test3", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 5, Username = "test4", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 6, Username = "test5", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 7, Username = "test6", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active }
                 );
 
             modelBuilder.Entity<Wallet>().HasData(
@@ -80,16 +81,16 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<BehaviorCategory>().HasData(
-                new BehaviorCategory { Id = 1, Name = "Chạy vòng tròn trước khi nằm xuống" },
+                new BehaviorCategory { Id = 1, Name = "Chạy vòng tròn trước khi nằm xuống"},
                 new BehaviorCategory { Id = 2, Name = "Liếm mặt chủ" },
-                new BehaviorCategory { Id = 3, Name = "Rung lắc đuôi khi vui mừng" },
+                new BehaviorCategory { Id = 3, Name = "Rung lắc đuôi khi vui mừng"},
                 new BehaviorCategory { Id = 4, Name = "Gầm gừ khi cảm thấy bị đe dọa" },
                 new BehaviorCategory { Id = 5, Name = "Cào móng để đánh dấu lãnh thổ" }
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(
-                new PetOwner { Id = 1, AccountId = 6, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow, Phone = "1234567890", Address = "test", Status = "Active" },
-                new PetOwner { Id = 2, AccountId = 7, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow, Phone = "0123456789", Address = "test", Status = "Active" }
+                new PetOwner { Id = 1, AccountId = 6, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow, Phone = "1234567890", Address = "test", Reputation = "Good" },
+                new PetOwner { Id = 2, AccountId = 7, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow, Phone = "0123456789", Address = "test", Reputation = "Good" }
                 );
 
             modelBuilder.Entity<PetCategory>().HasData(
@@ -98,30 +99,64 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<PetType>().HasData(
-                new PetType { Id = 1, Name = "Cho Phu Quoc", Image = "None", Status = true },
-                new PetType { Id = 2, Name = "Meo Tam The", Image = "None", Status = true }
+                new PetType { Id = 1, PetCategoryId = 1, Name = "Chó Chihuahua", Image = "None" },
+                new PetType { Id = 2, PetCategoryId = 1, Name = "Chó Bắc Kinh", Image = "None" },
+                new PetType { Id = 3, PetCategoryId = 1, Name = "Chó Bắc Kinh lai Nhật", Image = "None" },
+                new PetType { Id = 4, PetCategoryId = 1, Name = "Chó Dachshund (Lạp Xưởng/Xúc Xích)", Image = "None" },
+                new PetType { Id = 5, PetCategoryId = 1, Name = "Chó Phú Quốc", Image = "None" },
+                new PetType { Id = 6, PetCategoryId = 1, Name = "Chó Poodle", Image = "None" },
+                new PetType { Id = 7, PetCategoryId = 1, Name = "Chó Pug", Image = "None" },
+                new PetType { Id = 8, PetCategoryId = 1, Name = "Chó Alaska", Image = "None" },
+                new PetType { Id = 9, PetCategoryId = 1, Name = "Chó Husky", Image = "None" },
+                new PetType { Id = 10, PetCategoryId = 1, Name = "Chó Samoyed", Image = "None" },
+                new PetType { Id = 11, PetCategoryId = 1, Name = "Chó Pomeranian (Phốc sóc)", Image = "None" },
+                new PetType { Id = 12, PetCategoryId = 1, Name = "Chó Beagle", Image = "None" },
+                new PetType { Id = 13, PetCategoryId = 1, Name = "Chó Shiba Inu", Image = "None" },
+                new PetType { Id = 14, PetCategoryId = 1, Name = "Chó Golden Retriever", Image = "None" },
+                new PetType { Id = 15, PetCategoryId = 1, Name = "Chó Becgie", Image = "None" },
+                new PetType { Id = 16, PetCategoryId = 1, Name = "Chó Corgi", Image = "None" },
+                new PetType { Id = 17, PetCategoryId = 1, Name = "Chó Mông Cộc", Image = "None" },
+                new PetType { Id = 18, PetCategoryId = 2, Name = "Mèo Xiêm", Image = "None" },
+                new PetType { Id = 19, PetCategoryId = 2, Name = "Mèo Anh lông ngắn", Image = "None" },
+                new PetType { Id = 20, PetCategoryId = 2, Name = "Mèo Anh lông dài", Image = "None" },
+                new PetType { Id = 21, PetCategoryId = 2, Name = "Mèo Ai Cập", Image = "None" },
+                new PetType { Id = 22, PetCategoryId = 2, Name = "Mèo Ba Tư", Image = "None" },
+                new PetType { Id = 23, PetCategoryId = 2, Name = "Mèo Bali", Image = "None" },
+                new PetType { Id = 24, PetCategoryId = 2, Name = "Mèo Bengal", Image = "None" },
+                new PetType { Id = 25, PetCategoryId = 2, Name = "Mèo Scottish Fold", Image = "None" },
+                new PetType { Id = 26, PetCategoryId = 2, Name = "Mèo Munchkin", Image = "None" },
+                new PetType { Id = 27, PetCategoryId = 2, Name = "Mèo mướp", Image = "None" },
+                new PetType { Id = 28, PetCategoryId = 2, Name = "Mèo Ragdoll", Image = "None" },
+                new PetType { Id = 29, PetCategoryId = 2, Name = "Mèo Maine Coon", Image = "None" },
+                new PetType { Id = 30, PetCategoryId = 2, Name = "Mèo Angora", Image = "None" },
+                new PetType { Id = 31, PetCategoryId = 2, Name = "Mèo Laperm", Image = "None" },
+                new PetType { Id = 32, PetCategoryId = 2, Name = "Mèo Somali", Image = "None" },
+                new PetType { Id = 33, PetCategoryId = 2, Name = "Mèo Toyger", Image = "None" },
+                new PetType { Id = 34, PetCategoryId = 2, Name = "Mèo Turkish Van", Image = "None" },
+                new PetType { Id = 35, PetCategoryId = 2, Name = "Mèo Miến Điện", Image = "None" },
+                new PetType { Id = 36, PetCategoryId = 2, Name = "Mèo Exotic", Image = "None" }
                 );
 
             modelBuilder.Entity<Pet>().HasData(
-                new Pet { Id = 1, PetOwnerId = 1, PetCategoryId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test", IsNeuter = true, Status = "Available" },
-                new Pet { Id = 2, PetOwnerId = 1, PetCategoryId = 2, PetTypeId = 1, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = CoreHelper.SystemTimeNow, Allergy = "None", MicrochipNumber = "None", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
+                new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTime.Parse("2022-08-23"), Allergy = "None", MicrochipNumber = "None", Decription = "test", IsNeuter = true, Status = "Available" },
+                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 18, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = DateTime.Parse("2022-10-23"), Allergy = "None", MicrochipNumber = "None", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
                 );
 
             modelBuilder.Entity<ServiceType>().HasData(
-                new ServiceType { Id = 1, Name = "Service Booking" },
-                new ServiceType { Id = 2, Name = "Service Reservation" }
+                new ServiceType { Id = 1, Name = "Grooming", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s" },
+                new ServiceType { Id = 2, Name = "Vaccine", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s" }
                 );
 
-            modelBuilder.Entity<StoreManager>().HasData(
-                new StoreManager { Id = 1, AccountId = 2, Name = "StoreA", BusinessLicense = "None", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", Status = true },
-                new StoreManager { Id = 2, AccountId = 3, Name = "StoreB", BusinessLicense = "None", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Status = true }
+            modelBuilder.Entity<Brand>().HasData(
+                new Brand { Id = 1, AccountId = 2, Name = "StoreA", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "None", Status = true },
+                new Brand { Id = 2, AccountId = 3, Name = "StoreB", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "None" , Status = true }
                 );
 
             modelBuilder.Entity<Service>().HasData(
-                new Service { Id = 1, ServiceTypeId = 1, StoreManagerId = 1, Name = "Grooming", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", Status = true },
-                new Service { Id = 2, ServiceTypeId = 2, StoreManagerId = 1, Name = "Vaccine", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", Status = true },
-                new Service { Id = 3, ServiceTypeId = 1, StoreManagerId = 1, Name = "Hotel", Duration = TimeSpan.Zero, Cost = 100000, Description = "test", Status = true },
-                new Service { Id = 4, ServiceTypeId = 2, StoreManagerId = 1, Name = "Training", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", Status = true }
+                new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Grooming", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", Status = true },
+                new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Vaccine", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", Status = true },
+                new Service { Id = 3, ServiceTypeId = 1, BrandId = 1, Name = "Hotel", Duration = TimeSpan.Zero, Cost = 100000, Description = "test", Status = true },
+                new Service { Id = 4, ServiceTypeId = 2, BrandId = 1, Name = "Training", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", Status = true }
                 );
 
             modelBuilder.Entity<Certificate>().HasData(
@@ -129,18 +164,18 @@ namespace FluffyPaw_Infrastructure.Data
                 new Certificate { Id = 2, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" }
                 );
 
-            modelBuilder.Entity<StaffAddress>().HasData(
-                new StaffAddress { Id = 1, AccountId = 6, StoreManagerId = 1, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f },
-                new StaffAddress { Id = 2, AccountId = 7, StoreManagerId = 2, Address = "aaa", Phone = "0192837465", TotalRating = 5.0f }
+            modelBuilder.Entity<Store>().HasData(
+                new Store { Id = 1, AccountId = 6, BrandId = 1, Address = "aaa", Name = "Name" , Phone = "0192837465", TotalRating = 5.0f},
+                new Store { Id = 2, AccountId = 7, BrandId = 2, Address = "aaa", Name = "Name" , Phone = "0192837465", TotalRating = 5.0f}
                 );
 
-            modelBuilder.Entity<StaffAddressService>().HasData(
-                new StaffAddressService { Id = 1, StaffAddressId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow, LimitPetOwner = 5, CurrentPetOwner = 0, TotalRating = 5.0F, Status = "Aceepted" },
-                new StaffAddressService { Id = 2, StaffAddressId = 2, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow, LimitPetOwner = 10, CurrentPetOwner = 0, TotalRating = 5.0F, Status = "Aceepted" }
+            modelBuilder.Entity<StoreService>().HasData(
+                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow, LimitPetOwner = 5, CurrentPetOwner = 0, Status = "Acepted" },
+                new StoreService { Id = 2, StoreId = 2, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow, LimitPetOwner = 10, CurrentPetOwner = 0, Status = "Acepted" }
                 );
 
             modelBuilder.Entity<Booking>().HasData(
-                new Booking { Id = 1, PetId = 1, StaffAddressServiceId = 1, PaymentMethod = "PayOS", Cost = 100000, Description = "test", CreateDate = CoreHelper.SystemTimeNow, StartTime = CoreHelper.SystemTimeNow, EndTime = CoreHelper.SystemTimeNow, Status = "Accept" }
+                new Booking { Id = 1, PetId = 1, StoreServiceId = 1, PaymentMethod = "PayOS", Cost = 100000, Description = "test", CreateDate = CoreHelper.SystemTimeNow, StartTime = CoreHelper.SystemTimeNow, EndTime = CoreHelper.SystemTimeNow, Status = "Accept" }
                 );
 
             modelBuilder.Entity<BookingRating>().HasData(

@@ -21,7 +21,7 @@ namespace FluffyPaw_Application.Services
         Task<List<ServiceResponse>> GetAllServiceFalseBySMId(long id);
         Task<bool> AcceptStoreManagerService(long id);
         Task<bool> ActiveDeactiveAccount(long userId);
-        Task<IEnumerable<Account>> GetAllAccounts();
+        
     }
 }
     

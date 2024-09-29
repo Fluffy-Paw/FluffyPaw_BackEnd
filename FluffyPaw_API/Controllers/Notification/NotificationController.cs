@@ -18,14 +18,14 @@ namespace FluffyPaw_API.Controllers.Notification
         }
 
         [HttpGet("GetNotification")]
-        public async Task<IActionResult> GetAllNotification(long userId, int numberNoti)
+        public async Task<IActionResult> GetAllNotification(int numberNoti)
         {
-            var noti = await _notificationService.GetNotifications(userId, numberNoti);
+            var noti = await _notificationService.GetNotifications(numberNoti);
             return CustomResult("Thông báo của bạn:", noti);
         }
 
         [HttpPost("CreateNotification")]
-        public async Task<IActionResult> CreateNotification([FromBody] NotificationRequest notiRequest)
+        public async Task<IActionResult> CreateNotification([FromForm] NotificationRequest notiRequest)
         {
             var noti = await _notificationService.CreateNotification(notiRequest);
             return CustomResult("Tạo thông báo thành công.", noti);
@@ -39,9 +39,9 @@ namespace FluffyPaw_API.Controllers.Notification
         }
 
         [HttpPatch("ChangeNotificationStatus")]
-        public async Task<IActionResult> ChangeNotificationStatus(long receiverId)
+        public async Task<IActionResult> ChangeNotificationStatus()
         {
-            var noti = await _notificationService.ChangeNotificationStatus(receiverId);
+            var noti = await _notificationService.ChangeNotificationStatus();
             return CustomResult("Toàn bộ thông báo đã được đọc.", noti);
         }
     }

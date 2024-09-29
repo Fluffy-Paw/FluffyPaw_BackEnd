@@ -27,10 +27,10 @@ namespace FluffyPaw_Domain.Interfaces
         public IGenericRepository<Service> ServiceRepository { get; }
         public IGenericRepository<ServiceFile> ServiceFileRepository { get; }
         public IGenericRepository<ServiceType> ServiceTypeRepository { get; }
-        public IGenericRepository<StaffAddress> StaffAddressRepository { get; }
-        public IGenericRepository<StaffAddressFile> StaffAddressFileRepository { get; }
-        public IGenericRepository<StaffAddressService> StaffAddressServiceRepository { get; }
-        public IGenericRepository<StoreManager> StoreManagerRepository { get; }
+        public IGenericRepository<Store> StaffAddressRepository { get; }
+        public IGenericRepository<StoreFile> StaffAddressFileRepository { get; }
+        public IGenericRepository<StoreService> StaffAddressServiceRepository { get; }
+        public IGenericRepository<Brand> StoreManagerRepository { get; }
         public IGenericRepository<Tracking> TrackingRepository { get; }
         public IGenericRepository<TrackingFile> TrackingFileRepository { get; }
         public IGenericRepository<VaccineHistory> VaccineHistoryRepository { get; }

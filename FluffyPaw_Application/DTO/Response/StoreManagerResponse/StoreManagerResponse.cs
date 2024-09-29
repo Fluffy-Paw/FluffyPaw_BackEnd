@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
 {
-    public class StoreManagerResponse : IMapFrom<StoreManager>
+    public class StoreManagerResponse : IMapFrom<Brand>
     {
         public long Id { get; set; }
 

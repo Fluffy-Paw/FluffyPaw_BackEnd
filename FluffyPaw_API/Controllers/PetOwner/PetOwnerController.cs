@@ -2,6 +2,7 @@
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FluffyPaw_API.Controllers.PetOwner
@@ -18,14 +19,14 @@ namespace FluffyPaw_API.Controllers.PetOwner
         }
 
         [HttpGet("GetPetOwnerDetail")]
-        public async Task<IActionResult> GetPetOwnerDetail(long id)
+        public async Task<IActionResult> GetPetOwnerDetail()
         {
-            var po = await _petOwnerService.GetPetOwnerDetail(id);
+            var po = await _petOwnerService.GetPetOwnerDetail();
             return CustomResult("Lấy thông tin thành công.", po);
         }
 
         [HttpPatch("UpdatePetOwnerAccount")]
-        public async Task<IActionResult> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
+        public async Task<IActionResult> UpdatePetOwnerAccount([FromForm] PetOwnerRequest petOwnerRequest)
         {
             var po = await _petOwnerService.UpdatePetOwnerAccount(petOwnerRequest);
             return CustomResult("Cập nhật thành công.", po);
