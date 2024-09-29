@@ -23,7 +23,7 @@ namespace FluffyPaw_API.Controllers.Service
         }
 
         [HttpGet("GetAllServiceBySM")]
-        [Authorize(Roles = "StoreManager")]
+        [Authorize(Roles = "Brand")]
         public async Task<IActionResult> GetAllServiceBySM()
         {
             var services = await _SerService.GetAllServiceBySM();
@@ -40,7 +40,7 @@ namespace FluffyPaw_API.Controllers.Service
         }
 
         [HttpPost("CreateService")]
-        [Authorize(Roles = "StoreManager")]
+        [Authorize(Roles = "Brand")]
         public async Task<IActionResult> CreateService([FromForm] ServiceRequest serviceRequest)
         {
             ServiceResponse service = await _SerService.CreateService(serviceRequest);
@@ -48,7 +48,7 @@ namespace FluffyPaw_API.Controllers.Service
         }
 
         [HttpPatch("UpdateService/{id}")]
-        [Authorize(Roles = "StoreManager")]
+        [Authorize(Roles = "Brand")]
         public async Task<IActionResult> UpdateService(long id, [FromForm] UpdateServiceRequest updateServiceRequest)
         {
             UpdateServiceResponse service = await _SerService.UpdateService(id, updateServiceRequest);
@@ -56,7 +56,7 @@ namespace FluffyPaw_API.Controllers.Service
         }
 
         [HttpDelete("DeleteService/{id}")]
-        [Authorize(Roles = "Admin,StoreManager")]
+        [Authorize(Roles = "Admin,Brand")]
         public async Task<IActionResult> DeleteService(long id)
         {
             var serviceType = await _SerService.DeleteService(id);

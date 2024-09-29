@@ -3,7 +3,7 @@ using FluffyPaw_Application.DTO.Request.AdminRequest;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.ServiceTypeResponse;
-using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
+using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
@@ -56,35 +56,35 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public IEnumerable<StoreManagerResponse> GetAllStoreManagerFalse()
+        public IEnumerable<BrandResponse> GetAllBrandFalse()
         {
-            var storeManagers = _unitOfWork.StoreManagerRepository.Get().Where(sm => sm.Status == false).ToList();
-            var storeManagerResponses = _mapper.Map<IEnumerable<StoreManagerResponse>>(storeManagers);
-            return storeManagerResponses;
+            var brands = _unitOfWork.BrandRepository.Get().Where(sm => sm.Status == false).ToList();
+            var brandResponses = _mapper.Map<IEnumerable<BrandResponse>>(brands);
+            return brandResponses;
         }
 
-        public async Task<bool> AcceptStoreManager(long id)
+        public async Task<bool> AcceptBrand(long id)
         {
-            var storeManager = _unitOfWork.StoreManagerRepository.GetByID(id);
-            storeManager.Status = true;
+            var Brand = _unitOfWork.BrandRepository.GetByID(id);
+            Brand.Status = true;
             _unitOfWork.Save();
             return true;
         }
 
-        public async Task<List<ServiceResponse>> GetAllServiceFalseBySMId(long id)
+        public async Task<List<ServiceResponse>> GetAllServiceFalseByBrandId(long id)
         {
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.StoreManagerId == id && ss.Status == false).ToList();
+            var brandService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id && ss.Status == false).ToList();
 
-            if (storeService == null)
+            if (brandService == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<List<ServiceResponse>>(storeService);
+            var serviceResponse = _mapper.Map<List<ServiceResponse>>(brandService);
             return serviceResponse;
         }
 
-        public async Task<bool> AcceptStoreManagerService(long id)
+        public async Task<bool> AcceptBrandService(long id)
         {
             var service = _unitOfWork.ServiceRepository.GetByID(id);
             service.Status = true;

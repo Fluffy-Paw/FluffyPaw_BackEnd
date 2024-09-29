@@ -94,7 +94,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var sm = _mapper.Map<Brand>(registerAccountSMRequest);
             sm.AccountId = account.Id;
             sm.Status = false;
-            _unitOfWork.StoreManagerRepository.Insert(sm);
+            _unitOfWork.BrandRepository.Insert(sm);
 
             return true;
         }

@@ -25,17 +25,17 @@ namespace FluffyPaw_API.Controllers.Account
             return CustomResult("Tải dữ liệu thành công.", account);
         }
 
-        [HttpGet("GetStoreManagers")]
+        [HttpGet("GetBrands")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetStoreManagers()
+        public IActionResult GetBrands()
         {
-            var account = _accountService.GetStoreManagers();
+            var account = _accountService.GetBrands();
             return CustomResult("Tải dữ liệu thành công.", account);
         }
 
         [HttpGet("GetStores")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetStaffAddresses()
+        public IActionResult GetStorees()
         {
             var account = _accountService.GetStores();
             return CustomResult("Tải dữ liệu thành công.", account);

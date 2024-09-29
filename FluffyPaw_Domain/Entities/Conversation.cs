@@ -16,7 +16,7 @@ namespace FluffyPaw_Domain.Entities
 
         public long PetOwnerId { get; set; }
 
-        public long StaffAddressId { get; set; }
+        public long StoreId { get; set; }
 
         public string LastMessege { get; set; }
 
@@ -25,7 +25,7 @@ namespace FluffyPaw_Domain.Entities
         [ForeignKey("PetOwnerId")]
         public virtual PetOwner PetOwner { get; set; }
 
-        [ForeignKey("StaffAddressId")]
-        public virtual Store StaffAdddress { get; set; }
+        [ForeignKey("StoreId")]
+        public virtual Store Store { get; set; }
     }
 }
