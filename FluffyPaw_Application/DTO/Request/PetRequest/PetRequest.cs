@@ -9,11 +9,9 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Request.PetRequest
 {
-    public class PetRequest : IMapFrom<Pet>, IMapFrom<PetCategory>, IMapFrom<PetType>, IMapFrom<BehaviorCategory>
+    public class PetRequest : IMapFrom<Pet>, IMapFrom<PetType>, IMapFrom<BehaviorCategory>
     {
-        public string? Image {  get; set; }
-
-        public long PetCategoryId { get; set; }
+        public IFormFile? Image {  get; set; }
 
         public long PetTypeId { get; set; }
 
@@ -29,7 +27,7 @@ namespace FluffyPaw_Application.DTO.Request.PetRequest
 
         public string? Allergy { get; set; }
 
-        public string MicrochipNumber { get; set; }
+        public string? MicrochipNumber { get; set; }
 
         public string? Decription { get; set; }
 

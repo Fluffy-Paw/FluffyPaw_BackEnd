@@ -17,7 +17,7 @@ namespace FluffyPaw_Domain.Entities
 
         public long PetId { get; set; }
 
-        public long StaffAddressServiceId { get; set; }
+        public long StoreServiceId { get; set; }
 
         public string PaymentMethod { get; set; }
 
@@ -31,6 +31,8 @@ namespace FluffyPaw_Domain.Entities
 
         public DateTimeOffset EndTime { get; set; }
 
+        public bool Checkin { get; set; }
+
         public DateTimeOffset CheckinTime { get; set; }
 
         public string Status { get; set; }
@@ -38,8 +40,8 @@ namespace FluffyPaw_Domain.Entities
         [ForeignKey("PetId")]
         public virtual Pet Pet { get; set; }
 
-        [ForeignKey("StaffAddressServiceId")]
-        public virtual StaffAddressService StaffAddressService { get; set; }
+        [ForeignKey("StoreServiceId")]
+        public virtual StoreService StoreService { get; set; }
 
         public Booking()
         {

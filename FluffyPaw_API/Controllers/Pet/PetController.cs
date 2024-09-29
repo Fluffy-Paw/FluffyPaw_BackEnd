@@ -32,14 +32,14 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpPost("AddPet")]
-        public async Task<IActionResult> AddPet([FromBody] PetRequest petRequest)
+        public async Task<IActionResult> AddPet([FromForm] PetRequest petRequest)
         {
             var pet = await _petService.CreateNewPet(petRequest);
             return CustomResult("Thêm thú cưng thành công.", pet);
         }
 
         [HttpPatch("UpdatePet")]
-        public async Task<IActionResult> UpdatePet(long petId, [FromBody] PetRequest petRequest)
+        public async Task<IActionResult> UpdatePet(long petId, [FromForm] PetRequest petRequest)
         {
             var pet = await _petService.UpdatePet(petId, petRequest);
             return CustomResult("Cập nhật thú cưng thành công.", pet);
@@ -50,20 +50,6 @@ namespace FluffyPaw_API.Controllers.Pet
         {
             var pet = await _petService.DeletePet(petId);
             return CustomResult("Xóa thú cưng thành công.", pet);
-        }
-
-        [HttpGet("GetAllPetCategory")]
-        public async Task<IActionResult> GetAllPetCategory()
-        {
-            var pet = await _petService.GetAllPetCategory();
-            return CustomResult("Loại pet:", pet);
-        }
-
-        [HttpGet("GetPetCategory")]
-        public async Task<IActionResult> GetPetCategory(long petCategoryId)
-        {
-            var pet = await _petService.GetPetCategory(petCategoryId);
-            return CustomResult("Loại pet:", pet);
         }
 
         [HttpGet("GetAllPetType")]

@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.AdminRequest;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
+using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.ServiceTypeResponse;
-using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
+using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Repository.Enum;
 using System;
@@ -40,7 +42,7 @@ namespace FluffyPaw_Application.ServiceImplements
             account.RoleName = RoleName.Admin.ToString();
             account.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             account.Password = _hashing.SHA512Hash(adminRequest.Password);
-            account.Status = true;
+            account.Status = (int) AccountStatus.Active;
             _unitOfWork.AccountRepository.Insert(account);
             _unitOfWork.Save();
 
@@ -54,17 +56,38 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public IEnumerable<StoreManagerResponse> GetAllStoreManagerFalse()
+        public IEnumerable<BrandResponse> GetAllBrandFalse()
         {
-            var storeManagers = _unitOfWork.StoreManagerRepository.Get().Where(sm => sm.Status == false).ToList();
-            var storeManagerResponses = _mapper.Map<IEnumerable<StoreManagerResponse>>(storeManagers);
-            return storeManagerResponses;
+            var brands = _unitOfWork.BrandRepository.Get().Where(sm => sm.Status == false).ToList();
+            var brandResponses = _mapper.Map<IEnumerable<BrandResponse>>(brands);
+            return brandResponses;
         }
 
-        public async Task<bool> AcceptStoreManager(long id)
+        public async Task<bool> AcceptBrand(long id)
         {
-            var storeManager = _unitOfWork.StoreManagerRepository.GetByID(id);
-            storeManager.Status = true;
+            var Brand = _unitOfWork.BrandRepository.GetByID(id);
+            Brand.Status = true;
+            _unitOfWork.Save();
+            return true;
+        }
+
+        public async Task<List<ServiceResponse>> GetAllServiceFalseByBrandId(long id)
+        {
+            var brandService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id && ss.Status == false).ToList();
+
+            if (brandService == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
+            }
+
+            var serviceResponse = _mapper.Map<List<ServiceResponse>>(brandService);
+            return serviceResponse;
+        }
+
+        public async Task<bool> AcceptBrandService(long id)
+        {
+            var service = _unitOfWork.ServiceRepository.GetByID(id);
+            service.Status = true;
             _unitOfWork.Save();
             return true;
         }
@@ -77,15 +100,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy người dùng");
             }
 
-            if (user.Status == true)
+            if (user.Status == (int)AccountStatus.Active)
             {
-                user.Status = false;
-            } else user.Status = true;
+                user.Status = (int)AccountStatus.Deactive;
+            } else user.Status = (int)AccountStatus.Active;
             _unitOfWork.Save();
 
-            return user.Status;
+            return true;
         }
-
-        
     }
 }

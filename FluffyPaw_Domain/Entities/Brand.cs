@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Domain.Entities
 {
-    public class StoreManager
+    public class Brand
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,7 +20,11 @@ namespace FluffyPaw_Domain.Entities
 
         public string Logo { get; set; }
 
+        public string Hotline { get; set; }
+
         public string BusinessLicense { get; set; }
+
+        public string MST {  get; set; }
 
         public bool Status { get; set; }
 

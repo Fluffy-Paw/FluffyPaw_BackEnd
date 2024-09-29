@@ -15,51 +15,51 @@ namespace FluffyPaw_API.Controllers.Service
     [ApiController]
     public class ServiceController : BaseController
     {
-        private readonly IServiceService _serviceService;
+        private readonly ISerService _SerService;
 
-        public ServiceController(IServiceService serviceService)
+        public ServiceController(ISerService SerService)
         {
-            _serviceService = serviceService;
+            _SerService = SerService;
         }
 
         [HttpGet("GetAllServiceBySM")]
-        [Authorize(Roles = "StoreManager")]
-        public IActionResult GetAllServiceBySM()
+        [Authorize(Roles = "Brand")]
+        public async Task<IActionResult> GetAllServiceBySM()
         {
-            var services = _serviceService.GetAllServiceBySM();
+            var services = await _SerService.GetAllServiceBySM();
             return CustomResult("Tải dữ liệu thành công.", services);
         }
 
 
         [HttpGet("GetAllServiceBySMId/{id}")]
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "Staff")]
         public IActionResult GetAllServiceBySMId(long id)
         {
-            var services = _serviceService.GetAllServiceBySMId(id);
+            var services = _SerService.GetAllServiceBySMId(id);
             return CustomResult("Tải dữ liệu thành công.", services);
         }
 
         [HttpPost("CreateService")]
-        [Authorize(Roles = "StoreManager")]
-        public async Task<IActionResult> CreateService(ServiceRequest serviceRequest)
+        [Authorize(Roles = "Brand")]
+        public async Task<IActionResult> CreateService([FromForm] ServiceRequest serviceRequest)
         {
-            ServiceResponse service = await _serviceService.CreateService(serviceRequest);
+            ServiceResponse service = await _SerService.CreateService(serviceRequest);
             return CustomResult("Tạo dịch vụ thành công. Vui lòng chờ hệ thống xác thực", service);
         }
 
         [HttpPatch("UpdateService/{id}")]
-        [Authorize(Roles = "StoreManager")]
-        public async Task<IActionResult> UpdateService(long id, UpdateServiceRequest updateServiceRequest)
+        [Authorize(Roles = "Brand")]
+        public async Task<IActionResult> UpdateService(long id, [FromForm] UpdateServiceRequest updateServiceRequest)
         {
-            UpdateServiceResponse service = await _serviceService.UpdateService(id, updateServiceRequest);
+            UpdateServiceResponse service = await _SerService.UpdateService(id, updateServiceRequest);
             return CustomResult("Cập nhật dịch vụ thành công. Vui lòng chờ hệ thống xác thực", service);
         }
 
         [HttpDelete("DeleteService/{id}")]
-        [Authorize(Roles = "Admin,StoreManager")]
+        [Authorize(Roles = "Admin,Brand")]
         public async Task<IActionResult> DeleteService(long id)
         {
-            var serviceType = await _serviceService.DeleteService(id);
+            var serviceType = await _SerService.DeleteService(id);
             return CustomResult("Xóa dịch vụ thành công.");
         }
     }

@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluffyPaw_Application.DTO.Request
+namespace FluffyPaw_Domain.Enums
 {
-    public class BrandRequest
+    public enum AccountReputation
     {
+        Good,
+        Warning,
+        Ban
     }
 }

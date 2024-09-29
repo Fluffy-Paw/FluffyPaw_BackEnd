@@ -25,7 +25,7 @@ namespace FluffyPaw_API.Controllers.Notification
         }
 
         [HttpPost("CreateNotification")]
-        public async Task<IActionResult> CreateNotification([FromBody] NotificationRequest notiRequest)
+        public async Task<IActionResult> CreateNotification([FromForm] NotificationRequest notiRequest)
         {
             var noti = await _notificationService.CreateNotification(notiRequest);
             return CustomResult("Tạo thông báo thành công.", noti);

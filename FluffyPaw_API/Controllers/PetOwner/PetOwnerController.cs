@@ -26,7 +26,7 @@ namespace FluffyPaw_API.Controllers.PetOwner
         }
 
         [HttpPatch("UpdatePetOwnerAccount")]
-        public async Task<IActionResult> UpdatePetOwnerAccount([FromBody] PetOwnerRequest petOwnerRequest)
+        public async Task<IActionResult> UpdatePetOwnerAccount([FromForm] PetOwnerRequest petOwnerRequest)
         {
             var po = await _petOwnerService.UpdatePetOwnerAccount(petOwnerRequest);
             return CustomResult("Cập nhật thành công.", po);

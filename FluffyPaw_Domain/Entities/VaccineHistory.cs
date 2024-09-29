@@ -16,7 +16,7 @@ namespace FluffyPaw_Domain.Entities
 
         public long PetId { get; set; }
 
-        public string Image { get; set; }
+        public string? Image { get; set; }
 
         public float PetCurrentWeight { get; set; }
 

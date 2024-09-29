@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Request.AuthRequest
 {
-    public class RegisterAccountSMRequest : IMapFrom<Account>, IMapFrom<StoreManager>
+    public class RegisterAccountSMRequest : IMapFrom<Account>, IMapFrom<Brand>
     {
         [Required(ErrorMessage = "Vui lòng nhập Username.")]
         public string UserName { get; set; }

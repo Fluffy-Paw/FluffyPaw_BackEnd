@@ -4,6 +4,7 @@ using FluffyPaw_Application.DTO.Response.AuthResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
@@ -49,7 +50,7 @@ namespace FluffyPaw_Application.ServiceImplements
             account.RoleName = RoleName.PetOwner.ToString();
             account.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             account.Password = _hashing.SHA512Hash(registerAccountPORequest.Password);
-            account.Status = true;
+            account.Status = (int) AccountStatus.Active;
             _unitOfWork.AccountRepository.Insert(account);
             _unitOfWork.Save();
 
@@ -62,7 +63,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var po = _mapper.Map<PetOwner>(registerAccountPORequest);
             po.AccountId = account.Id;
-            po.Status = "Active";
+            po.Reputation = AccountReputation.Good.ToString();
             _unitOfWork.PetOwnerRepository.Insert(po);
 
             return true;
@@ -79,7 +80,7 @@ namespace FluffyPaw_Application.ServiceImplements
             account.RoleName = RoleName.StoreManager.ToString();
             account.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             account.Password = _hashing.SHA512Hash(registerAccountSMRequest.Password);
-            account.Status = true;
+            account.Status = (int) AccountStatus.Active;
             _unitOfWork.AccountRepository.Insert(account);
             _unitOfWork.Save();
 
@@ -90,10 +91,10 @@ namespace FluffyPaw_Application.ServiceImplements
             };
             _unitOfWork.WalletRepository.Insert(wallet);
 
-            var sm = _mapper.Map<StoreManager>(registerAccountSMRequest);
+            var sm = _mapper.Map<Brand>(registerAccountSMRequest);
             sm.AccountId = account.Id;
             sm.Status = false;
-            _unitOfWork.StoreManagerRepository.Insert(sm);
+            _unitOfWork.BrandRepository.Insert(sm);
 
             return true;
         }
@@ -111,7 +112,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             Account account = check.First();
-            if (account.Status == false)
+            if (account.Status == (int)AccountStatus.Active)
             {
                 throw new CustomException.InvalidDataException(HttpStatusCode.BadRequest.ToString(), $"Tài khoản chưa được kích hoạt.");
             }

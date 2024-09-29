@@ -11,8 +11,8 @@ namespace FluffyPaw_Application.Services
     public interface IAccountService
     {
         Task<IEnumerable<AccountResponse>> GetPetOwners();
-        Task<IEnumerable<AccountResponse>> GetStoreManagers();
-        Task<IEnumerable<AccountResponse>> GetStaffAddresses();
+        Task<IEnumerable<AccountResponse>> GetBrands();
+        Task<IEnumerable<AccountResponse>> GetStores();
         Task<IEnumerable<Account>> GetAllAccounts();
         Task<bool> ChangePassword(string oldPassword, string newPassword);
     }

@@ -15,7 +15,6 @@ namespace FluffyPaw_Domain.Interfaces
         public IGenericRepository<Booking> BookingRepository { get; }
         public IGenericRepository<BookingRating> BookingRatingRepository { get; }
         public IGenericRepository<Certificate> CertificateRepository { get; }
-        public IGenericRepository<CertificateService> CertificateServiceRepository { get; }
         public IGenericRepository<Conversation> ConversationRepository { get; }
         public IGenericRepository<ConversationMessage> ConversationMessageRepository { get; }
         public IGenericRepository<Files> FilesRepository { get; }
@@ -28,10 +27,10 @@ namespace FluffyPaw_Domain.Interfaces
         public IGenericRepository<Service> ServiceRepository { get; }
         public IGenericRepository<ServiceFile> ServiceFileRepository { get; }
         public IGenericRepository<ServiceType> ServiceTypeRepository { get; }
-        public IGenericRepository<StaffAddress> StaffAddressRepository { get; }
-        public IGenericRepository<StaffAddressFile> StaffAddressFileRepository { get; }
-        public IGenericRepository<StaffAddressService> StaffAddressServiceRepository { get; }
-        public IGenericRepository<StoreManager> StoreManagerRepository { get; }
+        public IGenericRepository<Store> StoreRepository { get; }
+        public IGenericRepository<StoreFile> StoreFileRepository { get; }
+        public IGenericRepository<StoreService> StoreServiceRepository { get; }
+        public IGenericRepository<Brand> BrandRepository { get; }
         public IGenericRepository<Tracking> TrackingRepository { get; }
         public IGenericRepository<TrackingFile> TrackingFileRepository { get; }
         public IGenericRepository<VaccineHistory> VaccineHistoryRepository { get; }

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
+namespace FluffyPaw_Application.DTO.Response.BrandResponse
 {
-    public class StoreManagerResponse : IMapFrom<StoreManager>
+    public class BrandResponse : IMapFrom<Brand>
     {
         public long Id { get; set; }
 
