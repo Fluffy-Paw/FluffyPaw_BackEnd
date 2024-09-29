@@ -18,7 +18,7 @@ namespace FluffyPaw_Application.Services
         IEnumerable<StoreManagerResponse> GetAllStoreManagerFalse();
         Task<bool> AcceptStoreManager(long id);
         Task<bool> ActiveDeactiveAccount(long userId);
-        
+        Task<bool> DowngradeReputation(long userId);
     }
 }
     

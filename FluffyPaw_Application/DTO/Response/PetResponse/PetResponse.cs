@@ -34,13 +34,7 @@ namespace FluffyPaw_Application.DTO.Response.PetResponse
 
         public long PetCategoryId { get; set; }
 
-        public PetCategory? PetCategory { get; set; }
-
-        public long PetTypeId { get; set; }
-
         public PetType? PetType { get; set; }
-
-        public long BehaviorCategoryId { get; set; }
 
         public BehaviorCategory? BehaviorCategory { get; set; }
     }

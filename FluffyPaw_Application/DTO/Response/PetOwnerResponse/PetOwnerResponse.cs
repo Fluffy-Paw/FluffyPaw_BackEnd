@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.PetOwnerResponse
 {
-    public class PetOwnerResponse : IMapFrom<PetOwner>
+    public class PetOwnerResponse : IMapFrom<PetOwner>, IMapFrom<Account>
     {
         public string FullName { get; set; }
 

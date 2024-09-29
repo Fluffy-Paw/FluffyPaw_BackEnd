@@ -49,6 +49,15 @@ namespace FluffyPaw_API.Controllers.Authentication
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActiveDeactiveAccount(long id)
         {
+            var user = await _adminService.ActiveDeactiveAccount(id);
+            if (user) return CustomResult("Đã chuyển thành Active.");
+            else return CustomResult("Đã chuyển thành Deactive");
+        }
+
+        [HttpPatch("DowngradeReputation/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DowngradeReputation(long id)
+        {
             var storemanager = await _adminService.ActiveDeactiveAccount(id);
             if (storemanager) return CustomResult("Đã chuyển thành Active.");
             else return CustomResult("Đã chuyển thành Deactive");

@@ -35,15 +35,15 @@ namespace FluffyPaw_Application.ServiceImplements
             _firebaseConfiguration = firebaseConfiguration;
         }
 
-        public async Task<PetOwner> GetPetOwnerDetail()
+        public async Task<PetOwnerResponse> GetPetOwnerDetail()
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Reputation != AccountReputation.Ban.ToString(), includeProperties: "Account").FirstOrDefault();
             if(po == null)
             {
-                throw new CustomException.DataNotFoundException("Bạn đã bị cấm, liên hệ admin để biết thêm thông tin.");
+                throw new CustomException.ForbbidenException("Bạn đã bị cấm, liên hệ admin để biết thêm thông tin.");
             }
-            return po;
+            return _mapper.Map<PetOwnerResponse>(po);
         }
 
         public async Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
@@ -52,7 +52,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties : "Account").FirstOrDefault();
             if (po == null)
             {
-                throw new CustomException.DataNotFoundException("Không tìm thấy user.");
+                throw new CustomException.DataNotFoundException("Bạn không phải Pet Owner.");
             }
 
             po.Account.Email = petOwnerRequest.Email;
