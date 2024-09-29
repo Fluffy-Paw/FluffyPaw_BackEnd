@@ -13,12 +13,12 @@ namespace FluffyPaw_Domain.Entities
 
         public long FileId { get; set; }
 
-        public long StaffAddressId { get; set; }
+        public long StoreId { get; set; }
 
         [ForeignKey("FileId")]
         public virtual Files Files { get; set; }
 
-        [ForeignKey("StaffAddressId")]
-        public virtual Store StaffAddress { get; set; }
+        [ForeignKey("StoreId")]
+        public virtual Store Store { get; set; }
     }
 }

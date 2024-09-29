@@ -86,7 +86,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<IEnumerable<AccountResponse>> GetStores()
         {
-            var user = _unitOfWork.StaffAddressRepository.Get(includeProperties: "Account");
+            var user = _unitOfWork.StoreRepository.Get(includeProperties: "Account");
             List<AccountResponse> result = new List<AccountResponse>();
 
             foreach (var account in user)
@@ -105,9 +105,9 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<IEnumerable<AccountResponse>> GetStoreManagers()
+        public async Task<IEnumerable<AccountResponse>> GetBrands()
         {
-            var user = _unitOfWork.StoreManagerRepository.Get(includeProperties: "Account");
+            var user = _unitOfWork.BrandRepository.Get(includeProperties: "Account");
             List<AccountResponse> result = new List<AccountResponse>();
 
             foreach (var account in user)

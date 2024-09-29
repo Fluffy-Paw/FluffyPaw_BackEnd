@@ -16,14 +16,14 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
-    public class ServiceService : IServiceService
+    public class SerService : ISerService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ServiceService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor)
+        public SerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -31,22 +31,25 @@ namespace FluffyPaw_Application.ServiceImplements
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IEnumerable<ServiceResponse> GetAllServiceBySM()
+        public async Task<List<ServiceResponse>> GetAllServiceBySM()
         {
-            var brandId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
 
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == brandId).ToList();
+            var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
 
-            if (storeService == null)
+            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == BrandId.Id,
+                includeProperties: "Certificate").ToList();
+
+            if (!storeService.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<IEnumerable<ServiceResponse>>(storeService);
+            var serviceResponse = _mapper.Map<List<ServiceResponse>>(storeService);
             return serviceResponse;
         }
 
-        public ServiceResponse GetAllServiceBySMId(long id)
+        public async Task<List<ServiceResponse>> GetAllServiceBySMId(long id)
         {
             var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
 
@@ -55,7 +58,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<ServiceResponse>(storeService);
+            var serviceResponse = _mapper.Map<List<ServiceResponse>>(storeService);
             return serviceResponse;
         }
 
@@ -63,9 +66,10 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
 
-            var storeManagerId = _unitOfWork.StoreManagerRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
+            var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
 
-            var existingService = _unitOfWork.ServiceRepository.Get(p => p.Name.ToLower() == serviceRequest.Name.ToLower()).FirstOrDefault();
+            var existingService = _unitOfWork.ServiceRepository.Get(p => p.Name.ToLower() == serviceRequest.Name.ToLower() 
+            && p.BrandId == BrandId.Id).FirstOrDefault();
 
             if (existingService != null)
             {
@@ -73,7 +77,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var newService = _mapper.Map<Service>(serviceRequest);
-            newService.BrandId = storeManagerId.Id;
+            newService.BrandId = BrandId.Id;
 
             _unitOfWork.ServiceRepository.Insert(newService);
             await _unitOfWork.SaveAsync();
@@ -81,15 +85,6 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 var newCertificate = _mapper.Map<Certificate>(certificate);
                 _unitOfWork.CertificateRepository.Insert(newCertificate);
-
-                var newCertificateService = new CertificateService
-                {
-                    CertificateId = newCertificate.Id,
-                    ServiceId = newService.Id,
-                };
-
-                _unitOfWork.CertificateServiceRepository.Insert(newCertificateService);
-
             }
 
             await _unitOfWork.SaveAsync();

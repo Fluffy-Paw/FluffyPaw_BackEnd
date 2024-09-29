@@ -41,7 +41,7 @@ namespace FluffyPaw_Domain.Entities
         public virtual Pet Pet { get; set; }
 
         [ForeignKey("StoreServiceId")]
-        public virtual StoreService StaffAddressService { get; set; }
+        public virtual StoreService StoreService { get; set; }
 
         public Booking()
         {

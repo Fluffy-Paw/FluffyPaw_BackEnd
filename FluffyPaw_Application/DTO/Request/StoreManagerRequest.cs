@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Request
 {
-    public class StoreManagerRequest
+    public class BrandRequest
     {
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluffyPaw_Application.DTO.Request.CertificateRequest;
 using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.Interfaces;
@@ -24,10 +25,10 @@ namespace FluffyPaw_Application.ServiceImplements
             _firebaseConfiguration = firebaseConfiguration;
         }
 
-        public async Task<CertificatesResponse> CreateCertificate(CertificateRequest certificateRequest)
+        public async Task<CertificatesResponse> CreateCertificate(CertificateDto certificateDto)
         {
 
-            var certificateResponse = _mapper.Map<CertificatesResponse>(certificateRequest);
+            var certificateResponse = _mapper.Map<CertificatesResponse>(certificateDto);
             return certificateResponse;
         }
     }

@@ -37,5 +37,7 @@ namespace FluffyPaw_Domain.Entities
 
         [ForeignKey("BrandId")]
         public virtual Brand Brand { get; set; }
+
+        public ICollection<Certificate> Certificate { get; set; }
     }
 }

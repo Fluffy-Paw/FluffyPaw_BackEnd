@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.Services
 {
-    public interface IServiceService
+    public interface ISerService
     {
-        IEnumerable<ServiceResponse> GetAllServiceBySM();
-        ServiceResponse GetAllServiceBySMId(long id);
+        Task<List<ServiceResponse>> GetAllServiceBySM();
+        Task<List<ServiceResponse>> GetAllServiceBySMId(long id);
         Task<ServiceResponse> CreateService(ServiceRequest serviceRequest);
         Task<UpdateServiceResponse> UpdateService(long id, UpdateServiceRequest updateServiceRequest);
         Task<bool> DeleteService(long id);
