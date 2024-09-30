@@ -112,7 +112,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             Account account = check.First();
-            if (account.Status == (int)AccountStatus.Active)
+            if (account.Status == (int)AccountStatus.Deactive)
             {
                 throw new CustomException.InvalidDataException(HttpStatusCode.BadRequest.ToString(), $"Tài khoản chưa được kích hoạt.");
             }
