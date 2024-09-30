@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.PetResponse
 {
-    public class ListPetResponse : IMapFrom<Pet>
+    public class ListPetResponse : IMapFrom<Pet>, IMapFrom<PetCategory>
     {
         public long Id { get; set; }
 
@@ -16,7 +16,7 @@ namespace FluffyPaw_Application.DTO.Response.PetResponse
 
         public string Name { get; set; }
 
-        public string PetCategory { get; set; }
+        public long PetCategoryId { get; set; }
 
         public string BehaviorCategory { get; set; }
 

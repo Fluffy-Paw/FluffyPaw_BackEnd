@@ -98,7 +98,7 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.ForbbidenException("Bạn đã bị cấm.");
             }
-            var pet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status != PetStatus.Deleted.ToString(), includeProperties: "BehaviorCategory,PetCategory");
+            var pet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status != PetStatus.Deleted.ToString(), includeProperties: "BehaviorCategory,PetType.PetCategory");
             if (!pet.Any())
             {
                 throw new CustomException.DataNotFoundException("Bạn chưa nhập thông tin thú cưng.");
@@ -108,7 +108,7 @@ namespace FluffyPaw_Application.ServiceImplements
             foreach (var item in pet)
             {
                 var p = _mapper.Map<ListPetResponse>(item);
-                p.PetCategory = item.PetType.PetCategory.Name;
+                p.PetCategoryId = item.PetType.PetCategoryId;
                 p.BehaviorCategory = item.BehaviorCategory.Name;
                 result.Add(p);
             }
@@ -116,9 +116,9 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<IEnumerable<PetType>> GetAllPetType()
+        public async Task<IEnumerable<PetType>> GetAllPetType(long categoryId)
         {
-            return _unitOfWork.PetTypeRepository.GetAll();
+            return _unitOfWork.PetTypeRepository.Get(c => c.PetCategoryId == categoryId,includeProperties: "PetCategory");
         }
 
         public async Task<BehaviorCategory> GetBehavior(long behaviorId)
@@ -139,14 +139,13 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var result = _mapper.Map<PetResponse>(pet);
-            //result.PetCategory = pet.PetType.PetCategory;
-            //result.BehaviorCategoryName = pet.BehaviorCategory.Name;
-            //result.PetTypeName = pet.PetType.Name;
+            result.PetCategoryId = pet.PetType.PetCategoryId;
             result.Age = DateTime.Now.Year - pet.Dob.Year;
             if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
             {
                 result.Age--;
             }
+
             return result;
         }
 
@@ -157,7 +156,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<PetResponse> UpdatePet(long petId, PetRequest petRequest)
         {
-            var pet = _unitOfWork.PetRepository.Get(p => p.Id == petId, includeProperties: "BehaviorCategory,PetCategory,PetType").FirstOrDefault();
+            var pet = _unitOfWork.PetRepository.Get(p => p.Id == petId, includeProperties: "BehaviorCategory,PetType.PetCategory,PetType").FirstOrDefault();
             if (pet == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
@@ -168,9 +167,12 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.Save();
 
             var result = _mapper.Map<PetResponse>(pet);
-            //result.PetCategoryName = pet.PetCategory.Name;
-            //result.BehaviorCategoryName = pet.BehaviorCategory.Name;
-            //result.PetTypeName = pet.PetType.Name;
+            result.PetCategoryId = pet.PetType.PetCategoryId;
+            result.Age = DateTime.Now.Year - pet.Dob.Year;
+            if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
+            {
+                result.Age--;
+            }
             return result;
         }
     }
