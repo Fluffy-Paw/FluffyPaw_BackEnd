@@ -6,6 +6,7 @@ using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,6 +97,23 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             return newFilesList;
+        }
+
+        public async Task<string> UploadIdentification(IFormFile file)
+        {
+            string[] imgExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+            if (!imgExtensions.Contains(Path.GetExtension(file.FileName)))
+            {
+                throw new CustomException.InvalidDataException("Chỉ nhận tệp hình ảnh");
+            }
+            if (file.Length >= 10 * 1024 * 1024)
+            {
+                throw new CustomException.InvalidDataException("Kích thước tập tin vượt quá giới hạn tối đa cho phép.");
+            }
+
+            string imageDownloadUrl = await _firebaseConfiguration.UploadImage(file);
+
+            return imageDownloadUrl;
         }
     }
 }

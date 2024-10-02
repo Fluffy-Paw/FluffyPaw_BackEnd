@@ -27,7 +27,7 @@ namespace FluffyPaw_API.Controllers.Authentication
         }
 
         [HttpPost("RegisterSM")]
-        public async Task<IActionResult> RegisterSM([FromBody] RegisterAccountSMRequest registerAccountSMRequest)
+        public async Task<IActionResult> RegisterSM([FromForm] RegisterAccountSMRequest registerAccountSMRequest)
         {
             var user = await _authService.RegisterSM(registerAccountSMRequest);
             return CustomResult("Đăng ký thành công. Vui lòng đợi hệ thống xác thực thông tin đăng ký.", user);

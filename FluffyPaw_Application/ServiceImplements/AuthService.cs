@@ -24,13 +24,15 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IAuthentication _authentication;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IFilesService _filesService;
 
-        public AuthService(IAuthentication authentication, IUnitOfWork unitOfWork, IMapper mapper, IHashing hashing)
+        public AuthService(IAuthentication authentication, IUnitOfWork unitOfWork, IMapper mapper, IHashing hashing, IFilesService filesService)
         {
             _authentication = authentication;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _hashing = hashing;
+            _filesService = filesService;
         }
 
         public async Task<bool> RegisterPO(RegisterAccountPORequest registerAccountPORequest)
@@ -84,15 +86,22 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.AccountRepository.Insert(account);
             _unitOfWork.Save();
 
-            var wallet = new Wallet
-            {
-                AccountId = account.Id,
-                Balance = 0
-            };
+            var identification = _mapper.Map<Identification>(registerAccountSMRequest);
+            identification.AccountId = account.Id;
+            identification.Front = await _filesService.UploadIdentification(registerAccountSMRequest.Front);
+            identification.Back = await _filesService.UploadIdentification(registerAccountSMRequest.Back);
+            _unitOfWork.IdentificationRepository.Insert(identification);
+
+            var wallet = _mapper.Map<Wallet>(registerAccountSMRequest);
+            wallet.Id = account.Id;
+            wallet.Balance = 0;
             _unitOfWork.WalletRepository.Insert(wallet);
+
 
             var sm = _mapper.Map<Brand>(registerAccountSMRequest);
             sm.AccountId = account.Id;
+            sm.Logo = await _filesService.UploadIdentification(registerAccountSMRequest.Logo);
+            sm.BusinessLicense = await _filesService.UploadIdentification(registerAccountSMRequest.BusinessLicense);
             sm.Status = false;
             _unitOfWork.BrandRepository.Insert(sm);
 
@@ -105,20 +114,44 @@ namespace FluffyPaw_Application.ServiceImplements
             IEnumerable<Account> check = _unitOfWork.AccountRepository.Get(x =>
                 x.Username.Equals(loginRequest.Username)
                 && x.Password.Equals(hashedPass)
+                && !x.RoleName.Equals(RoleName.Admin.ToString())
             );
             if (!check.Any())
             {
-                throw new CustomException.InvalidDataException(HttpStatusCode.BadRequest.ToString(), $"Tài khoản hoặc mật khẩu không đúng.");
+                throw new CustomException.InvalidDataException("Tài khoản hoặc mật khẩu không đúng.");
             }
 
             Account account = check.First();
             if (account.Status == (int)AccountStatus.Deactive)
             {
-                throw new CustomException.InvalidDataException(HttpStatusCode.BadRequest.ToString(), $"Tài khoản chưa được kích hoạt.");
+                throw new CustomException.InvalidDataException("Tài khoản chưa được kích hoạt.");
+            }
+            /*else if (account.RoleName == RoleName.Admin.ToString())
+            {
+                throw new CustomException.InvalidDataException("Tài khoản không được đăng nhập vào FluffyPaw theo cách này.");
+            }*/
+
+            string token = _authentication.GenerateJWTToken(account);
+            return token;
+        }
+
+        public async Task<string> AdminLogin(LoginRequest loginRequest)
+        {
+            string hashedPass = _hashing.SHA512Hash(loginRequest.Password);
+            IEnumerable<Account> check = _unitOfWork.AccountRepository.Get(x =>
+                x.Username.Equals(loginRequest.Username)
+                && x.Password.Equals(hashedPass)
+            );
+            if (!check.Any())
+            {
+                throw new CustomException.InvalidDataException("Tài khoản hoặc mật khẩu không đúng.");
             }
 
-
-
+            Account account = check.First();
+            if (!account.RoleName.Equals(RoleName.Admin.ToString()))
+            {
+                throw new CustomException.InvalidDataException("Tài khoản không có vai trò để đăng nhập.");
+            }
 
             string token = _authentication.GenerateJWTToken(account);
             return token;
