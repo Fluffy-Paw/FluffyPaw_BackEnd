@@ -20,7 +20,7 @@ namespace FluffyPaw_Application.DTO.Response.PetResponse
 
         public float Weight { get; set; }
 
-        public string Dob { get; set; }
+        public DateTimeOffset Dob { get; set; }
 
         public int Age { get; set; }
 

@@ -14,7 +14,7 @@ namespace FluffyPaw_Application.DTO.Response.PetOwnerResponse
 
         public string Gender { get; set; }
 
-        public string Dob { get; set; }
+        public DateTimeOffset Dob { get; set; }
 
         public string Phone { get; set; }
 

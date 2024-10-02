@@ -14,7 +14,7 @@ namespace FluffyPaw_Application.DTO.Response.VaccineResponse
 
         public string? Image { get; set; }
 
-        public string VaccineDate { get; set; }
+        public DateTimeOffset VaccineDate { get; set; }
 
         public string? Description { get; set; }
     }

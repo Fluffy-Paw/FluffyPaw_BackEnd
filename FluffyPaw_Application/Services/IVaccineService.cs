@@ -11,14 +11,16 @@ namespace FluffyPaw_Application.Services
 {
     public interface IVaccineService
     {
-        Task<bool> AddVacine(VaccineRequest vaccineRequest);
+        Task<bool> AddVaccine(VaccineRequest vaccineRequest);
         
         Task<bool> RemoveVacine(long vaccineId);
 
-        Task<VaccineHistory> UpdateVaccine(VaccineRequest vaccineRequest);
+        Task<VaccineHistory> CheckoutVaccine(long vaccineId);
 
         Task<IEnumerable<ListVaccineResponse>> GetVaccineHistories(long petId);
 
         Task<VaccineHistory> GetVaccineHistory(long vaccineId);
+
+        Task<VaccineHistory> UpdateVaccineHistory(long vaccineId, VaccineRequest vaccineRequest);
     }
 }

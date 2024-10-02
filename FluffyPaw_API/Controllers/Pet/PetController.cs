@@ -52,10 +52,10 @@ namespace FluffyPaw_API.Controllers.Pet
             return CustomResult("Xóa thú cưng thành công.", pet);
         }
 
-        [HttpGet("GetAllPetType")]
-        public async Task<IActionResult> GetAllPetType(long id)
+        [HttpGet("GetAllPetTypeByPetCategory/{id}")]
+        public async Task<IActionResult> GetAllPetTypeByPetCate(long petCategoryId)
         {
-            var pet = await _petService.GetAllPetType(id);
+            var pet = await _petService.GetAllPetType(petCategoryId);
             return CustomResult("Giống loài:", pet);
         }
 
@@ -78,6 +78,14 @@ namespace FluffyPaw_API.Controllers.Pet
         {
             var pet = await _petService.GetBehavior(behaviorId);
             return CustomResult("Sở thích:", pet);
+        }
+
+        [HttpPatch("ActiveDeactivePet")]
+        public async Task<IActionResult> ActiveDeactivePet(long petId)
+        {
+            var result = await _petService.ActiveDeactivePet(petId);
+            if (result) return CustomResult("Thông tin thú cưng đã kích hoạt.", result);
+            else return CustomResult("Thông tin thú cưng đã tắt.", result);
         }
     }
 }

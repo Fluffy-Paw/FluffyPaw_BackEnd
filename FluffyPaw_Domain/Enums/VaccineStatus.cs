@@ -8,7 +8,7 @@ namespace FluffyPaw_Domain.Enums
 {
     public enum VaccineStatus
     {
-        Uncomplete,
+        Incomplete,
         Complete,
         Deleted
     }

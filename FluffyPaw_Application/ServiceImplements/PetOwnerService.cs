@@ -45,7 +45,6 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var result = _mapper.Map<PetOwnerResponse>(po);
-            result.Dob = po.Dob.ToString("dd-MM-yyyy");
             result.Email = po.Account.Email;
             result.Avatar = po.Account.Avatar;
             return result;
@@ -59,15 +58,22 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Bạn không phải Pet Owner.");
             }
+            if (petOwnerRequest.Phone != exitstingPo.Phone)
+            {
+                if (_unitOfWork.PetOwnerRepository.Get(po => po.Phone == petOwnerRequest.Phone).Any())
+                {
+                    throw new CustomException.DataExistException("Số điện thoại này đã tồn tại trong hệ thống");
+                }
+            }
 
             exitstingPo.Account.Email = petOwnerRequest.Email;
             if(petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
-            
             var po = _mapper.Map(petOwnerRequest, exitstingPo);
             _unitOfWork.Save();
 
             var result = _mapper.Map<PetOwnerResponse>(po);
-            result.Dob = exitstingPo.Dob.ToString("dd-MM-yyyy");
+            result.Avatar = po.Account.Avatar;
+            result.Email = po.Account.Email;
 
             return result;
         }
