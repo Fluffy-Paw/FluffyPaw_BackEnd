@@ -52,7 +52,7 @@ namespace FluffyPaw_API.Controllers.Pet
             return CustomResult("Xóa thú cưng thành công.", pet);
         }
 
-        [HttpGet("GetAllPetTypeByPetCategory/{id}")]
+        [HttpGet("GetAllPetTypeByPetCategory")]
         public async Task<IActionResult> GetAllPetTypeByPetCate(long petCategoryId)
         {
             var pet = await _petService.GetAllPetType(petCategoryId);
