@@ -144,8 +144,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<ServiceType>().HasData(
-                new ServiceType { Id = 1, Name = "Grooming", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s" },
-                new ServiceType { Id = 2, Name = "Vaccine", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s" }
+                new ServiceType { Id = 1, Name = "Grooming"},
+                new ServiceType { Id = 2, Name = "Vaccine"}
                 );
 
             modelBuilder.Entity<Brand>().HasData(
@@ -154,15 +154,20 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Service>().HasData(
-                new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Grooming", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", Status = true },
-                new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Vaccine", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", Status = true },
-                new Service { Id = 3, ServiceTypeId = 1, BrandId = 1, Name = "Hotel", Duration = TimeSpan.Zero, Cost = 100000, Description = "test", Status = true },
-                new Service { Id = 4, ServiceTypeId = 2, BrandId = 1, Name = "Training", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", Status = true }
+                new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Grooming", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
+                new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Vaccine", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
+                new Service { Id = 3, ServiceTypeId = 1, BrandId = 1, Name = "Hotel", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.Zero, Cost = 100000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
+                new Service { Id = 4, ServiceTypeId = 2, BrandId = 1, Name = "Training", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true }
                 );
 
             modelBuilder.Entity<Certificate>().HasData(
                 new Certificate { Id = 1, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
-                new Certificate { Id = 2, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" }
+                new Certificate { Id = 2, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
+                new Certificate { Id = 3, ServiceId = 2, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
+                new Certificate { Id = 4, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
+                new Certificate { Id = 5, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
+                new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
+                new Certificate { Id = 7, ServiceId = 4, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" }
                 );
 
             modelBuilder.Entity<Store>().HasData(

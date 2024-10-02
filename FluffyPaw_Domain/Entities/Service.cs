@@ -20,6 +20,8 @@ namespace FluffyPaw_Domain.Entities
 
         public string Name { get; set; }
 
+        public string Image { get; set; }
+
         public TimeSpan Duration { get; set; }
 
         public double Cost { get; set; }
