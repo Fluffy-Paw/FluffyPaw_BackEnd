@@ -1,4 +1,5 @@
-﻿using FluffyPaw_Application.DTO.Response.CertificateResponse;
+﻿using AutoMapper;
+using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.Mapper;
 using FluffyPaw_Domain.Entities;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 {
-    public class ServiceResponse : IMapFrom<Service>
+    public class SerResponse : IMapFrom<Service>
     {
         public long Id { get; set; }
 
@@ -31,6 +32,15 @@ namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 
         public bool Status { get; set; }
 
-        public ICollection<CertificatesResponse> Certificates { get; set; }
+        public string ServiceTypeName { get; set; }
+
+        public ICollection<CertificatesResponse> Certificate { get; set; }
+
+        public void Mapping (Profile profile)
+        {
+            profile.CreateMap<Service, SerResponse>()
+                .ForMember(dest => dest.ServiceTypeName, opt => opt.MapFrom(src => src.ServiceType.Name));
+        }
+
     }
 }

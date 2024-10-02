@@ -2,7 +2,6 @@
 using FluffyPaw_Application.DTO.Request.AdminRequest;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
-using FluffyPaw_Application.DTO.Response.ServiceTypeResponse;
 using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
@@ -71,7 +70,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public async Task<List<ServiceResponse>> GetAllServiceFalseByBrandId(long id)
+        public async Task<List<SerResponse>> GetAllServiceFalseByBrandId(long id)
         {
             var brandService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id && ss.Status == false).ToList();
 
@@ -80,7 +79,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<List<ServiceResponse>>(brandService);
+            var serviceResponse = _mapper.Map<List<SerResponse>>(brandService);
             return serviceResponse;
         }
 

@@ -21,6 +21,7 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<Conversation> _conversationRepository;
         private IGenericRepository<ConversationMessage> _conversationMessageRepository;
         private IGenericRepository<Files> _filesRepository;
+        private IGenericRepository<Identification> _identificationRepository;
         private IGenericRepository<MessageFile> _messageFileRepository;
         private IGenericRepository<Notification> _notificationRepository;
         private IGenericRepository<Pet> _petRepository;
@@ -146,6 +147,19 @@ namespace FluffyPaw_Infrastructure.Repository
                     _filesRepository = new GenericRepository<Files>(_context);
                 }
                 return _filesRepository;
+            }
+        }
+
+        public IGenericRepository<Identification> IdentificationRepository
+        {
+            get
+            {
+
+                if (_identificationRepository == null)
+                {
+                    _identificationRepository = new GenericRepository<Identification>(_context);
+                }
+                return _identificationRepository;
             }
         }
 

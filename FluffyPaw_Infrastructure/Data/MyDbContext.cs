@@ -26,6 +26,7 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ConversationMessage> ConversationMessages { get; set; }
         public DbSet<Files> Files { get; set; }
+        public DbSet<Identification> Identifications { get; set; }
         public DbSet<MessageFile> MessageFiles { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Pet> Pets { get; set; }
@@ -148,8 +149,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Brand>().HasData(
-                new Brand { Id = 1, AccountId = 2, Name = "StoreA", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "None", Status = true },
-                new Brand { Id = 2, AccountId = 3, Name = "StoreB", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "None" , Status = true }
+                new Brand { Id = 1, AccountId = 2, Name = "StoreA", BrandEmail = "test1@gmail.com", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "None", Address = "test", Status = true },
+                new Brand { Id = 2, AccountId = 3, Name = "StoreB", BrandEmail = "test1@gmail.com", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "None", Address = "test", Status = true }
                 );
 
             modelBuilder.Entity<Service>().HasData(
