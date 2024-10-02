@@ -33,6 +33,29 @@ namespace FluffyPaw_Application.ServiceImplements
             _authentication = authentication;
         }
 
+        public async Task<bool> ActiveDeactivePet(long petId)
+        {
+            bool result;
+            var existingPet = _unitOfWork.PetRepository.GetByID(petId);
+            if (existingPet == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
+            }
+            if(existingPet.Status == PetStatus.Available.ToString())
+            { 
+                existingPet.Status = PetStatus.Unavailable.ToString();
+                result = false;
+            }
+            else
+            {
+                existingPet.Status = PetStatus.Available.ToString();
+                result = true;
+            }
+            _unitOfWork.Save();
+
+            return result;
+        }
+
         public async Task<bool> CreateNewPet(PetRequest petRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
@@ -161,13 +184,21 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
-
+            if (petRequest.MicrochipNumber != pet.MicrochipNumber)
+            {
+                var duplicatePet = _unitOfWork.PetRepository.Get(m => m.MicrochipNumber == petRequest.MicrochipNumber).FirstOrDefault();
+                if (duplicatePet != null)
+                {
+                    throw new CustomException.InvalidDataException($"Đã tồn tại pet với số microchip {petRequest.MicrochipNumber}");
+                }
+            }
             if (petRequest.Image != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
             _mapper.Map(petRequest, pet);
             _unitOfWork.Save();
 
             var result = _mapper.Map<PetResponse>(pet);
             result.PetCategoryId = pet.PetType.PetCategoryId;
+            result.BehaviorCategory = await GetBehavior(pet.BehaviorCategoryId);
             result.Age = DateTime.Now.Year - pet.Dob.Year;
             if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
             {
