@@ -43,26 +43,33 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.ForbbidenException("Bạn đã bị cấm, liên hệ admin để biết thêm thông tin.");
             }
-            return _mapper.Map<PetOwnerResponse>(po);
+
+            var result = _mapper.Map<PetOwnerResponse>(po);
+            result.Dob = po.Dob.ToString("dd-MM-yyyy");
+            result.Email = po.Account.Email;
+            result.Avatar = po.Account.Avatar;
+            return result;
         }
 
         public async Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties : "Account").FirstOrDefault();
-            if (po == null)
+            var exitstingPo = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties : "Account").FirstOrDefault();
+            if (exitstingPo == null)
             {
                 throw new CustomException.DataNotFoundException("Bạn không phải Pet Owner.");
             }
 
-            po.Account.Email = petOwnerRequest.Email;
-            if(petOwnerRequest.Avatar != null) po.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
+            exitstingPo.Account.Email = petOwnerRequest.Email;
+            if(petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
             
-            var result = _mapper.Map(petOwnerRequest, po);
-
+            var po = _mapper.Map(petOwnerRequest, exitstingPo);
             _unitOfWork.Save();
 
-            return _mapper.Map<PetOwnerResponse>(result);
+            var result = _mapper.Map<PetOwnerResponse>(po);
+            result.Dob = exitstingPo.Dob.ToString("dd-MM-yyyy");
+
+            return result;
         }
     }
 }

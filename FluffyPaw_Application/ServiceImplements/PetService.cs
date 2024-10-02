@@ -140,6 +140,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var result = _mapper.Map<PetResponse>(pet);
             result.PetCategoryId = pet.PetType.PetCategoryId;
+            result.Dob = pet.Dob.ToString("dd-MM-yyyy");
             result.Age = DateTime.Now.Year - pet.Dob.Year;
             if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
             {
@@ -169,6 +170,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var result = _mapper.Map<PetResponse>(pet);
             result.PetCategoryId = pet.PetType.PetCategoryId;
             result.Age = DateTime.Now.Year - pet.Dob.Year;
+            result.Dob = pet.Dob.ToString("dd-MM-yyyy");
             if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
             {
                 result.Age--;

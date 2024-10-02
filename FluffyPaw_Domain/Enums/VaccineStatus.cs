@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Domain.Enums
 {
-    public enum AccountStatus
+    public enum VaccineStatus
     {
-        Deactive,
-        Active
+        Uncomplete,
+        Complete,
+        Deleted
     }
 }
