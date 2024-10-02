@@ -21,13 +21,16 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IMapper _mapper;
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IFirebaseConfiguration _firebaseConfiguration;
 
-        public SerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor)
+        public SerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
+                        IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authentication = authentication;
             _httpContextAccessor = httpContextAccessor;
+            _firebaseConfiguration = firebaseConfiguration;
         }
 
         public async Task<List<SerResponse>> GetAllServiceBySM()
@@ -47,7 +50,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(storeService.First().ServiceTypeId);
 
             var serviceResponse = _mapper.Map<List<SerResponse>>(storeService);
-            foreach( SerResponse serResponse in serviceResponse )
+            foreach (SerResponse serResponse in serviceResponse)
             {
                 serResponse.ServiceTypeName = serviceType.Name;
             }
@@ -74,7 +77,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
 
-            var existingService = _unitOfWork.ServiceRepository.Get(p => p.Name.ToLower() == serviceRequest.Name.ToLower() 
+            var existingService = _unitOfWork.ServiceRepository.Get(p => p.Name.ToLower() == serviceRequest.Name.ToLower()
             && p.BrandId == BrandId.Id).FirstOrDefault();
 
             if (existingService != null)
@@ -84,19 +87,26 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var newService = _mapper.Map<Service>(serviceRequest);
             newService.BrandId = BrandId.Id;
+            newService.Image = await _firebaseConfiguration.UploadImage(serviceRequest.Image);
 
             _unitOfWork.ServiceRepository.Insert(newService);
             await _unitOfWork.SaveAsync();
-            foreach ( var certificate in serviceRequest.CertificateDtos)
+
+            if (serviceRequest.CertificateDtos != null)
             {
-                var newCertificate = _mapper.Map<Certificate>(certificate);
-                _unitOfWork.CertificateRepository.Insert(newCertificate);
+                foreach (var certificate in serviceRequest.CertificateDtos)
+                {
+                    var newCertificate = _mapper.Map<Certificate>(certificate);
+                    _unitOfWork.CertificateRepository.Insert(newCertificate);
+                }
+
+                await _unitOfWork.SaveAsync();
             }
 
-            await _unitOfWork.SaveAsync();
+            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(serviceRequest.ServiceTypeId);
 
             var serviceResponse = _mapper.Map<SerResponse>(newService);
-
+            serviceResponse.ServiceTypeName = serviceType.Name;
             return serviceResponse;
         }
 

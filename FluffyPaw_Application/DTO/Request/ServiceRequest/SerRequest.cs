@@ -17,12 +17,14 @@ namespace FluffyPaw_Application.DTO.Request.ServiceRequest
 
         public string Name { get; set; }
 
+        public IFormFile Image { get; set; }
+
         public TimeSpan Duration { get; set; }
 
         public double Cost { get; set; }
 
         public string Description { get; set; }
 
-        public List<CertificateDto> CertificateDtos { get; set; }
+        public List<CertificateDto>? CertificateDtos { get; set; }
     }
 }
