@@ -2,7 +2,6 @@
 using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Request.ServiceTypeRequest;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
-using FluffyPaw_Application.DTO.Response.ServiceTypeResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
@@ -31,7 +30,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<List<ServiceResponse>> GetAllServiceBySM()
+        public async Task<List<SerResponse>> GetAllServiceBySM()
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
 
@@ -45,11 +44,18 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<List<ServiceResponse>>(storeService);
+            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(storeService.First().ServiceTypeId);
+
+            var serviceResponse = _mapper.Map<List<SerResponse>>(storeService);
+            foreach( SerResponse serResponse in serviceResponse )
+            {
+                serResponse.ServiceTypeName = serviceType.Name;
+            }
+
             return serviceResponse;
         }
 
-        public async Task<List<ServiceResponse>> GetAllServiceBySMId(long id)
+        public async Task<List<SerResponse>> GetAllServiceBySMId(long id)
         {
             var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
 
@@ -58,11 +64,11 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<List<ServiceResponse>>(storeService);
+            var serviceResponse = _mapper.Map<List<SerResponse>>(storeService);
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse> CreateService(ServiceRequest serviceRequest)
+        public async Task<SerResponse> CreateService(SerRequest serviceRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
 
@@ -89,7 +95,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             await _unitOfWork.SaveAsync();
 
-            var serviceResponse = _mapper.Map<ServiceResponse>(newService);
+            var serviceResponse = _mapper.Map<SerResponse>(newService);
 
             return serviceResponse;
         }

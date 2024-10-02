@@ -21,6 +21,7 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<Conversation> _conversationRepository;
         private IGenericRepository<ConversationMessage> _conversationMessageRepository;
         private IGenericRepository<Files> _filesRepository;
+        private IGenericRepository<Identification> _identificationRepository;
         private IGenericRepository<MessageFile> _messageFileRepository;
         private IGenericRepository<Notification> _notificationRepository;
         private IGenericRepository<Pet> _petRepository;
@@ -31,7 +32,7 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<ServiceFile> _serviceFileRepository;
         private IGenericRepository<ServiceType> _serviceTypeRepository;
         private IGenericRepository<Store> _storeRepository;
-        private IGenericRepository<StoreFile> _StoreFileRepository;
+        private IGenericRepository<StoreFile> _storeFileRepository;
         private IGenericRepository<StoreService> _StoreServiceRepository;
         private IGenericRepository<Brand> _brandRepository;
         private IGenericRepository<Tracking> _trackingRepository;
@@ -146,6 +147,19 @@ namespace FluffyPaw_Infrastructure.Repository
                     _filesRepository = new GenericRepository<Files>(_context);
                 }
                 return _filesRepository;
+            }
+        }
+
+        public IGenericRepository<Identification> IdentificationRepository
+        {
+            get
+            {
+
+                if (_identificationRepository == null)
+                {
+                    _identificationRepository = new GenericRepository<Identification>(_context);
+                }
+                return _identificationRepository;
             }
         }
 
@@ -284,11 +298,11 @@ namespace FluffyPaw_Infrastructure.Repository
             get
             {
 
-                if (_StoreFileRepository == null)
+                if (_storeFileRepository == null)
                 {
-                    _StoreFileRepository = new GenericRepository<StoreFile>(_context);
+                    _storeFileRepository = new GenericRepository<StoreFile>(_context);
                 }
-                return _StoreFileRepository;
+                return _storeFileRepository;
             }
         }
 

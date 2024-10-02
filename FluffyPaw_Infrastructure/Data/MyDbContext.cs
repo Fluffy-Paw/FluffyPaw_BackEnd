@@ -26,6 +26,7 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ConversationMessage> ConversationMessages { get; set; }
         public DbSet<Files> Files { get; set; }
+        public DbSet<Identification> Identifications { get; set; }
         public DbSet<MessageFile> MessageFiles { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Pet> Pets { get; set; }
@@ -64,8 +65,8 @@ namespace FluffyPaw_Infrastructure.Data
 
             modelBuilder.Entity<Account>().HasData(
                 new Account { Id = 1, Username = "FluffyPaw", Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", RoleName = "Admin", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 2, Username = "test1", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Brand", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 3, Username = "test2", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Brand", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 2, Username = "test1", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 3, Username = "test2", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
                 new Account { Id = 4, Username = "test3", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
                 new Account { Id = 5, Username = "test4", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
                 new Account { Id = 6, Username = "test5", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
@@ -148,8 +149,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Brand>().HasData(
-                new Brand { Id = 1, AccountId = 2, Name = "StoreA", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "None", Status = true },
-                new Brand { Id = 2, AccountId = 3, Name = "StoreB", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "None" , Status = true }
+                new Brand { Id = 1, AccountId = 2, Name = "StoreA", BrandEmail = "test1@gmail.com", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "None", Address = "test", Status = true },
+                new Brand { Id = 2, AccountId = 3, Name = "StoreB", BrandEmail = "test1@gmail.com", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "None", Address = "test", Status = true }
                 );
 
             modelBuilder.Entity<Service>().HasData(

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluffyPaw_Application.DTO.Response.ServiceTypeResponse
+namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 {
     public class ServiceTypeResponse : IMapFrom<ServiceType>
     {

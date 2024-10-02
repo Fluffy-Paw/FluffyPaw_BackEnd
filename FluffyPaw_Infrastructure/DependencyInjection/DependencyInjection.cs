@@ -3,6 +3,7 @@ using FluffyPaw_Application.Mapper;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Application.Utils.Pagination;
+using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Infrastructure.Authentication;
 using FluffyPaw_Infrastructure.Data;

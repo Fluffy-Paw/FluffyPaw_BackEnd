@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace FluffyPaw_Application.DTO.Request.ServiceRequest
 {
-    public class ServiceRequest : IMapFrom<Service>
+    public class SerRequest : IMapFrom<Service>
     {
         public long ServiceTypeId { get; set; }
 

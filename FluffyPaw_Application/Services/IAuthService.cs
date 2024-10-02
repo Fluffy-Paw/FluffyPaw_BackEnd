@@ -15,5 +15,6 @@ namespace FluffyPaw_Application.Services
         Task<bool> RegisterSM(RegisterAccountSMRequest registerAccountSMRequest);
 
         Task<string> Login(LoginRequest loginRequest);
+        Task<string> AdminLogin(LoginRequest loginRequest);
     }
 }
