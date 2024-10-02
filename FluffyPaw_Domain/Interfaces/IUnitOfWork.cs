@@ -18,6 +18,7 @@ namespace FluffyPaw_Domain.Interfaces
         public IGenericRepository<Conversation> ConversationRepository { get; }
         public IGenericRepository<ConversationMessage> ConversationMessageRepository { get; }
         public IGenericRepository<Files> FilesRepository { get; }
+        public IGenericRepository<Identification> IdentificationRepository { get; }
         public IGenericRepository<MessageFile> MessageFileRepository { get; }
         public IGenericRepository<Notification> NotificationRepository { get; }
         public IGenericRepository<Pet> PetRepository { get; }

@@ -16,10 +16,19 @@ namespace FluffyPaw_API.Controllers.Authentication
     public class AdminController : BaseController
     {
         private readonly IAdminService _adminService;
+        private readonly IAuthService _authService;
 
-        public AdminController(IAdminService adminService)
+        public AdminController(IAdminService adminService, IAuthService authService)
         {
             _adminService = adminService;
+            _authService = authService;
+        }
+
+        [HttpPost("AdminLogin")]
+        public async Task<IActionResult> AdminLogin([FromBody] LoginRequest loginRequest)
+        {
+            string tuple = await _authService.AdminLogin(loginRequest);
+            return CustomResult("Đăng nhập thành công", tuple);
         }
 
         [HttpPost("CreateAdmin")]

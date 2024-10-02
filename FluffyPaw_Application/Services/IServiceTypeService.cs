@@ -1,5 +1,5 @@
 ﻿using FluffyPaw_Application.DTO.Request.ServiceTypeRequest;
-using FluffyPaw_Application.DTO.Response.ServiceTypeResponse;
+using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,7 +2,6 @@
 using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Request.ServiceTypeRequest;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
-using FluffyPaw_Application.DTO.Response.ServiceTypeResponse;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +22,7 @@ namespace FluffyPaw_API.Controllers.Service
         }
 
         [HttpGet("GetAllServiceBySM")]
-        [Authorize(Roles = "Brand")]
+        [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> GetAllServiceBySM()
         {
             var services = await _SerService.GetAllServiceBySM();
@@ -40,15 +39,15 @@ namespace FluffyPaw_API.Controllers.Service
         }
 
         [HttpPost("CreateService")]
-        [Authorize(Roles = "Brand")]
-        public async Task<IActionResult> CreateService([FromForm] ServiceRequest serviceRequest)
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> CreateService([FromForm] SerRequest serviceRequest)
         {
-            ServiceResponse service = await _SerService.CreateService(serviceRequest);
+            SerResponse service = await _SerService.CreateService(serviceRequest);
             return CustomResult("Tạo dịch vụ thành công. Vui lòng chờ hệ thống xác thực", service);
         }
 
         [HttpPatch("UpdateService/{id}")]
-        [Authorize(Roles = "Brand")]
+        [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> UpdateService(long id, [FromForm] UpdateServiceRequest updateServiceRequest)
         {
             UpdateServiceResponse service = await _SerService.UpdateService(id, updateServiceRequest);
@@ -56,7 +55,7 @@ namespace FluffyPaw_API.Controllers.Service
         }
 
         [HttpDelete("DeleteService/{id}")]
-        [Authorize(Roles = "Admin,Brand")]
+        [Authorize(Roles = "Admin,StoreManager")]
         public async Task<IActionResult> DeleteService(long id)
         {
             var serviceType = await _SerService.DeleteService(id);
