@@ -10,6 +10,8 @@ namespace FluffyPaw_Application.DTO.Response.PetOwnerResponse
 {
     public class PetOwnerResponse : IMapFrom<PetOwner>, IMapFrom<Account>
     {
+        public string Username {  get; set; }
+
         public string FullName { get; set; }
 
         public string Gender { get; set; }
