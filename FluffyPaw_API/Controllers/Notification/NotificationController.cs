@@ -31,7 +31,7 @@ namespace FluffyPaw_API.Controllers.Notification
             return CustomResult("Tạo thông báo thành công.", noti);
         }
 
-        [HttpDelete("DeleteNotification")]
+        [HttpDelete("DeleteNotification/{notificationId}")]
         public async Task<IActionResult> DeleteNotification(long notificationId)
         {
             var noti = await _notificationService.DeleteNotification(notificationId);

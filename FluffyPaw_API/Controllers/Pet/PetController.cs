@@ -24,7 +24,7 @@ namespace FluffyPaw_API.Controllers.Pet
             return CustomResult("Thú cưng của bạn:", pet);
         }
 
-        [HttpGet("GetPet")]
+        [HttpGet("GetPet/{petId}")]
         public async Task<IActionResult> GetPet(long petId)
         {
             var pet = await _petService.GetPet(petId);
@@ -38,28 +38,28 @@ namespace FluffyPaw_API.Controllers.Pet
             return CustomResult("Thêm thú cưng thành công.", pet);
         }
 
-        [HttpPatch("UpdatePet")]
+        [HttpPatch("UpdatePet/{petId}")]
         public async Task<IActionResult> UpdatePet(long petId, [FromForm] PetRequest petRequest)
         {
             var pet = await _petService.UpdatePet(petId, petRequest);
             return CustomResult("Cập nhật thú cưng thành công.", pet);
         }
 
-        [HttpDelete("DeletePet")]
+        [HttpDelete("DeletePet/{petId}")]
         public async Task<IActionResult> DeletePet(long petId)
         {
             var pet = await _petService.DeletePet(petId);
             return CustomResult("Xóa thú cưng thành công.", pet);
         }
 
-        [HttpGet("GetAllPetTypeByPetCategory")]
+        [HttpGet("GetAllPetTypeByPetCategory/{petCategoryId}")]
         public async Task<IActionResult> GetAllPetTypeByPetCate(long petCategoryId)
         {
             var pet = await _petService.GetAllPetType(petCategoryId);
             return CustomResult("Giống loài:", pet);
         }
 
-        [HttpGet("GetPetType")]
+        [HttpGet("GetPetType/{petTypeID}")]
         public async Task<IActionResult> GetPetType(long petTypeID)
         {
             var pet = await _petService.GetPetType(petTypeID);
@@ -73,14 +73,14 @@ namespace FluffyPaw_API.Controllers.Pet
             return CustomResult("Sở thích:", pet);
         }
 
-        [HttpGet("GetBehavior")]
+        [HttpGet("GetBehavior/{behaviorId}")]
         public async Task<IActionResult> GetBehavior(long behaviorId)
         {
             var pet = await _petService.GetBehavior(behaviorId);
             return CustomResult("Sở thích:", pet);
         }
 
-        [HttpPatch("ActiveDeactivePet")]
+        [HttpPatch("ActiveDeactivePet/{petId}")]
         public async Task<IActionResult> ActiveDeactivePet(long petId)
         {
             var result = await _petService.ActiveDeactivePet(petId);

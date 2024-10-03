@@ -17,14 +17,14 @@ namespace FluffyPaw_API.Controllers.VaccineHistory
             _vaccineService = vaccineService;
         }
 
-        [HttpGet("GetAllVaccineHistories")]
+        [HttpGet("GetAllVaccineHistories/{petId}")]
         public async Task<IActionResult> GetAllVaccineHistories(long petId)
         {
             var vaccine = await _vaccineService.GetVaccineHistories(petId);
             return CustomResult("Vaccine list:", vaccine);
         }
 
-        [HttpGet("GetVaccineDetail")]
+        [HttpGet("GetVaccineDetail/{vaccineId}")]
         public async Task<IActionResult> GetVaccineHistorieDetail(long vaccineId)
         {
             var vaccine = await _vaccineService.GetVaccineHistory(vaccineId);
@@ -38,21 +38,21 @@ namespace FluffyPaw_API.Controllers.VaccineHistory
             return CustomResult("Thêm vaccine thành công.", vaccine);
         }
 
-        [HttpPatch("UpdateVaccine")]
+        [HttpPatch("UpdateVaccine/{vaccineId}")]
         public async Task<IActionResult> UpdateVaccine(long vaccineId, [FromForm] VaccineRequest vaccineRequest)
         {
             var vaccine = await _vaccineService.UpdateVaccineHistory(vaccineId, vaccineRequest);
             return CustomResult("Cập nhật vaccine thành công.", vaccine);
         }
 
-        [HttpDelete("DeleteVaccine")]
+        [HttpDelete("DeleteVaccine/{vaccineId}")]
         public async Task<IActionResult> DeleteVaccine(long vaccineId)
         {
             var vaccine = await _vaccineService.RemoveVacine(vaccineId);
             return CustomResult("Xóa vaccine thành công.", vaccine);
         }
 
-        [HttpPatch("CheckoutVaccine")]
+        [HttpPatch("CheckoutVaccine/{vaccineId}")]
         public async Task<IActionResult> CheckoutVaccine(long vaccineId)
         {
             var vaccine = await _vaccineService.CheckoutVaccine(vaccineId);
