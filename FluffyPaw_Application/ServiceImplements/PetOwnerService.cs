@@ -47,6 +47,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var result = _mapper.Map<PetOwnerResponse>(po);
             result.Email = po.Account.Email;
             result.Avatar = po.Account.Avatar;
+            result.Username = po.Account.Username;
             return result;
         }
 
