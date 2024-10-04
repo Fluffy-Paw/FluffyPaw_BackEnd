@@ -133,6 +133,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     break;
 
                 default:
+                    user.Reputation = AccountReputation.Bad.ToString();
                     await ActiveDeactiveAccount(userId); 
                     break;
                 

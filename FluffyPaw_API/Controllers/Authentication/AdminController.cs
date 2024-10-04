@@ -93,7 +93,7 @@ namespace FluffyPaw_API.Controllers.Authentication
         {
             var po = await _adminService.DowngradeReputation(id);
             if (po == "Ban") return CustomResult("Tài khoản đã bị khóa.");
-            return CustomResult($"Uy tín hiện tại của account id {id} là ",po);
+            return CustomResult($"Uy tín hiện tại của account id {id} là {po}");
         }
     }
 }
