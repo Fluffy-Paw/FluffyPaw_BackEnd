@@ -23,6 +23,8 @@ namespace FluffyPaw_Domain.Entities
 
         public float TotalRating { get; set; }
 
+        public bool Status { get; set; }
+
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }
 

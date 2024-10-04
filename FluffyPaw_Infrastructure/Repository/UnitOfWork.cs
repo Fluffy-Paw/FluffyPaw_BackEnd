@@ -29,7 +29,6 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<PetOwner> _petOwnerRepository;
         private IGenericRepository<PetType> _petTypeRepository;
         private IGenericRepository<Service> _serviceRepository;
-        private IGenericRepository<ServiceFile> _serviceFileRepository;
         private IGenericRepository<ServiceType> _serviceTypeRepository;
         private IGenericRepository<Store> _storeRepository;
         private IGenericRepository<StoreFile> _storeFileRepository;
@@ -251,19 +250,6 @@ namespace FluffyPaw_Infrastructure.Repository
                     _serviceRepository = new GenericRepository<Service>(_context);
                 }
                 return _serviceRepository;
-            }
-        }
-
-        public IGenericRepository<ServiceFile> ServiceFileRepository
-        {
-            get
-            {
-
-                if (_serviceFileRepository == null)
-                {
-                    _serviceFileRepository = new GenericRepository<ServiceFile>(_context);
-                }
-                return _serviceFileRepository;
             }
         }
 
