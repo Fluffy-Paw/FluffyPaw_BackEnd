@@ -109,7 +109,7 @@ namespace FluffyPaw_Application.ServiceImplements
             else return false;
         }
 
-        public async Task<bool> DowngradeReputation(long userId)
+        public async Task<string> DowngradeReputation(long userId)
         {
             var user = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == userId).FirstOrDefault();
             if(user == null)
@@ -117,18 +117,29 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
             }
 
-            if(user.Reputation == AccountReputation.Good.ToString())
+            switch(user.Reputation)
             {
-                user.Reputation = AccountReputation.Warning.ToString();
-            }
-            else
-            {
-                user.Reputation = AccountReputation.Ban.ToString();
-                await ActiveDeactiveAccount(userId);
+                case "Good":
+                    user.Reputation = AccountReputation.Warning.ToString();
+                    break;
+
+                case "Warning":
+                    user.Reputation = AccountReputation.Bad.ToString();
+                    break;
+
+                case "Bad":
+                    user.Reputation = AccountReputation.Ban.ToString();
+                    await ActiveDeactiveAccount(userId);
+                    break;
+
+                default:
+                    await ActiveDeactiveAccount(userId); 
+                    break;
+                
             }
             _unitOfWork.Save();
 
-            return true;
+            return user.Reputation;
         }
     }
 }

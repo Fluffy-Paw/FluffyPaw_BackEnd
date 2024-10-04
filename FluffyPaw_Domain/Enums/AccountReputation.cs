@@ -10,6 +10,7 @@ namespace FluffyPaw_Domain.Enums
     {
         Good,
         Warning,
+        Bad,
         Ban
     }
 }

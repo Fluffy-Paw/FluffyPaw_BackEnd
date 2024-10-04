@@ -20,7 +20,7 @@ namespace FluffyPaw_Application.Services
         Task<List<SerResponse>> GetAllServiceFalseByBrandId(long id);
         Task<bool> AcceptBrandService(long id);
         Task<bool> ActiveDeactiveAccount(long userId);
-        Task<bool> DowngradeReputation(long userId);
+        Task<string> DowngradeReputation(long userId);
     }
 }
     
