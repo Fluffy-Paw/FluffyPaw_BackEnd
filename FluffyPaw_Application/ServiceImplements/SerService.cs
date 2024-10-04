@@ -119,6 +119,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             _mapper.Map(updateServiceRequest, existingService);
+            existingService.Image = await _firebaseConfiguration.UploadImage(updateServiceRequest.Image);
             existingService.Status = false;
             _unitOfWork.Save();
 
