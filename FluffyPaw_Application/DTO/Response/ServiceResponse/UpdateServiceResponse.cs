@@ -1,6 +1,5 @@
 ﻿using FluffyPaw_Application.Mapper;
 using FluffyPaw_Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +18,13 @@ namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 
         public string Name { get; set; }
 
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
 
         public TimeSpan Duration { get; set; }
 
         public double Cost { get; set; }
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         public int BookingCount { get; set; }
 
