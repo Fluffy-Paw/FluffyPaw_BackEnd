@@ -141,12 +141,23 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<IEnumerable<PetType>> GetAllPetType(long categoryId)
         {
-            return _unitOfWork.PetTypeRepository.Get(c => c.PetCategoryId == categoryId,includeProperties: "PetCategory");
+            var result = _unitOfWork.PetTypeRepository.Get(c => c.PetCategoryId == categoryId, includeProperties: "PetCategory");
+            
+            if(!result.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy giống loài của chủng loài này.");
+            }
+            
+            return result;
         }
 
         public async Task<BehaviorCategory> GetBehavior(long behaviorId)
         {
-            return _unitOfWork.BehaviorCategoryRepository.GetByID(behaviorId);
+            var behavior = _unitOfWork.BehaviorCategoryRepository.GetByID(behaviorId);
+
+            if (behavior == null) throw new CustomException.DataNotFoundException($"Không tìm thấy hành vi có id {behaviorId}");
+
+            return behavior;
         }
 
         public async Task<PetResponse> GetPet(long petId)
@@ -174,7 +185,11 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<PetType> GetPetType(long petTypeId)
         {
-            return _unitOfWork.PetTypeRepository.GetByID(petTypeId);
+            var petType = _unitOfWork.PetTypeRepository.GetByID(petTypeId);
+
+            if (petType == null) throw new CustomException.DataNotFoundException("Không tìm thấy giống loài.");
+
+            return petType;
         }
 
         public async Task<PetResponse> UpdatePet(long petId, PetRequest petRequest)
