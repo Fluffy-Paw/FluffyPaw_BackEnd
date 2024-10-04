@@ -4,6 +4,7 @@ using FluffyPaw_Application.Services;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.DTO.Request.PetRequest;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace FluffyPaw_API.Controllers.Pet
 {
@@ -40,6 +41,14 @@ namespace FluffyPaw_API.Controllers.Pet
         {
             var pet = await _petService.CreateNewPet(petRequest);
             return CustomResult("Thêm thú cưng thành công.", pet);
+        }
+
+        [HttpPost("AddBehavior")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> AddBehavior([Required] string Action)
+        {
+            var id = await _petService.AddBehavior(Action);
+            return CustomResult("Id hành vi:", id);
         }
 
         [HttpPatch("UpdatePet/{petId}")]

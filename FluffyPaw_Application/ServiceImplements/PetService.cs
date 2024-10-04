@@ -56,6 +56,21 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
+        public async Task<long> AddBehavior(string Action)
+        {
+            var existingBehavior = _unitOfWork.BehaviorCategoryRepository.Get(b => b.Name.ToLower() == Action.ToLower()).FirstOrDefault();
+
+            if (existingBehavior != null)
+            {
+                return existingBehavior.Id;
+            }
+
+            _unitOfWork.BehaviorCategoryRepository.Insert(new BehaviorCategory { Name = Action});
+            _unitOfWork.Save();
+
+            return _unitOfWork.BehaviorCategoryRepository.Get(b => b.Name.ToLower() == Action.ToLower()).FirstOrDefault().Id;
+        }
+
         public async Task<bool> CreateNewPet(PetRequest petRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);

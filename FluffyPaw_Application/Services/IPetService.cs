@@ -22,5 +22,6 @@ namespace FluffyPaw_Application.Services
         Task<PetType> GetPetType(long petTypeId);
         Task<BehaviorCategory> GetBehavior(long behaviorId);
         Task<bool> ActiveDeactivePet(long petId);
+        Task<long> AddBehavior(string Action);
     }
 }
