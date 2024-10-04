@@ -1,11 +1,8 @@
 ﻿using CoreApiResponse;
 using FluffyPaw_Application.DTO.Request.ServiceRequest;
-using FluffyPaw_Application.DTO.Request.ServiceTypeRequest;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
-using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FluffyPaw_API.Controllers.Service

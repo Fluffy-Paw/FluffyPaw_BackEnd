@@ -23,7 +23,7 @@ namespace FluffyPaw_Application.DTO.Request.ServiceRequest
 
         public double Cost { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public List<CertificateDto>? CertificateDtos { get; set; }
     }

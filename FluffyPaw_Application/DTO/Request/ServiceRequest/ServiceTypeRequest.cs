@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluffyPaw_Application.DTO.Request.ServiceTypeRequest
+namespace FluffyPaw_Application.DTO.Request.ServiceRequest
 {
     public class ServiceTypeRequest : IMapFrom<ServiceType>
     {
