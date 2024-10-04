@@ -19,6 +19,7 @@ namespace FluffyPaw_API.Controllers.PetOwner
         }
 
         [HttpGet("GetPetOwnerDetail")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetPetOwnerDetail()
         {
             var po = await _petOwnerService.GetPetOwnerDetail();
@@ -26,6 +27,7 @@ namespace FluffyPaw_API.Controllers.PetOwner
         }
 
         [HttpPatch("UpdatePetOwnerAccount")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> UpdatePetOwnerAccount([FromForm] PetOwnerRequest petOwnerRequest)
         {
             var po = await _petOwnerService.UpdatePetOwnerAccount(petOwnerRequest);

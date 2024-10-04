@@ -56,6 +56,21 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
+        public async Task<long> AddBehavior(string Action)
+        {
+            var existingBehavior = _unitOfWork.BehaviorCategoryRepository.Get(b => b.Name.ToLower() == Action.ToLower()).FirstOrDefault();
+
+            if (existingBehavior != null)
+            {
+                return existingBehavior.Id;
+            }
+
+            _unitOfWork.BehaviorCategoryRepository.Insert(new BehaviorCategory { Name = Action});
+            _unitOfWork.Save();
+
+            return _unitOfWork.BehaviorCategoryRepository.Get(b => b.Name.ToLower() == Action.ToLower()).FirstOrDefault().Id;
+        }
+
         public async Task<bool> CreateNewPet(PetRequest petRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
@@ -71,7 +86,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Bạn chỉ được lưu tối đa 5 thú cưng.");
             }
 
-            if(petRequest.MicrochipNumber != null)
+            if(petRequest.MicrochipNumber != "none")
             {
                 var duplicatePet = _unitOfWork.PetRepository.Get(m => m.MicrochipNumber == petRequest.MicrochipNumber).FirstOrDefault();
                 if(duplicatePet != null)
@@ -79,6 +94,8 @@ namespace FluffyPaw_Application.ServiceImplements
                     throw new CustomException.InvalidDataException($"Đã tồn tại pet với số microchip {petRequest.MicrochipNumber}");
                 }
             }
+
+            if (petRequest.Dob > DateTimeOffset.UtcNow) throw new CustomException.InvalidDataException("Ngày sinh không hợp lệ.");
 
             var pet = _mapper.Map<Pet>(petRequest);
             pet.PetOwnerId = po.Id;
@@ -199,7 +216,7 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
-            if (petRequest.MicrochipNumber != pet.MicrochipNumber)
+            if (petRequest.MicrochipNumber != pet.MicrochipNumber || petRequest.MicrochipNumber != "none")
             {
                 var duplicatePet = _unitOfWork.PetRepository.Get(m => m.MicrochipNumber == petRequest.MicrochipNumber).FirstOrDefault();
                 if (duplicatePet != null)
@@ -207,12 +224,15 @@ namespace FluffyPaw_Application.ServiceImplements
                     throw new CustomException.InvalidDataException($"Đã tồn tại pet với số microchip {petRequest.MicrochipNumber}");
                 }
             }
+
+            if (petRequest.Dob > DateTimeOffset.UtcNow) throw new CustomException.InvalidDataException("Ngày sinh không hợp lệ.");
+
             if (petRequest.Image != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
             _mapper.Map(petRequest, pet);
             _unitOfWork.Save();
 
             var result = _mapper.Map<PetResponse>(pet);
-            result.PetCategoryId = pet.PetType.PetCategoryId;
+            result.PetCategoryId = _unitOfWork.PetTypeRepository.GetByID(pet.PetTypeId).PetCategoryId;
             result.BehaviorCategory = await GetBehavior(pet.BehaviorCategoryId);
             result.Age = DateTime.Now.Year - pet.Dob.Year;
             if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))

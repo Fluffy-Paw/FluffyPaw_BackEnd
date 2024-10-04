@@ -23,6 +23,8 @@ namespace FluffyPaw_Application.DTO.Request.PetOwnerRequest
 
         public string? Email { get; set; }
 
+        public DateTimeOffset? Dob {  get; set; }
+
         public IFormFile? Avatar { get; set; }
     }
 }
