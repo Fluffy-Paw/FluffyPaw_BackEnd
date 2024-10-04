@@ -34,7 +34,6 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<PetOwner> PetOwners { get; set; }
         public DbSet<PetType> PetTypes { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<ServiceFile> ServiceFiles { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreFile> StoreFiles { get; set; }

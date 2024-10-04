@@ -13,9 +13,9 @@ namespace FluffyPaw_Application.Services
 {
     public interface ICertificateService
     {
-        //IEnumerable<ServiceResponse> GetAllCertificateByServiceId(long id);
-        Task<CertificatesResponse> CreateCertificate(CertificateDto certificateDto);
-        //Task<UpdateServiceResponse> UpdateCertificate(long id, CertificateDto certificateDto);
-        //Task<bool> DeleteCertificate(long id);
+        Task<List<CertificatesResponse>> GetAllCertificateByServiceId(long id);
+        Task<CertificatesResponse> CreateCertificate(CreateCertificateRequest certificateRequest);
+        Task<CertificatesResponse> UpdateCertificate(long id, UpdateCertificateRequest certificateRequest);
+        Task<bool> DeleteCertificate(long id);
     }
 }

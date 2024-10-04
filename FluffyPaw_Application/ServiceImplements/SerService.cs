@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.ServiceRequest;
-using FluffyPaw_Application.DTO.Request.ServiceTypeRequest;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
@@ -120,6 +119,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             _mapper.Map(updateServiceRequest, existingService);
+            existingService.Image = await _firebaseConfiguration.UploadImage(updateServiceRequest.Image);
             existingService.Status = false;
             _unitOfWork.Save();
 

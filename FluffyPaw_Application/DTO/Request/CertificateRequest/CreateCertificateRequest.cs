@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Request.CertificateRequest
 {
-    public class CertificateDto : IMapFrom<Certificate>
+    public class CreateCertificateRequest : IMapFrom<Certificate>
     {
+        public long ServiceId { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public IFormFile File { get; set; }
