@@ -1,6 +1,6 @@
 ﻿using FluffyPaw_Application.DTO.Request.AdminRequest;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
-using FluffyPaw_Application.DTO.Request.ServiceTypeRequest;
+using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Domain.Entities;
