@@ -2,6 +2,7 @@
 using FluffyPaw_Application.DTO.Request.VacineRequest;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FluffyPaw_API.Controllers.VaccineHistory
@@ -18,6 +19,7 @@ namespace FluffyPaw_API.Controllers.VaccineHistory
         }
 
         [HttpGet("GetAllVaccineHistories/{petId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllVaccineHistories(long petId)
         {
             var vaccine = await _vaccineService.GetVaccineHistories(petId);
@@ -25,6 +27,7 @@ namespace FluffyPaw_API.Controllers.VaccineHistory
         }
 
         [HttpGet("GetVaccineDetail/{vaccineId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetVaccineHistorieDetail(long vaccineId)
         {
             var vaccine = await _vaccineService.GetVaccineHistory(vaccineId);
@@ -32,6 +35,7 @@ namespace FluffyPaw_API.Controllers.VaccineHistory
         }
 
         [HttpPost("AddVaccine")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> AddVaccine([FromForm] VaccineRequest vaccineRequest)
         {
             var vaccine = await _vaccineService.AddVaccine(vaccineRequest);
@@ -39,6 +43,7 @@ namespace FluffyPaw_API.Controllers.VaccineHistory
         }
 
         [HttpPatch("UpdateVaccine/{vaccineId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> UpdateVaccine(long vaccineId, [FromForm] VaccineRequest vaccineRequest)
         {
             var vaccine = await _vaccineService.UpdateVaccineHistory(vaccineId, vaccineRequest);
@@ -46,6 +51,7 @@ namespace FluffyPaw_API.Controllers.VaccineHistory
         }
 
         [HttpDelete("DeleteVaccine/{vaccineId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> DeleteVaccine(long vaccineId)
         {
             var vaccine = await _vaccineService.RemoveVacine(vaccineId);
@@ -53,6 +59,7 @@ namespace FluffyPaw_API.Controllers.VaccineHistory
         }
 
         [HttpPatch("CheckoutVaccine/{vaccineId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> CheckoutVaccine(long vaccineId)
         {
             var vaccine = await _vaccineService.CheckoutVaccine(vaccineId);

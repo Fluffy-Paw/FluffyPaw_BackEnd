@@ -59,6 +59,9 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Bạn không phải Pet Owner.");
             }
+
+            if (petOwnerRequest.Dob > DateTimeOffset.UtcNow) throw new CustomException.InvalidDataException("Ngày sinh không hợp lệ.");
+
             if (petOwnerRequest.Phone != exitstingPo.Phone)
             {
                 if (_unitOfWork.PetOwnerRepository.Get(po => po.Phone == petOwnerRequest.Phone).Any())

@@ -32,11 +32,11 @@ namespace FluffyPaw_Application.DTO.Request.PetRequest
         [Required(ErrorMessage = "Vui lòng nhập ngày sinh.")]
         public DateTimeOffset Dob { get; set; }
 
-        public string? Allergy { get; set; }
+        public string Allergy { get; set; }
 
-        public string? MicrochipNumber { get; set; }
+        public string MicrochipNumber { get; set; }
 
-        public string? Decription { get; set; }
+        public string Decription { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập tình trạng thiến.")]
         public bool IsNeuter { get; set; }

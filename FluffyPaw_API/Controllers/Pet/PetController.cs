@@ -3,6 +3,7 @@ using CoreApiResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.DTO.Request.PetRequest;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FluffyPaw_API.Controllers.Pet
 {
@@ -18,6 +19,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetAllPets")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllPets()
         {
             var pet = await _petService.GetAllPetOfUser();
@@ -25,6 +27,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetPet/{petId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetPet(long petId)
         {
             var pet = await _petService.GetPet(petId);
@@ -32,6 +35,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpPost("AddPet")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> AddPet([FromForm] PetRequest petRequest)
         {
             var pet = await _petService.CreateNewPet(petRequest);
@@ -39,6 +43,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpPatch("UpdatePet/{petId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> UpdatePet(long petId, [FromForm] PetRequest petRequest)
         {
             var pet = await _petService.UpdatePet(petId, petRequest);
@@ -46,6 +51,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpDelete("DeletePet/{petId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> DeletePet(long petId)
         {
             var pet = await _petService.DeletePet(petId);
@@ -53,6 +59,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetAllPetTypeByPetCategory/{petCategoryId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllPetTypeByPetCate(long petCategoryId)
         {
             var pet = await _petService.GetAllPetType(petCategoryId);
@@ -60,6 +67,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetPetType/{petTypeID}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetPetType(long petTypeID)
         {
             var pet = await _petService.GetPetType(petTypeID);
@@ -67,6 +75,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetAllBehavior")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllBehavior()
         {
             var pet = await _petService.GetAllBehavior();
@@ -74,6 +83,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetBehavior/{behaviorId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetBehavior(long behaviorId)
         {
             var pet = await _petService.GetBehavior(behaviorId);
@@ -81,6 +91,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpPatch("ActiveDeactivePet/{petId}")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> ActiveDeactivePet(long petId)
         {
             var result = await _petService.ActiveDeactivePet(petId);

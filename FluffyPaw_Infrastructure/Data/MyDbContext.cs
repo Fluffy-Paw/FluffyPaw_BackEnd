@@ -100,47 +100,47 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<PetType>().HasData(
-                new PetType { Id = 1, PetCategoryId = 1, Name = "Chó Chihuahua", Image = "None" },
-                new PetType { Id = 2, PetCategoryId = 1, Name = "Chó Bắc Kinh", Image = "None" },
-                new PetType { Id = 3, PetCategoryId = 1, Name = "Chó Bắc Kinh lai Nhật", Image = "None" },
-                new PetType { Id = 4, PetCategoryId = 1, Name = "Chó Dachshund (Lạp Xưởng/Xúc Xích)", Image = "None" },
-                new PetType { Id = 5, PetCategoryId = 1, Name = "Chó Phú Quốc", Image = "None" },
-                new PetType { Id = 6, PetCategoryId = 1, Name = "Chó Poodle", Image = "None" },
-                new PetType { Id = 7, PetCategoryId = 1, Name = "Chó Pug", Image = "None" },
-                new PetType { Id = 8, PetCategoryId = 1, Name = "Chó Alaska", Image = "None" },
-                new PetType { Id = 9, PetCategoryId = 1, Name = "Chó Husky", Image = "None" },
-                new PetType { Id = 10, PetCategoryId = 1, Name = "Chó Samoyed", Image = "None" },
-                new PetType { Id = 11, PetCategoryId = 1, Name = "Chó Pomeranian (Phốc sóc)", Image = "None" },
-                new PetType { Id = 12, PetCategoryId = 1, Name = "Chó Beagle", Image = "None" },
-                new PetType { Id = 13, PetCategoryId = 1, Name = "Chó Shiba Inu", Image = "None" },
-                new PetType { Id = 14, PetCategoryId = 1, Name = "Chó Golden Retriever", Image = "None" },
-                new PetType { Id = 15, PetCategoryId = 1, Name = "Chó Becgie", Image = "None" },
-                new PetType { Id = 16, PetCategoryId = 1, Name = "Chó Corgi", Image = "None" },
-                new PetType { Id = 17, PetCategoryId = 1, Name = "Chó Mông Cộc", Image = "None" },
-                new PetType { Id = 18, PetCategoryId = 2, Name = "Mèo Xiêm", Image = "None" },
-                new PetType { Id = 19, PetCategoryId = 2, Name = "Mèo Anh lông ngắn", Image = "None" },
-                new PetType { Id = 20, PetCategoryId = 2, Name = "Mèo Anh lông dài", Image = "None" },
-                new PetType { Id = 21, PetCategoryId = 2, Name = "Mèo Ai Cập", Image = "None" },
-                new PetType { Id = 22, PetCategoryId = 2, Name = "Mèo Ba Tư", Image = "None" },
-                new PetType { Id = 23, PetCategoryId = 2, Name = "Mèo Bali", Image = "None" },
-                new PetType { Id = 24, PetCategoryId = 2, Name = "Mèo Bengal", Image = "None" },
-                new PetType { Id = 25, PetCategoryId = 2, Name = "Mèo Scottish Fold", Image = "None" },
-                new PetType { Id = 26, PetCategoryId = 2, Name = "Mèo Munchkin", Image = "None" },
-                new PetType { Id = 27, PetCategoryId = 2, Name = "Mèo mướp", Image = "None" },
-                new PetType { Id = 28, PetCategoryId = 2, Name = "Mèo Ragdoll", Image = "None" },
-                new PetType { Id = 29, PetCategoryId = 2, Name = "Mèo Maine Coon", Image = "None" },
-                new PetType { Id = 30, PetCategoryId = 2, Name = "Mèo Angora", Image = "None" },
-                new PetType { Id = 31, PetCategoryId = 2, Name = "Mèo Laperm", Image = "None" },
-                new PetType { Id = 32, PetCategoryId = 2, Name = "Mèo Somali", Image = "None" },
-                new PetType { Id = 33, PetCategoryId = 2, Name = "Mèo Toyger", Image = "None" },
-                new PetType { Id = 34, PetCategoryId = 2, Name = "Mèo Turkish Van", Image = "None" },
-                new PetType { Id = 35, PetCategoryId = 2, Name = "Mèo Miến Điện", Image = "None" },
-                new PetType { Id = 36, PetCategoryId = 2, Name = "Mèo Exotic", Image = "None" }
+                new PetType { Id = 1, PetCategoryId = 1, Name = "Chó Chihuahua", Image = "none" },
+                new PetType { Id = 2, PetCategoryId = 1, Name = "Chó Bắc Kinh", Image = "none" },
+                new PetType { Id = 3, PetCategoryId = 1, Name = "Chó Bắc Kinh lai Nhật", Image = "none" },
+                new PetType { Id = 4, PetCategoryId = 1, Name = "Chó Dachshund (Lạp Xưởng/Xúc Xích)", Image = "none" },
+                new PetType { Id = 5, PetCategoryId = 1, Name = "Chó Phú Quốc", Image = "none" },
+                new PetType { Id = 6, PetCategoryId = 1, Name = "Chó Poodle", Image = "none" },
+                new PetType { Id = 7, PetCategoryId = 1, Name = "Chó Pug", Image = "none" },
+                new PetType { Id = 8, PetCategoryId = 1, Name = "Chó Alaska", Image = "none" },
+                new PetType { Id = 9, PetCategoryId = 1, Name = "Chó Husky", Image = "none" },
+                new PetType { Id = 10, PetCategoryId = 1, Name = "Chó Samoyed", Image = "none" },
+                new PetType { Id = 11, PetCategoryId = 1, Name = "Chó Pomeranian (Phốc sóc)", Image = "none" },
+                new PetType { Id = 12, PetCategoryId = 1, Name = "Chó Beagle", Image = "none" },
+                new PetType { Id = 13, PetCategoryId = 1, Name = "Chó Shiba Inu", Image = "none" },
+                new PetType { Id = 14, PetCategoryId = 1, Name = "Chó Golden Retriever", Image = "none" },
+                new PetType { Id = 15, PetCategoryId = 1, Name = "Chó Becgie", Image = "none" },
+                new PetType { Id = 16, PetCategoryId = 1, Name = "Chó Corgi", Image = "none" },
+                new PetType { Id = 17, PetCategoryId = 1, Name = "Chó Mông Cộc", Image = "none" },
+                new PetType { Id = 18, PetCategoryId = 2, Name = "Mèo Xiêm", Image = "none" },
+                new PetType { Id = 19, PetCategoryId = 2, Name = "Mèo Anh lông ngắn", Image = "none" },
+                new PetType { Id = 20, PetCategoryId = 2, Name = "Mèo Anh lông dài", Image = "none" },
+                new PetType { Id = 21, PetCategoryId = 2, Name = "Mèo Ai Cập", Image = "none" },
+                new PetType { Id = 22, PetCategoryId = 2, Name = "Mèo Ba Tư", Image = "none" },
+                new PetType { Id = 23, PetCategoryId = 2, Name = "Mèo Bali", Image = "none" },
+                new PetType { Id = 24, PetCategoryId = 2, Name = "Mèo Bengal", Image = "none" },
+                new PetType { Id = 25, PetCategoryId = 2, Name = "Mèo Scottish Fold", Image = "none" },
+                new PetType { Id = 26, PetCategoryId = 2, Name = "Mèo Munchkin", Image = "none" },
+                new PetType { Id = 27, PetCategoryId = 2, Name = "Mèo mướp", Image = "none" },
+                new PetType { Id = 28, PetCategoryId = 2, Name = "Mèo Ragdoll", Image = "none" },
+                new PetType { Id = 29, PetCategoryId = 2, Name = "Mèo Maine Coon", Image = "none" },
+                new PetType { Id = 30, PetCategoryId = 2, Name = "Mèo Angora", Image = "none" },
+                new PetType { Id = 31, PetCategoryId = 2, Name = "Mèo Laperm", Image = "none" },
+                new PetType { Id = 32, PetCategoryId = 2, Name = "Mèo Somali", Image = "none" },
+                new PetType { Id = 33, PetCategoryId = 2, Name = "Mèo Toyger", Image = "none" },
+                new PetType { Id = 34, PetCategoryId = 2, Name = "Mèo Turkish Van", Image = "none" },
+                new PetType { Id = 35, PetCategoryId = 2, Name = "Mèo Miến Điện", Image = "none" },
+                new PetType { Id = 36, PetCategoryId = 2, Name = "Mèo Exotic", Image = "none" }
                 );
 
             modelBuilder.Entity<Pet>().HasData(
-                new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTime.Parse("2022-08-23"), Allergy = "None", MicrochipNumber = "None", Decription = "test", IsNeuter = true, Status = "Available" },
-                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 18, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = DateTime.Parse("2022-10-23"), Allergy = "None", MicrochipNumber = "None", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
+                new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTime.Parse("2022-08-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test", IsNeuter = true, Status = "Available" },
+                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 18, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = DateTime.Parse("2022-10-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
                 );
 
             modelBuilder.Entity<ServiceType>().HasData(
@@ -149,8 +149,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Brand>().HasData(
-                new Brand { Id = 1, AccountId = 2, Name = "StoreA", BrandEmail = "test1@gmail.com", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "None", Address = "test", Status = true },
-                new Brand { Id = 2, AccountId = 3, Name = "StoreB", BrandEmail = "test1@gmail.com", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "None", Address = "test", Status = true }
+                new Brand { Id = 1, AccountId = 2, Name = "StoreA", BrandEmail = "test1@gmail.com", BusinessLicense = "none", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "none", Address = "test", Status = true },
+                new Brand { Id = 2, AccountId = 3, Name = "StoreB", BrandEmail = "test1@gmail.com", BusinessLicense = "none", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "none", Address = "test", Status = true }
                 );
 
             modelBuilder.Entity<Service>().HasData(
@@ -161,13 +161,13 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Certificate>().HasData(
-                new Certificate { Id = 1, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
-                new Certificate { Id = 2, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
-                new Certificate { Id = 3, ServiceId = 2, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
-                new Certificate { Id = 4, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
-                new Certificate { Id = 5, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
-                new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
-                new Certificate { Id = 7, ServiceId = 4, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" }
+                new Certificate { Id = 1, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
+                new Certificate { Id = 2, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
+                new Certificate { Id = 3, ServiceId = 2, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
+                new Certificate { Id = 4, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
+                new Certificate { Id = 5, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
+                new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
+                new Certificate { Id = 7, ServiceId = 4, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" }
                 );
 
             modelBuilder.Entity<Store>().HasData(
