@@ -69,7 +69,11 @@ namespace FluffyPaw_Infrastructure.Data
                 new Account { Id = 4, Username = "test3", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
                 new Account { Id = 5, Username = "test4", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
                 new Account { Id = 6, Username = "test5", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 7, Username = "test6", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active }
+                new Account { Id = 7, Username = "test6", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 8, Username = "test7", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
+                new Account { Id = 9, Username = "test8", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow, Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active }
+
+
                 );
 
             modelBuilder.Entity<Wallet>().HasData(
@@ -152,6 +156,13 @@ namespace FluffyPaw_Infrastructure.Data
                 new Brand { Id = 2, AccountId = 3, Name = "StoreB", BrandEmail = "test1@gmail.com", BusinessLicense = "None", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "None", Address = "test", Status = true }
                 );
 
+            modelBuilder.Entity<Store>().HasData(
+                new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Chi nhánh A", Address = "số AAA đường AA, Thành phố A", Phone = "0123456789", TotalRating = 0f, Status = true},
+                new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Chi nhánh B", Address = "số BBB đường BB, Thành phố B", Phone = "0123456789", TotalRating = 0f, Status = true},
+                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", Address = "số CCC đường CC, Thành phố C", Phone = "0123456789", TotalRating = 0f, Status = true},
+                new Store { Id = 4, BrandId = 2, AccountId = 9, Name = "Chi nhánh D", Address = "số DDD đường DD, Thành phố d", Phone = "0123456789", TotalRating = 0f, Status = true}
+                );
+
             modelBuilder.Entity<Service>().HasData(
                 new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Grooming", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
                 new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Vaccine", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
@@ -167,11 +178,6 @@ namespace FluffyPaw_Infrastructure.Data
                 new Certificate { Id = 5, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
                 new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" },
                 new Certificate { Id = 7, ServiceId = 4, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "None" }
-                );
-
-            modelBuilder.Entity<Store>().HasData(
-                new Store { Id = 1, AccountId = 6, BrandId = 1, Address = "aaa", Name = "Name" , Phone = "0192837465", TotalRating = 5.0f},
-                new Store { Id = 2, AccountId = 7, BrandId = 2, Address = "aaa", Name = "Name" , Phone = "0192837465", TotalRating = 5.0f}
                 );
 
             modelBuilder.Entity<StoreService>().HasData(

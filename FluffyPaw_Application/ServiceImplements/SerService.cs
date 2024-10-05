@@ -74,10 +74,14 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
 
-            var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
+            var brand = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId && sm.Status == true).FirstOrDefault();
+            if (brand == null)
+            {
+                throw new CustomException.DataNotFoundException("Brand này chưa được xác thực từ hệ thống.");
+            }
 
             var existingService = _unitOfWork.ServiceRepository.Get(p => p.Name.ToLower() == serviceRequest.Name.ToLower()
-            && p.BrandId == BrandId.Id).FirstOrDefault();
+            && p.BrandId == brand.Id).FirstOrDefault();
 
             if (existingService != null)
             {
@@ -85,7 +89,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var newService = _mapper.Map<Service>(serviceRequest);
-            newService.BrandId = BrandId.Id;
+            newService.BrandId = brand.Id;
             newService.Image = await _firebaseConfiguration.UploadImage(serviceRequest.Image);
 
             _unitOfWork.ServiceRepository.Insert(newService);

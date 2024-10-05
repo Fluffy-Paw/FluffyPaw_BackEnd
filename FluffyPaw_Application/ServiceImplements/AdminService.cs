@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -87,6 +88,27 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var service = _unitOfWork.ServiceRepository.GetByID(id);
             service.Status = true;
+            _unitOfWork.Save();
+            return true;
+        }
+
+        public async Task<List<StoreResponse>> GetAllStoreFalseByBrandId(long id)
+        {
+            var stores = _unitOfWork.StoreRepository.Get(ss => ss.BrandId == id && ss.Status == false, includeProperties: "Account").ToList();
+
+            if (stores == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy chi nhánh của doanh nghiệp");
+            }
+
+            var storeResponses = _mapper.Map<List<StoreResponse>>(stores);
+            return storeResponses;
+        }
+
+        public async Task<bool> AcceptStore(long id)
+        {
+            var store = _unitOfWork.StoreRepository.GetByID(id);
+            store.Status = true;
             _unitOfWork.Save();
             return true;
         }
