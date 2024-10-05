@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 
 namespace FluffyPaw_Application.Services
 {
@@ -19,6 +20,8 @@ namespace FluffyPaw_Application.Services
         Task<bool> AcceptBrand(long id);
         Task<List<SerResponse>> GetAllServiceFalseByBrandId(long id);
         Task<bool> AcceptBrandService(long id);
+        Task<List<StoreResponse>> GetAllStoreFalseByBrandId(long id);
+        Task<bool> AcceptStore(long id);
         Task<bool> ActiveDeactiveAccount(long userId);
         Task<string> DowngradeReputation(long userId);
     }
