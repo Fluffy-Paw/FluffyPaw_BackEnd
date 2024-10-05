@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -91,6 +92,27 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
+        public async Task<List<StoreResponse>> GetAllStoreFalseByBrandId(long id)
+        {
+            var stores = _unitOfWork.StoreRepository.Get(ss => ss.BrandId == id && ss.Status == false, includeProperties: "Account").ToList();
+
+            if (stores == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy chi nhánh của doanh nghiệp");
+            }
+
+            var storeResponses = _mapper.Map<List<StoreResponse>>(stores);
+            return storeResponses;
+        }
+
+        public async Task<bool> AcceptStore(long id)
+        {
+            var store = _unitOfWork.StoreRepository.GetByID(id);
+            store.Status = true;
+            _unitOfWork.Save();
+            return true;
+        }
+
         public async Task<bool> ActiveDeactiveAccount(long userId)
         {
             var user = _unitOfWork.AccountRepository.GetByID(userId);
@@ -109,7 +131,7 @@ namespace FluffyPaw_Application.ServiceImplements
             else return false;
         }
 
-        public async Task<bool> DowngradeReputation(long userId)
+        public async Task<string> DowngradeReputation(long userId)
         {
             var user = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == userId).FirstOrDefault();
             if(user == null)
@@ -117,18 +139,30 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
             }
 
-            if(user.Reputation == AccountReputation.Good.ToString())
+            switch(user.Reputation)
             {
-                user.Reputation = AccountReputation.Warning.ToString();
-            }
-            else
-            {
-                user.Reputation = AccountReputation.Ban.ToString();
-                await ActiveDeactiveAccount(userId);
+                case "Good":
+                    user.Reputation = AccountReputation.Warning.ToString();
+                    break;
+
+                case "Warning":
+                    user.Reputation = AccountReputation.Bad.ToString();
+                    break;
+
+                case "Bad":
+                    user.Reputation = AccountReputation.Ban.ToString();
+                    await ActiveDeactiveAccount(userId);
+                    break;
+
+                default:
+                    user.Reputation = AccountReputation.Bad.ToString();
+                    await ActiveDeactiveAccount(userId); 
+                    break;
+                
             }
             _unitOfWork.Save();
 
-            return true;
+            return user.Reputation;
         }
     }
 }

@@ -42,16 +42,16 @@ namespace FluffyPaw_API.Controllers.Authentication
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllBrandFalse()
         {
-            var BrandResponse = _adminService.GetAllBrandFalse();
-            return CustomResult("Tải dữ liệu thành công.", BrandResponse);
+            var brandResponse = _adminService.GetAllBrandFalse();
+            return CustomResult("Tải dữ liệu thành công.", brandResponse);
         }
 
         [HttpPatch("AcceptBrand/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AcceptBrand(long id)
         {
-            var Brand = await _adminService.AcceptBrand(id);
-            return CustomResult("Xác thực hoàn tất.", Brand);
+            var brand = await _adminService.AcceptBrand(id);
+            return CustomResult("Xác thực hoàn tất.", brand);
         }
 
         [HttpGet("GetAllServiceFalseByBrandId/{id}")]
@@ -66,8 +66,24 @@ namespace FluffyPaw_API.Controllers.Authentication
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AcceptBrandService(long id)
         {
-            var BrandService = await _adminService.AcceptBrandService(id);
-            return CustomResult("Xác thực hoàn tất.", BrandService);
+            var brandService = await _adminService.AcceptBrandService(id);
+            return CustomResult("Xác thực hoàn tất.", brandService);
+        }
+
+        [HttpGet("GetAllStoreFalseByBrandId/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllStoreFalseByBrandId(long id)
+        {
+            var stores = await _adminService.GetAllStoreFalseByBrandId(id);
+            return CustomResult("Tải dữ liệu thành công.", stores);
+        }
+
+        [HttpPatch("AcceptStore/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AcceptStore(long id)
+        {
+            var store = await _adminService.AcceptStore(id);
+            return CustomResult("Xác thực hoàn tất.", store);
         }
 
         /*[HttpGet("GetAllAccount")]
@@ -91,9 +107,9 @@ namespace FluffyPaw_API.Controllers.Authentication
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DowngradeReputation(long id)
         {
-            var po = await _adminService.ActiveDeactiveAccount(id);
-            if (po) return CustomResult("Đã chuyển thành Active.");
-            else return CustomResult("Đã chuyển thành Deactive");
+            var po = await _adminService.DowngradeReputation(id);
+            if (po == "Ban") return CustomResult("Tài khoản đã bị khóa.");
+            return CustomResult($"Uy tín hiện tại của account id {id} là {po}");
         }
     }
 }
