@@ -17,28 +17,36 @@ namespace FluffyPaw_API.Controllers.Account
             _accountService = accountService;
         }
 
-        [HttpGet("GetAllAccount")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GetAllAccount()
-        {
-            var account = _accountService.GetAllAccounts();
-            return CustomResult("Tải dữ liệu thành công.", account);
-        }
+        //[HttpGet("GetAllAccount")]
+        //[Authorize(Roles = "Admin")]
+        //public IActionResult GetAllAccount()
+        //{
+        //    var brands = _accountService.GetAllAccounts();
+        //    return CustomResult("Tải dữ liệu thành công.", brands);
+        //}
 
         [HttpGet("GetBrands")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetBrands()
         {
-            var account = _accountService.GetBrands();
-            return CustomResult("Tải dữ liệu thành công.", account);
+            var brands = _accountService.GetBrands();
+            return CustomResult("Danh sách Brand:", brands);
         }
 
         [HttpGet("GetStores")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetStorees()
+        public IActionResult GetStores()
         {
-            var account = _accountService.GetStores();
-            return CustomResult("Tải dữ liệu thành công.", account);
+            var stores = _accountService.GetStores();
+            return CustomResult("Danh sách Store:", stores);
+        }
+
+        [HttpGet("GetStoresByBrandId/{brandId}")]
+        [Authorize(Roles = "Admin,StoreManager")]
+        public IActionResult GetStoresByBrandId(long brandId)
+        {
+            var stores = _accountService.GetStores();
+            return CustomResult("Danh sách Store:", stores);
         }
 
         [HttpGet("GetPetOwners")]
@@ -46,10 +54,11 @@ namespace FluffyPaw_API.Controllers.Account
         public IActionResult GetPetOwners()
         {
             var account = _accountService.GetPetOwners();
-            return CustomResult("Tải dữ liệu thành công.", account);
+            return CustomResult("Danh sách PO:", account);
         }
 
         [HttpPatch("UpdatePassword")]
+        [Authorize]
         public IActionResult UpdatePassword(string oldPassword, string newPassword)
         {
             _accountService.ChangePassword(oldPassword, newPassword);
