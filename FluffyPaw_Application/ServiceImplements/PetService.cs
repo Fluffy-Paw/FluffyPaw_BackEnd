@@ -99,7 +99,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var pet = _mapper.Map<Pet>(petRequest);
             pet.PetOwnerId = po.Id;
-            if (petRequest.Image != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
+            if (petRequest.PetImage != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.PetImage);
             
             pet.Status = PetStatus.Available.ToString();
             _unitOfWork.PetRepository.Insert(pet);
@@ -216,7 +216,7 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
-            if (petRequest.MicrochipNumber != pet.MicrochipNumber || petRequest.MicrochipNumber != "none")
+            if (petRequest.MicrochipNumber != pet.MicrochipNumber && petRequest.MicrochipNumber != "none")
             {
                 var duplicatePet = _unitOfWork.PetRepository.Get(m => m.MicrochipNumber == petRequest.MicrochipNumber).FirstOrDefault();
                 if (duplicatePet != null)
@@ -227,7 +227,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (petRequest.Dob > DateTimeOffset.UtcNow) throw new CustomException.InvalidDataException("Ngày sinh không hợp lệ.");
 
-            if (petRequest.Image != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.Image);
+            if (petRequest.PetImage != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.PetImage);
             _mapper.Map(petRequest, pet);
             _unitOfWork.Save();
 
