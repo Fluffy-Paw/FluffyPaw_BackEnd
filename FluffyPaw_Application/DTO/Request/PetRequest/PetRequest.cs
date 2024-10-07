@@ -12,7 +12,7 @@ namespace FluffyPaw_Application.DTO.Request.PetRequest
 {
     public class PetRequest : IMapFrom<Pet>, IMapFrom<PetType>, IMapFrom<BehaviorCategory>
     {
-        public IFormFile? Image {  get; set; }
+        public IFormFile? PetImage {  get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập chủng loại.")]
         public long PetTypeId { get; set; }
@@ -34,7 +34,7 @@ namespace FluffyPaw_Application.DTO.Request.PetRequest
 
         public string Allergy { get; set; }
 
-        public string MicrochipNumber { get; set; }
+        public string? MicrochipNumber { get; set; }
 
         public string Decription { get; set; }
 

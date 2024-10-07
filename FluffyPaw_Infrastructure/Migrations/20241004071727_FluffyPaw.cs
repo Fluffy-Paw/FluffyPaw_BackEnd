@@ -801,7 +801,7 @@ namespace FluffyPaw_Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "PetTypes",
-                columns: new[] { "Id", "Image", "Name", "PetCategoryId" },
+                columns: new[] { "Id", "PetImage", "Name", "PetCategoryId" },
                 values: new object[,]
                 {
                     { 1L, "None", "Chó Chihuahua", 1L },
@@ -856,7 +856,7 @@ namespace FluffyPaw_Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Pets",
-                columns: new[] { "Id", "Allergy", "BehaviorCategoryId", "Decription", "Dob", "Image", "IsNeuter", "MicrochipNumber", "Name", "PetOwnerId", "PetTypeId", "Sex", "Status", "Weight" },
+                columns: new[] { "Id", "Allergy", "BehaviorCategoryId", "Decription", "Dob", "PetImage", "IsNeuter", "MicrochipNumber", "Name", "PetOwnerId", "PetTypeId", "Sex", "Status", "Weight" },
                 values: new object[,]
                 {
                     { 1L, "None", 1L, "test", new DateTimeOffset(new DateTime(2022, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, true, "None", "LuLu", 1L, 1L, "Male", "Available", 6.5f },
@@ -865,7 +865,7 @@ namespace FluffyPaw_Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Services",
-                columns: new[] { "Id", "BookingCount", "BrandId", "Cost", "Description", "Duration", "Image", "Name", "ServiceTypeId", "Status", "TotalRating" },
+                columns: new[] { "Id", "BookingCount", "BrandId", "Cost", "Description", "Duration", "PetImage", "Name", "ServiceTypeId", "Status", "TotalRating" },
                 values: new object[,]
                 {
                     { 1L, 0, 1L, 100000.0, "test", new TimeSpan(0, 0, 30, 0, 0), "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", "Grooming", 1L, true, 0f },

@@ -687,7 +687,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Property<DateTimeOffset>("Dob")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("PetImage")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsNeuter")
@@ -863,7 +863,7 @@ namespace FluffyPaw_Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Image")
+                    b.Property<string>("PetImage")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -1159,7 +1159,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time(6)");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("PetImage")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -1512,7 +1512,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("PetImage")
                         .HasColumnType("longtext");
 
                     b.Property<DateTimeOffset>("NextVaccineDate")
