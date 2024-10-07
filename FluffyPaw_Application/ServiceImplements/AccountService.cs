@@ -36,11 +36,6 @@ namespace FluffyPaw_Application.ServiceImplements
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var user = _unitOfWork.AccountRepository.GetByID(accountId);
 
-            if (user == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy stores.");
-            }
-
             if (_hashing.SHA512Hash(oldPassword) != user.Password)
             {
                 throw new CustomException.InvalidDataException("Sai mật khẩu cũ.");
@@ -48,13 +43,13 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (oldPassword == newPassword)
             {
-                throw new CustomException.InvalidDataException("Mật khẩu mới trùng với mật khẩu cũ");
+                throw new CustomException.InvalidDataException("Mật khẩu mới trùng với mật khẩu cũ.");
             }
             
-            if (newPassword.Length < 8)
-            {
-                throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
-            }
+            //if (newPassword.Length < 8)
+            //{
+            //    throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
+            //}
 
             user.Password = _hashing.SHA512Hash(newPassword);
             _unitOfWork.Save();
