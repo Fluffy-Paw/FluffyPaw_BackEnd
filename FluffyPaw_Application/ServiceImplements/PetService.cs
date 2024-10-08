@@ -191,10 +191,23 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var result = _mapper.Map<PetResponse>(pet);
             result.PetCategoryId = pet.PetType.PetCategoryId;
-            result.Age = DateTime.Now.Year - pet.Dob.Year;
-            if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
+
+            int year = DateTimeOffset.Now.Year - pet.Dob.Year;
+            int month = DateTimeOffset.Now.Month - pet.Dob.Month;
+            
+            if (month < 0)
             {
-                result.Age--;
+                year--;
+                month += 12;
+            }
+            if (year == 0)
+            {
+                if (DateTimeOffset.Now.Month == pet.Dob.Month) result.Age = (DateTimeOffset.Now.Day - pet.Dob.Day).ToString() + " ngày";
+                else result.Age = month.ToString() + " tháng";
+            }
+            else
+            {
+                result.Age = year.ToString() + " năm " + month.ToString() + " tháng";
             }
 
             return result;
@@ -231,15 +244,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _mapper.Map(petRequest, pet);
             _unitOfWork.Save();
 
-            var result = _mapper.Map<PetResponse>(pet);
-            result.PetCategoryId = _unitOfWork.PetTypeRepository.GetByID(pet.PetTypeId).PetCategoryId;
-            result.BehaviorCategory = await GetBehavior(pet.BehaviorCategoryId);
-            result.Age = DateTime.Now.Year - pet.Dob.Year;
-            if (DateTime.Now.Month < pet.Dob.Month || (DateTime.Now.Month == pet.Dob.Month && DateTime.Now.Day < pet.Dob.Day))
-            {
-                result.Age--;
-            }
-            return result;
+            return await GetPet(petId);
         }
     }
 }

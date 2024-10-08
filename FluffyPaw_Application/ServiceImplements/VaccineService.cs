@@ -39,7 +39,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Ngày của vaccine không hợp lệ");
             }
             var vaccine = _mapper.Map<VaccineHistory>(vaccineRequest);
-            if(vaccineRequest.Image != null) vaccine.Image = await _firebaseConfiguration.UploadImage(vaccineRequest.Image);
+            if(vaccineRequest.VaccineImage != null) vaccine.Image = await _firebaseConfiguration.UploadImage(vaccineRequest.VaccineImage);
             vaccine.Status = VaccineStatus.Incomplete.ToString();
 
             _unitOfWork.VaccineHistoryRepository.Insert(vaccine);

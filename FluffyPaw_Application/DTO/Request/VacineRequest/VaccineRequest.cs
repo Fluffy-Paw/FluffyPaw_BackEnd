@@ -15,7 +15,10 @@ namespace FluffyPaw_Application.DTO.Request.VacineRequest
         [Required(ErrorMessage = "Bạn chưa nhập petId")]
         public long PetId { get; set; }
 
-        public IFormFile? Image { get; set; }
+        [Required(ErrorMessage = "Bạn chưa nhập tên vaccine")]
+        public string Name { get; set; }
+
+        public IFormFile? VaccineImage { get; set; }
 
         [Required(ErrorMessage = "Bạn chưa nhập cân nặng")]
         public float PetCurrentWeight { get; set; }
@@ -23,8 +26,7 @@ namespace FluffyPaw_Application.DTO.Request.VacineRequest
         [Required(ErrorMessage = "Bạn chưa nhập ngày của vaccine")]
         public DateTimeOffset VaccineDate { get; set; }
 
-        [Required(ErrorMessage = "Bạn chưa nhập Ngày chích tiếp theo")]
-        public DateTimeOffset NextVaccineDate { get; set; }
+        public DateTimeOffset? NextVaccineDate { get; set; }
 
         public string? Description { get; set; }
     }
