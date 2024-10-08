@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -35,11 +36,6 @@ namespace FluffyPaw_Application.ServiceImplements
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var user = _unitOfWork.AccountRepository.GetByID(accountId);
 
-            if (user == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy user.");
-            }
-
             if (_hashing.SHA512Hash(oldPassword) != user.Password)
             {
                 throw new CustomException.InvalidDataException("Sai mật khẩu cũ.");
@@ -47,13 +43,13 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (oldPassword == newPassword)
             {
-                throw new CustomException.InvalidDataException("Mật khẩu mới trùng với mật khẩu cũ");
+                throw new CustomException.InvalidDataException("Mật khẩu mới trùng với mật khẩu cũ.");
             }
             
-            if (newPassword.Length < 8)
-            {
-                throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
-            }
+            //if (newPassword.Length < 8)
+            //{
+            //    throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
+            //}
 
             user.Password = _hashing.SHA512Hash(newPassword);
             _unitOfWork.Save();
@@ -64,21 +60,16 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<IEnumerable<AccountResponse>> GetPetOwners()
         {
             var user = _unitOfWork.PetOwnerRepository.Get(includeProperties: "Account");
+            if (!user.Any()) throw new CustomException.DataNotFoundException("Không tìm thấy Pet Owner nào.");
             List<AccountResponse> result = new List<AccountResponse>();
 
             foreach (var account in user)
             {
-                var temp = new AccountResponse
-                {
-                    UserId = account.Account.Id,
-                    Username = account.Account.Username,
-                    Fullname = account.FullName,
-                    Email = account.Account.Email,
-                    Phone = account.Phone,
-                    Dob = account.Dob,
-                    Reputation = account.Reputation,
-                    Status = account.Account.Status
-                };
+                var temp = _mapper.Map<AccountResponse>(account);
+                temp.Username = account.Account.Username;
+                temp.Email = account.Account.Email;
+                temp.Status = account.Account.Status;
+
                 result.Add(temp);
             }
             return result;
@@ -86,48 +77,67 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<IEnumerable<AccountResponse>> GetStores()
         {
-            var user = _unitOfWork.StoreRepository.Get(includeProperties: "Account");
+            var stores = _unitOfWork.StoreRepository.Get(includeProperties: "Account");
+            if (!stores.Any()) throw new CustomException.DataNotFoundException("Không tìm thấy Store nào.");
             List<AccountResponse> result = new List<AccountResponse>();
 
-            foreach (var account in user)
+            foreach (var store in stores)
             {
-                var temp = new AccountResponse
-                {
-                    UserId = account.Account.Id,
-                    Username = account.Account.Username,
-                    Fullname = account.Name,
-                    Email = account.Account.Email,
-                    Phone = account.Phone,
-                    Status = account.Account.Status
-                };
+                var temp = _mapper.Map<AccountResponse>(store);
+                temp.Username = store.Account.Username;
+                temp.Email = store.Account.Email;
+                temp.Status = store.Account.Status;
+                temp.Fullname = store.Name;
+
                 result.Add(temp);
             }
+
             return result;
         }
 
         public async Task<IEnumerable<AccountResponse>> GetBrands()
         {
-            var user = _unitOfWork.BrandRepository.Get(includeProperties: "Account");
+            var brands = _unitOfWork.BrandRepository.Get(includeProperties: "Account");
+            if (!brands.Any()) throw new CustomException.DataNotFoundException("Không tìm thấy Brand nào.");
             List<AccountResponse> result = new List<AccountResponse>();
 
-            foreach (var account in user)
+            foreach (var brand in brands)
             {
-                var temp = new AccountResponse
-                {
-                    UserId = account.Account.Id,
-                    Username = account.Account.Username,
-                    Fullname = account.Name,
-                    Email = account.Account.Email,
-                    Status = account.Account.Status
-                };
+                var temp = _mapper.Map<AccountResponse>(brand);
+                temp.Fullname = brand.Name;
+                temp.Username = brand.Account.Username;
+                temp.Email = brand.Account.Email;
+                temp.Phone = brand.Hotline;
+
                 result.Add(temp);
             }
+
             return result;
         }
 
-        public async Task<IEnumerable<Account>> GetAllAccounts()
+        //public async Task<IEnumerable<Account>> GetAllAccounts()
+        //{
+        //    return _unitOfWork.AccountRepository.Get(orderBy: ob => ob.OrderByDescending(a => a.RoleName));
+        //}
+
+        public async Task<IEnumerable<AccountResponse>> GetStoresByBrandId(long id)
         {
-            return _unitOfWork.AccountRepository.Get(orderBy: ob => ob.OrderByDescending(a => a.RoleName));
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == id, includeProperties: "Account,Brand");
+            if (!stores.Any()) throw new CustomException.DataNotFoundException("Không tìm thấy Store nào.");
+            List<AccountResponse> result = new List<AccountResponse>();
+
+            foreach (var store in stores)
+            {
+                var temp = _mapper.Map<AccountResponse>(store);
+                temp.Username = store.Account.Username;
+                temp.Email = store.Account.Email;
+                temp.Status = store.Account.Status;
+                temp.Fullname = store.Name;
+
+                result.Add(temp);
+            }
+
+            return result;
         }
     }
 }

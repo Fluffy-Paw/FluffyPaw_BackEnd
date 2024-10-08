@@ -1,4 +1,5 @@
 ﻿using CoreApiResponse;
+using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -17,43 +18,52 @@ namespace FluffyPaw_API.Controllers.Account
             _accountService = accountService;
         }
 
-        [HttpGet("GetAllAccount")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GetAllAccount()
-        {
-            var account = _accountService.GetAllAccounts();
-            return CustomResult("Tải dữ liệu thành công.", account);
-        }
+        //[HttpGet("GetAllAccount")]
+        //[Authorize(Roles = "Admin")]
+        //public IActionResult GetAllAccount()
+        //{
+        //    var brands = _accountService.GetAllAccounts();
+        //    return CustomResult("Tải dữ liệu thành công.", brands);
+        //}
 
         [HttpGet("GetBrands")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetBrands()
+        public async Task<IActionResult> GetBrands()
         {
-            var account = _accountService.GetBrands();
-            return CustomResult("Tải dữ liệu thành công.", account);
+            var brands = await _accountService.GetBrands();
+            return CustomResult("Danh sách Brand:", brands);
         }
 
         [HttpGet("GetStores")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetStorees()
+        public async Task<IActionResult> GetStores()
         {
-            var account = _accountService.GetStores();
-            return CustomResult("Tải dữ liệu thành công.", account);
+            var stores = await _accountService.GetStores();
+            return CustomResult("Danh sách Store:", stores);
+        }
+
+        [HttpGet("GetStoresByBrandId/{brandId}")]
+        [Authorize(Roles = "Admin,StoreManager")]
+        public async Task<IActionResult> GetStoresByBrandId(long brandId)
+        {
+            var stores = await _accountService.GetStores();
+            return CustomResult("Danh sách Store:", stores);
         }
 
         [HttpGet("GetPetOwners")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetPetOwners()
+        public async Task<IActionResult> GetPetOwners()
         {
-            var account = _accountService.GetPetOwners();
-            return CustomResult("Tải dữ liệu thành công.", account);
+            var account = await _accountService.GetPetOwners();
+            return CustomResult("Danh sách PO:", account);
         }
 
         [HttpPatch("UpdatePassword")]
-        public IActionResult UpdatePassword(string oldPassword, string newPassword)
+        [Authorize]
+        public async Task<IActionResult> UpdatePassword([FromBody]UpdatePasswordRequest updatePasswordRequest)
         {
-            _accountService.ChangePassword(oldPassword, newPassword);
-            return CustomResult("Cập nhật mật khẩu thành công");
+            await _accountService.ChangePassword(updatePasswordRequest.OldPassword, updatePasswordRequest.NewPassword);
+            return CustomResult("Cập nhật mật khẩu thành công.");
         }
     }
 }
