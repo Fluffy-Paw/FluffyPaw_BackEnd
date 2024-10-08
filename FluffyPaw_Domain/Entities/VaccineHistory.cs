@@ -18,11 +18,13 @@ namespace FluffyPaw_Domain.Entities
 
         public string? Image { get; set; }
 
+        public string Name { get; set; }
+
         public float PetCurrentWeight { get; set; }
 
         public DateTimeOffset VaccineDate { get; set; }
 
-        public DateTimeOffset NextVaccineDate { get; set; }
+        public DateTimeOffset? NextVaccineDate { get; set; }
 
         public string? Description { get; set; }
 

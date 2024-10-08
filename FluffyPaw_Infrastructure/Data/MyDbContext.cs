@@ -85,11 +85,12 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<BehaviorCategory>().HasData(
-                new BehaviorCategory { Id = 1, Name = "Chạy vòng tròn trước khi nằm xuống"},
-                new BehaviorCategory { Id = 2, Name = "Liếm mặt chủ" },
-                new BehaviorCategory { Id = 3, Name = "Rung lắc đuôi khi vui mừng"},
-                new BehaviorCategory { Id = 4, Name = "Gầm gừ khi cảm thấy bị đe dọa" },
-                new BehaviorCategory { Id = 5, Name = "Cào móng để đánh dấu lãnh thổ" }
+                new BehaviorCategory { Id = 1, Name = "Không" },
+                new BehaviorCategory { Id = 2, Name = "Chạy vòng tròn trước khi nằm xuống"},
+                new BehaviorCategory { Id = 3, Name = "Liếm mặt chủ" },
+                new BehaviorCategory { Id = 4, Name = "Rung lắc đuôi khi vui mừng"},
+                new BehaviorCategory { Id = 5, Name = "Gầm gừ khi cảm thấy bị đe dọa" },
+                new BehaviorCategory { Id = 6, Name = "Cào móng để đánh dấu lãnh thổ" }
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(
@@ -143,7 +144,12 @@ namespace FluffyPaw_Infrastructure.Data
 
             modelBuilder.Entity<Pet>().HasData(
                 new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTime.Parse("2022-08-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test", IsNeuter = true, Status = "Available" },
-                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 18, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "FeMale", Weight = 5F, Dob = DateTime.Parse("2022-10-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
+                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 18, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "Female", Weight = 5F, Dob = DateTime.Parse("2022-10-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test1", IsNeuter = false, Status = "Unavailable" }
+                );
+
+            modelBuilder.Entity<VaccineHistory>().HasData(
+                new VaccineHistory { Id = 1, PetId = 1, Image = "none", Name = "Vaccine 1", PetCurrentWeight = 4, VaccineDate = DateTime.Parse("2024-10-08"), NextVaccineDate = DateTime.Parse("2024-10-13"), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString()},
+                new VaccineHistory { Id = 2, PetId = 2, Image = "none", Name = "Vaccine 2", PetCurrentWeight = 4, VaccineDate = DateTime.Parse("2024-09-09"), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() }
                 );
 
             modelBuilder.Entity<ServiceType>().HasData(

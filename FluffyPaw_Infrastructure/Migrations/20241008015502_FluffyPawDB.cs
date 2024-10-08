@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FluffyPaw_Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FluffyPaw : Migration
+    public partial class FluffyPawDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -519,9 +519,11 @@ namespace FluffyPaw_Infrastructure.Migrations
                     PetId = table.Column<long>(type: "bigint", nullable: false),
                     Image = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     PetCurrentWeight = table.Column<float>(type: "float", nullable: false),
                     VaccineDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
-                    NextVaccineDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    NextVaccineDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<string>(type: "longtext", nullable: false)
@@ -740,15 +742,15 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "Avatar", "CreateDate", "Email", "Password", "RoleName", "Status", "Username" },
                 values: new object[,]
                 {
-                    { 1L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2802), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", "Admin", 1, "FluffyPaw" },
-                    { 2L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2807), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "test1" },
-                    { 3L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2811), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "test2" },
-                    { 4L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2814), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test3" },
-                    { 5L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2817), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test4" },
-                    { 6L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2820), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "test5" },
-                    { 7L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2823), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "test6" },
-                    { 8L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2826), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test7" },
-                    { 9L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(2829), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test8" }
+                    { 1L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2310), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", "Admin", 1, "FluffyPaw" },
+                    { 2L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2315), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "test1" },
+                    { 3L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2320), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "test2" },
+                    { 4L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2325), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test3" },
+                    { 5L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2329), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test4" },
+                    { 6L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2334), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "test5" },
+                    { 7L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2339), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "test6" },
+                    { 8L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2343), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test7" },
+                    { 9L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2348), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test8" }
                 });
 
             migrationBuilder.InsertData(
@@ -756,11 +758,12 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1L, "Chạy vòng tròn trước khi nằm xuống" },
-                    { 2L, "Liếm mặt chủ" },
-                    { 3L, "Rung lắc đuôi khi vui mừng" },
-                    { 4L, "Gầm gừ khi cảm thấy bị đe dọa" },
-                    { 5L, "Cào móng để đánh dấu lãnh thổ" }
+                    { 1L, "Không" },
+                    { 2L, "Chạy vòng tròn trước khi nằm xuống" },
+                    { 3L, "Liếm mặt chủ" },
+                    { 4L, "Rung lắc đuôi khi vui mừng" },
+                    { 5L, "Gầm gừ khi cảm thấy bị đe dọa" },
+                    { 6L, "Cào móng để đánh dấu lãnh thổ" }
                 });
 
             migrationBuilder.InsertData(
@@ -786,8 +789,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "AccountId", "Address", "BrandEmail", "BusinessLicense", "Hotline", "Logo", "MST", "Name", "Status" },
                 values: new object[,]
                 {
-                    { 1L, 2L, "test", "test1@gmail.com", "None", "0123456789", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", "None", "StoreA", true },
-                    { 2L, 3L, "test", "test1@gmail.com", "None", "0123456789", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", "None", "StoreB", true }
+                    { 1L, 2L, "test", "test1@gmail.com", "none", "0123456789", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", "none", "StoreA", true },
+                    { 2L, 3L, "test", "test1@gmail.com", "none", "0123456789", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", "none", "StoreB", true }
                 });
 
             migrationBuilder.InsertData(
@@ -795,51 +798,51 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "AccountId", "Address", "Dob", "FullName", "Gender", "Phone", "Reputation" },
                 values: new object[,]
                 {
-                    { 1L, 6L, "test", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(3085), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "1234567890", "Good" },
-                    { 2L, 7L, "test", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(3089), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "0123456789", "Good" }
+                    { 1L, 6L, "test", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2705), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "1234567890", "Good" },
+                    { 2L, 7L, "test", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(2709), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "0123456789", "Good" }
                 });
 
             migrationBuilder.InsertData(
                 table: "PetTypes",
-                columns: new[] { "Id", "PetImage", "Name", "PetCategoryId" },
+                columns: new[] { "Id", "Image", "Name", "PetCategoryId" },
                 values: new object[,]
                 {
-                    { 1L, "None", "Chó Chihuahua", 1L },
-                    { 2L, "None", "Chó Bắc Kinh", 1L },
-                    { 3L, "None", "Chó Bắc Kinh lai Nhật", 1L },
-                    { 4L, "None", "Chó Dachshund (Lạp Xưởng/Xúc Xích)", 1L },
-                    { 5L, "None", "Chó Phú Quốc", 1L },
-                    { 6L, "None", "Chó Poodle", 1L },
-                    { 7L, "None", "Chó Pug", 1L },
-                    { 8L, "None", "Chó Alaska", 1L },
-                    { 9L, "None", "Chó Husky", 1L },
-                    { 10L, "None", "Chó Samoyed", 1L },
-                    { 11L, "None", "Chó Pomeranian (Phốc sóc)", 1L },
-                    { 12L, "None", "Chó Beagle", 1L },
-                    { 13L, "None", "Chó Shiba Inu", 1L },
-                    { 14L, "None", "Chó Golden Retriever", 1L },
-                    { 15L, "None", "Chó Becgie", 1L },
-                    { 16L, "None", "Chó Corgi", 1L },
-                    { 17L, "None", "Chó Mông Cộc", 1L },
-                    { 18L, "None", "Mèo Xiêm", 2L },
-                    { 19L, "None", "Mèo Anh lông ngắn", 2L },
-                    { 20L, "None", "Mèo Anh lông dài", 2L },
-                    { 21L, "None", "Mèo Ai Cập", 2L },
-                    { 22L, "None", "Mèo Ba Tư", 2L },
-                    { 23L, "None", "Mèo Bali", 2L },
-                    { 24L, "None", "Mèo Bengal", 2L },
-                    { 25L, "None", "Mèo Scottish Fold", 2L },
-                    { 26L, "None", "Mèo Munchkin", 2L },
-                    { 27L, "None", "Mèo mướp", 2L },
-                    { 28L, "None", "Mèo Ragdoll", 2L },
-                    { 29L, "None", "Mèo Maine Coon", 2L },
-                    { 30L, "None", "Mèo Angora", 2L },
-                    { 31L, "None", "Mèo Laperm", 2L },
-                    { 32L, "None", "Mèo Somali", 2L },
-                    { 33L, "None", "Mèo Toyger", 2L },
-                    { 34L, "None", "Mèo Turkish Van", 2L },
-                    { 35L, "None", "Mèo Miến Điện", 2L },
-                    { 36L, "None", "Mèo Exotic", 2L }
+                    { 1L, "none", "Chó Chihuahua", 1L },
+                    { 2L, "none", "Chó Bắc Kinh", 1L },
+                    { 3L, "none", "Chó Bắc Kinh lai Nhật", 1L },
+                    { 4L, "none", "Chó Dachshund (Lạp Xưởng/Xúc Xích)", 1L },
+                    { 5L, "none", "Chó Phú Quốc", 1L },
+                    { 6L, "none", "Chó Poodle", 1L },
+                    { 7L, "none", "Chó Pug", 1L },
+                    { 8L, "none", "Chó Alaska", 1L },
+                    { 9L, "none", "Chó Husky", 1L },
+                    { 10L, "none", "Chó Samoyed", 1L },
+                    { 11L, "none", "Chó Pomeranian (Phốc sóc)", 1L },
+                    { 12L, "none", "Chó Beagle", 1L },
+                    { 13L, "none", "Chó Shiba Inu", 1L },
+                    { 14L, "none", "Chó Golden Retriever", 1L },
+                    { 15L, "none", "Chó Becgie", 1L },
+                    { 16L, "none", "Chó Corgi", 1L },
+                    { 17L, "none", "Chó Mông Cộc", 1L },
+                    { 18L, "none", "Mèo Xiêm", 2L },
+                    { 19L, "none", "Mèo Anh lông ngắn", 2L },
+                    { 20L, "none", "Mèo Anh lông dài", 2L },
+                    { 21L, "none", "Mèo Ai Cập", 2L },
+                    { 22L, "none", "Mèo Ba Tư", 2L },
+                    { 23L, "none", "Mèo Bali", 2L },
+                    { 24L, "none", "Mèo Bengal", 2L },
+                    { 25L, "none", "Mèo Scottish Fold", 2L },
+                    { 26L, "none", "Mèo Munchkin", 2L },
+                    { 27L, "none", "Mèo mướp", 2L },
+                    { 28L, "none", "Mèo Ragdoll", 2L },
+                    { 29L, "none", "Mèo Maine Coon", 2L },
+                    { 30L, "none", "Mèo Angora", 2L },
+                    { 31L, "none", "Mèo Laperm", 2L },
+                    { 32L, "none", "Mèo Somali", 2L },
+                    { 33L, "none", "Mèo Toyger", 2L },
+                    { 34L, "none", "Mèo Turkish Van", 2L },
+                    { 35L, "none", "Mèo Miến Điện", 2L },
+                    { 36L, "none", "Mèo Exotic", 2L }
                 });
 
             migrationBuilder.InsertData(
@@ -856,16 +859,16 @@ namespace FluffyPaw_Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Pets",
-                columns: new[] { "Id", "Allergy", "BehaviorCategoryId", "Decription", "Dob", "PetImage", "IsNeuter", "MicrochipNumber", "Name", "PetOwnerId", "PetTypeId", "Sex", "Status", "Weight" },
+                columns: new[] { "Id", "Allergy", "BehaviorCategoryId", "Decription", "Dob", "Image", "IsNeuter", "MicrochipNumber", "Name", "PetOwnerId", "PetTypeId", "Sex", "Status", "Weight" },
                 values: new object[,]
                 {
-                    { 1L, "None", 1L, "test", new DateTimeOffset(new DateTime(2022, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, true, "None", "LuLu", 1L, 1L, "Male", "Available", 6.5f },
-                    { 2L, "None", 2L, "test1", new DateTimeOffset(new DateTime(2022, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, false, "None", "MeowMeow", 2L, 18L, "FeMale", "Unavailable", 5f }
+                    { 1L, "none", 1L, "test", new DateTimeOffset(new DateTime(2022, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, true, "none", "LuLu", 1L, 1L, "Male", "Available", 6.5f },
+                    { 2L, "none", 2L, "test1", new DateTimeOffset(new DateTime(2022, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, false, "none", "MeowMeow", 2L, 18L, "Female", "Unavailable", 5f }
                 });
 
             migrationBuilder.InsertData(
                 table: "Services",
-                columns: new[] { "Id", "BookingCount", "BrandId", "Cost", "Description", "Duration", "PetImage", "Name", "ServiceTypeId", "Status", "TotalRating" },
+                columns: new[] { "Id", "BookingCount", "BrandId", "Cost", "Description", "Duration", "Image", "Name", "ServiceTypeId", "Status", "TotalRating" },
                 values: new object[,]
                 {
                     { 1L, 0, 1L, 100000.0, "test", new TimeSpan(0, 0, 30, 0, 0), "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", "Grooming", 1L, true, 0f },
@@ -890,13 +893,13 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "Description", "File", "Name", "ServiceId" },
                 values: new object[,]
                 {
-                    { 1L, "None", "test", "Certificate of Excellence in Pet Grooming", 1L },
-                    { 2L, "None", "test", "Certificate of Excellence in Pet Grooming", 1L },
-                    { 3L, "None", "test", "Certificate of Excellence in Pet Grooming", 2L },
-                    { 4L, "None", "test", "Certificate of Excellence in Pet Grooming", 3L },
-                    { 5L, "None", "test", "Certificate of Excellence in Pet Grooming", 3L },
-                    { 6L, "None", "test", "Certificate of Excellence in Pet Grooming", 3L },
-                    { 7L, "None", "test", "Certificate of Excellence in Pet Grooming", 4L }
+                    { 1L, "none", "test", "Certificate of Excellence in Pet Grooming", 1L },
+                    { 2L, "none", "test", "Certificate of Excellence in Pet Grooming", 1L },
+                    { 3L, "none", "test", "Certificate of Excellence in Pet Grooming", 2L },
+                    { 4L, "none", "test", "Certificate of Excellence in Pet Grooming", 3L },
+                    { 5L, "none", "test", "Certificate of Excellence in Pet Grooming", 3L },
+                    { 6L, "none", "test", "Certificate of Excellence in Pet Grooming", 3L },
+                    { 7L, "none", "test", "Certificate of Excellence in Pet Grooming", 4L }
                 });
 
             migrationBuilder.InsertData(
@@ -904,14 +907,23 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "CurrentPetOwner", "LimitPetOwner", "ServiceId", "StartTime", "Status", "StoreId" },
                 values: new object[,]
                 {
-                    { 1L, 0, 5, 1L, new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(3608), new TimeSpan(0, 7, 0, 0, 0)), "Acepted", 1L },
-                    { 2L, 0, 10, 2L, new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(3612), new TimeSpan(0, 7, 0, 0, 0)), "Acepted", 2L }
+                    { 1L, 0, 5, 1L, new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(3357), new TimeSpan(0, 7, 0, 0, 0)), "Acepted", 1L },
+                    { 2L, 0, 10, 2L, new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(3409), new TimeSpan(0, 7, 0, 0, 0)), "Acepted", 2L }
+                });
+
+            migrationBuilder.InsertData(
+                table: "VaccineHistories",
+                columns: new[] { "Id", "Description", "Image", "Name", "NextVaccineDate", "PetCurrentWeight", "PetId", "Status", "VaccineDate" },
+                values: new object[,]
+                {
+                    { 1L, "Vaccine test", "none", "Vaccine 1", new DateTimeOffset(new DateTime(2024, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), 4f, 1L, "Incomplete", new DateTimeOffset(new DateTime(2024, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)) },
+                    { 2L, "Vaccine test", "none", "Vaccine 2", null, 4f, 2L, "Complete", new DateTimeOffset(new DateTime(2024, 9, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Bookings",
                 columns: new[] { "Id", "Checkin", "CheckinTime", "Cost", "CreateDate", "Description", "EndTime", "PaymentMethod", "PetId", "StartTime", "Status", "StoreServiceId" },
-                values: new object[] { 1L, false, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 100000.0, new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(3644), new TimeSpan(0, 7, 0, 0, 0)), "test", new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(3647), new TimeSpan(0, 7, 0, 0, 0)), "PayOS", 1L, new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(3646), new TimeSpan(0, 7, 0, 0, 0)), "Accept", 1L });
+                values: new object[] { 1L, false, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 100000.0, new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(3446), new TimeSpan(0, 7, 0, 0, 0)), "test", new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(3449), new TimeSpan(0, 7, 0, 0, 0)), "PayOS", 1L, new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(3447), new TimeSpan(0, 7, 0, 0, 0)), "Accept", 1L });
 
             migrationBuilder.InsertData(
                 table: "BookingRatings",
@@ -921,7 +933,7 @@ namespace FluffyPaw_Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Trackings",
                 columns: new[] { "Id", "BookingId", "Description", "Status", "UploadDate" },
-                values: new object[] { 1L, 1L, "test", true, new DateTimeOffset(new DateTime(2024, 10, 4, 14, 17, 27, 113, DateTimeKind.Unspecified).AddTicks(3691), new TimeSpan(0, 7, 0, 0, 0)) });
+                values: new object[] { 1L, 1L, "test", true, new DateTimeOffset(new DateTime(2024, 10, 8, 8, 55, 1, 902, DateTimeKind.Unspecified).AddTicks(3510), new TimeSpan(0, 7, 0, 0, 0)) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookingRatings_BookingId",
