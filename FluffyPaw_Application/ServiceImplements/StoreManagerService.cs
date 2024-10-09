@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Response;
+using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.Services;
@@ -26,15 +28,17 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
+        private readonly IHashing _hashing;
 
         public StoreManagerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
-                                    IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration)
+                                    IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration, IHashing hashing)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authentication = authentication;
             _contextAccessor = httpContextAccessor;
             _firebaseConfiguration = firebaseConfiguration;
+            _hashing = hashing;
         }
 
         public async Task<List<StaffResponse>> GetAllStaffBySM()
@@ -84,9 +88,17 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var storeResponses = new List<StoreResponse>();
+
             foreach (var store in stores)
             {
                 var storeResponse = _mapper.Map<StoreResponse>(store);
+
+                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id, includeProperties: "Files")
+                                    .Select(sf => sf.Files)
+                                    .ToList();
+
+                storeResponse.Files = _mapper.Map<List<FileResponse>>(storeFiles);
+
                 storeResponses.Add(storeResponse);
             }
 
@@ -140,7 +152,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataExistException("Username này đã tồn tại. Vui lòng chọn Username khác.");
             }
 
+            if (storeRequest.ConfirmPassword != storeRequest.Password)
+            {
+                throw new CustomException.InvalidDataException("Password và ConfirmPassword không trùng khớp.");
+            }
+
             var newStaff = _mapper.Map<Account>(storeRequest);
+            newStaff.Password = _hashing.SHA512Hash(storeRequest.Password);
             newStaff.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             newStaff.RoleName = RoleName.Staff.ToString();
             newStaff.Status = (int)AccountStatus.Active;
@@ -154,6 +172,8 @@ namespace FluffyPaw_Application.ServiceImplements
             newStore.Status = false;
             _unitOfWork.StoreRepository.Insert(newStore);
             await _unitOfWork.SaveAsync();
+
+            var fileResponses = new List<FileResponse>();
 
             foreach (var file in storeRequest.File)
             {
@@ -172,9 +192,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 };
                 _unitOfWork.StoreFileRepository.Insert(newStoreFile);
                 _unitOfWork.Save();
+
+                var fileResponse = _mapper.Map<FileResponse>(newFile);
+                fileResponses.Add(fileResponse);
             }
 
             var storeResponse = _mapper.Map<StoreResponse>(newStore);
+            storeResponse.Files = fileResponses;
 
             return storeResponse;
         }
@@ -190,7 +214,14 @@ namespace FluffyPaw_Application.ServiceImplements
             _mapper.Map(updateStoreRequest, existingstore);
             _unitOfWork.Save();
 
+            var storeFiles = _unitOfWork.StoreFileRepository
+                .Get(sf => sf.StoreId == id, includeProperties: "Files")
+                .Select(sf => sf.Files)
+                .ToList();
+
+            var fileResponses = _mapper.Map<List<FileResponse>>(storeFiles);
             var storeResponse = _mapper.Map<StoreResponse>(existingstore);
+            storeResponse.Files = fileResponses;
             return storeResponse;
         }
 
@@ -214,12 +245,70 @@ namespace FluffyPaw_Application.ServiceImplements
                     throw new CustomException.DataExistException($"Chi nhánh {store.Name} vẫn còn dịch vụ đang được book.");
                 }
             }
-            _unitOfWork.StoreRepository.Delete(store);
 
+            var staff = _unitOfWork.AccountRepository.GetByID(store.AccountId);
+
+            var fileIds = _unitOfWork.StoreFileRepository.Get(f => f.StoreId == store.Id).ToList();
+            
+            foreach ( var fileId in fileIds)
+            {
+                var file = _unitOfWork.FilesRepository.GetByID(fileId);
+                _unitOfWork.FilesRepository.Delete(file);
+                _unitOfWork.Save();
+            }
+            _unitOfWork.StoreRepository.Delete(staff);
 
             _unitOfWork.Save();
 
             return true;
+        }
+
+        public async Task<StaffResponse> UpdateStaff(long id, UpdateStaffRequest updateStaffRequest)
+        {
+            var duplicateUsername = _unitOfWork.AccountRepository.Get(
+                                du => du.Username.ToLower() == updateStaffRequest.UserName.ToLower()).ToList();
+            if (duplicateUsername.Any())
+            {
+                throw new CustomException.DataExistException("Username đã tồn tại.");
+            }
+
+            if (updateStaffRequest.ConfirmPassword != updateStaffRequest.Password)
+            {
+                throw new CustomException.InvalidDataException("Password và ConfirmPassword không trùng khớp.");
+            }
+
+            var storemanagerId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(storemanagerId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
+            }
+
+            var storeManagerBrand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+            if (storeManagerBrand == null)
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu của StoreManager không tồn tại.");
+            }
+
+            var existingstaff = _unitOfWork.AccountRepository.GetByID(id);
+            if (existingstaff == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy nhân viên.");
+            }
+
+            var staffStore = _unitOfWork.StoreRepository.Get(s => s.AccountId == existingstaff.Id).FirstOrDefault();
+
+            if (staffStore.BrandId != storeManagerBrand.Id)
+            {
+                throw new CustomException.InvalidDataException("Tài khoản này không thuộc quyền quản lý của bạn.");
+            }
+
+            _mapper.Map(updateStaffRequest, existingstaff);
+            existingstaff.Password = _hashing.SHA512Hash(updateStaffRequest.Password);
+            _unitOfWork.Save();
+
+            var staffResponse = _mapper.Map<StaffResponse>(existingstaff);
+            return staffResponse;
         }
     }
 }
