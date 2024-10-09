@@ -30,8 +30,14 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<CertificatesResponse>> GetAllCertificateByServiceId(long id)
         {
+            var service = _unitOfWork.ServiceRepository.GetByID(id);
+            if (service.Status = false)
+            {
+                throw new CustomException.InvalidDataException("Dịch vụ này chưa được xác thực.");
+            }
+
             var certificateService = _unitOfWork.CertificateRepository.Get(ss => ss.ServiceId == id).ToList();
-            if (certificateService == null)
+            if (!certificateService.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy certificate của dịch vụ này");
             }
@@ -52,7 +58,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var existingCertificate = _unitOfWork.CertificateRepository.Get(c => c.Name.ToLower() == certificateRequest.Name.ToLower()
                                             && c.ServiceId == certificateRequest.ServiceId);
-            if (existingCertificate != null)
+            if (existingCertificate.Any())
             {
                 throw new CustomException.DataExistException($"Đã tồn tại Certificate {certificateRequest.Name} của dịch vụ này.");
             }

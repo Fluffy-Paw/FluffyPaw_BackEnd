@@ -20,7 +20,7 @@ namespace FluffyPaw_Domain.Entities
 
         public int Vote { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public bool Status { get; set; }
 
