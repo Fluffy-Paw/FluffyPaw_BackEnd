@@ -19,7 +19,7 @@ namespace FluffyPaw_Domain.Entities
 
         public DateTimeOffset UploadDate { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public bool Status { get; set; }
 

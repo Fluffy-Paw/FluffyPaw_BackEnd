@@ -20,7 +20,7 @@ namespace FluffyPaw_Domain.Entities
 
         public string File { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [ForeignKey("ServiceId")]
         public virtual Service Service { get; set; }
