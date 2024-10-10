@@ -37,7 +37,7 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Tải dữ liệu thành công.", stores);
         }
 
-        [HttpGet("GetAllStoreFalseBySM")]
+        [HttpGet("GetAllStoreFalseBySM/{id}")]
         [Authorize(Roles = "StoreManager")]
         public IActionResult GetAllStoreFalse()
         {
@@ -53,7 +53,7 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Đăng ký chi nhánh thành công. Vui lòng đợi hệ thống xác thực", store);
         }
 
-        [HttpPatch("UpdateStore")]
+        [HttpPatch("UpdateStore/{id}")]
         [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> UpdateStore(long id, [FromForm] UpdateStoreRequest updateStoreRequest)
         {
