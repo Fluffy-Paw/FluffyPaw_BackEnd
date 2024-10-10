@@ -85,6 +85,7 @@ namespace FluffyPaw_Application.ServiceImplements
             if (user.Account.RoleName != RoleName.PetOwner.ToString()) throw new CustomException.ForbbidenException("User không phải Pet Owner.");
             if (user.Account.Status == (int)AccountStatus.Deactive) throw new CustomException.ForbbidenException($"Tài khoản có Username {changePORequest.NewOwnerUsername} đã bị cấm.");
             if (pet == null) throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng");
+            if (pet.PetOwnerId != po.Id) throw new CustomException.ForbbidenException("Bạn không thể chuyển quyền nuôi dưỡng vì đây không phải thú cưng của bạn.");
             if (_hashing.SHA512Hash(changePORequest.YourPassword) != po.Account.Password) throw new CustomException.ForbbidenException("Bạn đã nhập sai mật khẩu.");
 
             pet.PetOwnerId = user.Id;
