@@ -39,7 +39,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<bool> RegisterPO(RegisterAccountPORequest registerAccountPORequest)
         {
             var duplicateUsername = _unitOfWork.AccountRepository.Get(du => du.Username.ToLower() == registerAccountPORequest.UserName.ToLower());
-            if (duplicateUsername != null)
+            if (duplicateUsername.Any())
             {
                 throw new CustomException.DataExistException("Username đã tồn tại.");
             }
@@ -81,7 +81,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<bool> RegisterSM(RegisterAccountSMRequest registerAccountSMRequest)
         {
             var duplicateUsername = _unitOfWork.AccountRepository.Get(du => du.Username.ToLower() == registerAccountSMRequest.UserName.ToLower());
-            if (duplicateUsername != null)
+            if (duplicateUsername.Any())
             {
                 throw new CustomException.DataExistException("Username đã tồn tại.");
             }
