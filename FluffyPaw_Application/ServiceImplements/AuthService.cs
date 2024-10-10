@@ -52,7 +52,7 @@ namespace FluffyPaw_Application.ServiceImplements
             account.RoleName = RoleName.PetOwner.ToString();
             account.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             account.Password = _hashing.SHA512Hash(registerAccountPORequest.Password);
-            account.Status = (int) AccountStatus.Active;
+            account.Status = (int)AccountStatus.Active;
             _unitOfWork.AccountRepository.Insert(account);
             _unitOfWork.Save();
 
@@ -82,7 +82,7 @@ namespace FluffyPaw_Application.ServiceImplements
             account.RoleName = RoleName.StoreManager.ToString();
             account.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             account.Password = _hashing.SHA512Hash(registerAccountSMRequest.Password);
-            account.Status = (int) AccountStatus.Active;
+            account.Status = (int)AccountStatus.Active;
             _unitOfWork.AccountRepository.Insert(account);
             _unitOfWork.Save();
 
@@ -92,10 +92,12 @@ namespace FluffyPaw_Application.ServiceImplements
             identification.Back = await _filesService.UploadIdentification(registerAccountSMRequest.Back);
             _unitOfWork.IdentificationRepository.Insert(identification);
 
-            var wallet = _mapper.Map<Wallet>(registerAccountSMRequest);
-            wallet.Id = account.Id;
-            wallet.Balance = 0;
-            _unitOfWork.WalletRepository.Insert(wallet);
+            var newWallet = new Wallet
+            {
+                AccountId = account.Id,
+                Balance = 0
+            };
+            _unitOfWork.WalletRepository.Insert(newWallet);
 
 
             var sm = _mapper.Map<Brand>(registerAccountSMRequest);
