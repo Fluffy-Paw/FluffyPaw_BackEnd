@@ -40,7 +40,8 @@ namespace FluffyPaw_Application.ServiceImplements
             }
             var vaccine = _mapper.Map<VaccineHistory>(vaccineRequest);
             if(vaccineRequest.VaccineImage != null) vaccine.Image = await _firebaseConfiguration.UploadImage(vaccineRequest.VaccineImage);
-            vaccine.Status = VaccineStatus.Incomplete.ToString();
+            if(vaccine.NextVaccineDate == null) vaccine.Status = VaccineStatus.Complete.ToString();
+            else vaccine.Status = VaccineStatus.Incomplete.ToString();
 
             _unitOfWork.VaccineHistoryRepository.Insert(vaccine);
             _unitOfWork.Save();
@@ -108,6 +109,9 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             _mapper.Map(vaccineRequest, vaccine);
+
+            if (vaccine.NextVaccineDate > DateTimeOffset.UtcNow) vaccine.Status = VaccineStatus.Incomplete.ToString();
+            else vaccine.Status = VaccineStatus.Complete.ToString();
             _unitOfWork.Save();
 
             return vaccine;
