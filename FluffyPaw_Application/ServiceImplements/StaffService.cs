@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
-using FluffyPaw_Application.DTO.Response;
+using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
@@ -9,6 +9,7 @@ using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -98,7 +99,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     throw new CustomException.InvalidDataException($"Thời gian bắt đầu {createScheduleRequest.StartTime} đã tồn tại.");
                 }
 
-                if (createScheduleRequest.StartTime <= System.DateTimeOffset.UtcNow)
+                if (createScheduleRequest.StartTime <= CoreHelper.SystemTimeNow)
                 {
                     throw new CustomException.InvalidDataException($"Thời gian {createScheduleRequest.StartTime} không phù hợp.");
                 }
@@ -202,18 +203,6 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var bookingResponses = _mapper.Map<List<BookingResponse>>(existingBooking);
             return bookingResponses;
-        }
-
-        public async Task<BookingResponse> GetBookingById(long id)
-        {
-            var existingBooking = _unitOfWork.BookingRepository.GetByID(id);
-            if (existingBooking == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
-            }
-
-            var bookingResponse = _mapper.Map<BookingResponse>(existingBooking);
-            return bookingResponse;
         }
 
         public async Task<bool> AcceptBooking(long id)

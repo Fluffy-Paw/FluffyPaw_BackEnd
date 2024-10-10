@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluffyPaw_Application.DTO.Response
+namespace FluffyPaw_Application.DTO.Response.BookingResponse
 {
     public class BookingResponse : IMapFrom<Booking>
     {
