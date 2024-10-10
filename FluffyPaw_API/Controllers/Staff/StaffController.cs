@@ -30,7 +30,7 @@ namespace FluffyPaw_API.Controllers.Staff
 
         [HttpPost("CreateStoreService")]
         [Authorize(Roles = "Staff")]
-        public async Task<IActionResult> CreateStoreService([FromForm] CreateStoreServiceRequest createStoreServiceRequest)
+        public async Task<IActionResult> CreateStoreService([FromBody] CreateStoreServiceRequest createStoreServiceRequest)
         {
             var storeServices = await _staffService.CreateStoreService(createStoreServiceRequest);
             return CustomResult("Tạo lịch trình thành công", storeServices);

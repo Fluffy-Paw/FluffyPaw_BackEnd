@@ -26,7 +26,7 @@ namespace FluffyPaw_Domain.Entities
 
         public double Cost { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public int BookingCount { get; set; }
 

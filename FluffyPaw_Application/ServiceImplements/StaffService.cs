@@ -5,6 +5,8 @@ using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
+using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -66,17 +68,50 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
             }
 
-            var existingService = _unitOfWork.ServiceRepository.Get(ex => ex.BrandId == store.BrandId
-                                                        && ex.Status == true).ToList();
-            if (existingService.)
+            var existingServices = _unitOfWork.ServiceRepository.Get(ex => ex.BrandId == store.BrandId
+                                                        && ex.Id == createStoreServiceRequest.ServiceId
+                                                        && ex.Status == true).FirstOrDefault();
+            if (existingServices == null)
             {
-                throw new CustomException.DataNotFoundException("Dịch vụ này chưa được xác thực.");
+                throw new CustomException.DataNotFoundException("Dịch vụ này chưa được xác thực hoặc chưa thuộc thương hiệu này.");
             }
 
+            var existingStoreServiceTimes = _unitOfWork.StoreServiceRepository.Get(
+                            ss => ss.ServiceId == createStoreServiceRequest.ServiceId)
+                            .Select(ss => ss.StartTime)
+                            .ToList();
 
+            var storeServices = new List<StoreService>();
 
-            var storeServiceResponses = _mapper.Map<List<StoreServiceResponse>>(createStoreServiceRequest);
+            if (createStoreServiceRequest.CreateScheduleRequests == null || !createStoreServiceRequest.CreateScheduleRequests.Any())
+            {
+                throw new CustomException.InvalidDataException("Danh sách yêu cầu lịch trình trống.");
+            }
 
+            foreach ( var createScheduleRequest in createStoreServiceRequest.CreateScheduleRequests)
+            {
+                if (existingStoreServiceTimes.Contains(createScheduleRequest.StartTime))
+                {
+                    throw new CustomException.InvalidDataException($"Thời gian bắt đầu {createScheduleRequest.StartTime} đã tồn tại.");
+                }
+
+                var newStoreService = new StoreService
+                {
+                    StoreId = store.Id,
+                    ServiceId = createStoreServiceRequest.ServiceId,
+                    StartTime = createScheduleRequest.StartTime,
+                    LimitPetOwner = createScheduleRequest.LimitPetOwner,
+                    CurrentPetOwner = 0,
+                    Status = StoreServiceStatus.Available.ToString()
+                };
+                _unitOfWork.StoreServiceRepository.Insert(newStoreService);
+                storeServices.Add(newStoreService);
+                _unitOfWork.Save();
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            var storeServiceResponses = _mapper.Map<List<StoreServiceResponse>>(storeServices);
             return storeServiceResponses;
         }
     }
