@@ -64,8 +64,11 @@ namespace FluffyPaw_Application.ServiceImplements
                 if (staff != null)
                 {
                     var staffResponse = _mapper.Map<StaffResponse>(staff);
+                    _mapper.Map(store, staffResponse);
                     staffResponses.Add(staffResponse);
                 }
+
+                
             }
 
             return staffResponses;
@@ -73,16 +76,22 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<StoreResponse>> GetAllStoreBySM()
         {
-            var storemanagerId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
-            var account = _unitOfWork.AccountRepository.GetByID(storemanagerId);
+            var storeManagerId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(storeManagerId);
             if (account == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
             }
 
-            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).First();
-            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == true).ToList();
-            if (stores == null || stores.Count == 0)
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+            if (brand == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu liên kết với tài khoản của bạn.");
+            }
+
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == true);
+
+            if (!stores.Any())
             {
                 throw new CustomException.DataNotFoundException("Thương hiệu chưa đăng kí các chi nhánh cửa hàng.");
             }
@@ -94,8 +103,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 var storeResponse = _mapper.Map<StoreResponse>(store);
 
                 var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id, includeProperties: "Files")
-                                    .Select(sf => sf.Files)
-                                    .ToList();
+                                .Select(sf => sf.Files)
+                                .ToList();
 
                 storeResponse.Files = _mapper.Map<List<FileResponse>>(storeFiles);
 
@@ -107,24 +116,38 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<StoreResponse>> GetAllStoreFalseBySM()
         {
-            var storemanagerId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
-            var account = _unitOfWork.AccountRepository.GetByID(storemanagerId);
+            var storeManagerId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(storeManagerId);
             if (account == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
             }
 
-            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).First();
-            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == false).ToList();
-            if (stores == null || stores.Count == 0)
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+            if (brand == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu liên kết với tài khoản của bạn.");
+            }
+
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == false);
+
+            if (!stores.Any())
             {
                 throw new CustomException.DataNotFoundException("Thương hiệu chưa đăng kí các chi nhánh cửa hàng.");
             }
 
             var storeResponses = new List<StoreResponse>();
+
             foreach (var store in stores)
             {
                 var storeResponse = _mapper.Map<StoreResponse>(store);
+
+                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id, includeProperties: "Files")
+                                .Select(sf => sf.Files)
+                                .ToList();
+
+                storeResponse.Files = _mapper.Map<List<FileResponse>>(storeFiles);
+
                 storeResponses.Add(storeResponse);
             }
 
