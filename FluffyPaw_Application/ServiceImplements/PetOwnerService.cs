@@ -1,18 +1,26 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
+using FluffyPaw_Application.DTO.Request.BookingRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
+using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
+using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
+using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Domain.Utils;
+using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -80,6 +88,120 @@ namespace FluffyPaw_Application.ServiceImplements
             result.Email = po.Account.Email;
 
             return result;
+        }
+
+        public async Task<List<BookingResponse>> GetAllBookingByPetId(long id)
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var pet = _unitOfWork.PetRepository.GetByID(id);
+            if (pet == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
+            }
+
+            if (pet.PetOwnerId != po.Id)
+            {
+                throw new CustomException.InvalidDataException("Thú cưng không thuộc quyền quản lý của bạn.");
+            }
+
+            var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id);
+            if (!bookings.Any())
+            {
+                throw new CustomException.DataNotFoundException("Thú cưng này hiện chưa có lịch nào");
+            }
+
+            var bookingResponses = _mapper.Map<List<BookingResponse>>(bookings);
+            return bookingResponses;
+        }
+
+        public async Task<BookingResponse> CreateBooking(CreateBookingRequest createBookingRequest)
+        {
+            var po = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(po);
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == account.Id).ToList();
+            if (!pets.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
+            }
+
+            if (!pets.Any(p => p.Id == createBookingRequest.PetId))
+            {
+                throw new CustomException.InvalidDataException("Thú cưng được đặt lịch không thuộc quyền quản lý của bạn.");
+            }
+
+            if (createBookingRequest.PaymentMethod != BookingPaymentMethod.COD.ToString()
+                || createBookingRequest.PaymentMethod != BookingPaymentMethod.PayOS.ToString())
+            {
+                throw new CustomException.InvalidDataException("Phương thức thanh toán không hợp lệ.");
+            }
+
+            var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
+                                ess => ess.Id == createBookingRequest.StoreServiceId,
+                                includeProperties: "Service").First();
+            if (existingStoreService == null)
+            {
+                throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
+            }
+
+            var newBooking = _mapper.Map<Booking>(createBookingRequest);
+            newBooking.CreateDate = CoreHelper.SystemTimeNow;
+            newBooking.StartTime = existingStoreService.StartTime;
+            newBooking.EndTime = existingStoreService.StartTime + existingStoreService.Service.Duration;
+            newBooking.Checkin = false;
+            newBooking.CheckinTime = CoreHelper.SystemTimeNow;
+            newBooking.Status = BookingStatus.Pending.ToString();
+
+            _unitOfWork.BookingRepository.Insert(newBooking);
+            _unitOfWork.Save();
+
+            /*var newBooking = new Booking
+            {
+                PetId = createBookingRequest.PetId,
+                StoreServiceId = createBookingRequest.StoreServiceId,
+                PaymentMethod = createBookingRequest.PaymentMethod,
+                Cost = createBookingRequest.Cost,
+            };*/
+
+            //Handle xử lý thanh toán
+
+            //
+
+            var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
+            return bookingResponse;
+        }
+
+        public async Task<bool> CancelBooking(long id)
+        {
+            var po = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(po);
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == account.Id).ToList();
+            if (!pets.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
+            }
+
+            var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
+                                            && pb.Status == BookingStatus.Pending.ToString()).First();
+            if (pendingBooking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
+            }
+
+            if (!pets.Any(p => p.Id == pendingBooking.PetId))
+            {
+                throw new CustomException.InvalidDataException("Thú cưng trong đặt lịch không thuộc quyền quản lý của bạn.");
+            }
+
+            pendingBooking.Status = BookingStatus.Cancel.ToString();
+            _unitOfWork.Save();
+
+            //Handle xử lý thanh toán
+
+            //
+
+            return true;
         }
     }
 }
