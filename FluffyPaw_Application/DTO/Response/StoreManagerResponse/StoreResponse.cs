@@ -1,4 +1,5 @@
-﻿using FluffyPaw_Application.Mapper;
+﻿using FluffyPaw_Application.DTO.Response.FilesResponse;
+using FluffyPaw_Application.Mapper;
 using FluffyPaw_Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -27,5 +28,7 @@ namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
         public bool Status { get; set; }
 
         public Account Account { get; set; }
+
+        public List<FileResponse> Files { get; set; }
     }
 }
