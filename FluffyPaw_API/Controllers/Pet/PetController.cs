@@ -107,5 +107,13 @@ namespace FluffyPaw_API.Controllers.Pet
             if (result) return CustomResult("Thông tin thú cưng đã kích hoạt.", result);
             else return CustomResult("Thông tin thú cưng đã tắt.", result);
         }
+
+        [HttpPatch("ChangeOwnerOfPet")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> ChangeOwnerOfPet([FromBody]ChangePORequest changePORequest)
+        {
+            var result = await _petService.ChangeOwnerOfPet(changePORequest);
+            return CustomResult($"Đã chuyển quyền nuôi dưỡng cho user {changePORequest.NewOwnerUsername}.", result);
+        }
     }
 }

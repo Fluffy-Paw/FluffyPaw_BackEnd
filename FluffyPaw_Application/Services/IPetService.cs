@@ -23,5 +23,6 @@ namespace FluffyPaw_Application.Services
         Task<BehaviorCategory> GetBehavior(long behaviorId);
         Task<bool> ActiveDeactivePet(long petId);
         Task<long> AddBehavior(string Action);
+        Task<bool> ChangeOwnerOfPet(ChangePORequest changePORequest);
     }
 }
