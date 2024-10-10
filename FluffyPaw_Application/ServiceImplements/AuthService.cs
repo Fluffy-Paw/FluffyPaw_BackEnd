@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
+using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Response.AuthResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
@@ -37,6 +38,12 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> RegisterPO(RegisterAccountPORequest registerAccountPORequest)
         {
+            var duplicateUsername = _unitOfWork.AccountRepository.Get(du => du.Username.ToLower() == registerAccountPORequest.UserName.ToLower());
+            if (duplicateUsername != null)
+            {
+                throw new CustomException.DataExistException("Username đã tồn tại.");
+            }
+
             if (registerAccountPORequest.ComfirmPassword != registerAccountPORequest.Password)
             {
                 throw new CustomException.InvalidDataException("Password và ConfirmPassword không trùng khớp.");
@@ -73,6 +80,12 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> RegisterSM(RegisterAccountSMRequest registerAccountSMRequest)
         {
+            var duplicateUsername = _unitOfWork.AccountRepository.Get(du => du.Username.ToLower() == registerAccountSMRequest.UserName.ToLower());
+            if (duplicateUsername != null)
+            {
+                throw new CustomException.DataExistException("Username đã tồn tại.");
+            }
+
             if (registerAccountSMRequest.ComfirmPassword != registerAccountSMRequest.Password)
             {
                 throw new CustomException.InvalidDataException("Password và ConfirmPassword không trùng khớp.");

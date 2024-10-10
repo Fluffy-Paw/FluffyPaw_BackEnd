@@ -32,7 +32,7 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<ServiceType> _serviceTypeRepository;
         private IGenericRepository<Store> _storeRepository;
         private IGenericRepository<StoreFile> _storeFileRepository;
-        private IGenericRepository<StoreService> _StoreServiceRepository;
+        private IGenericRepository<StoreService> _storeServiceRepository;
         private IGenericRepository<Brand> _brandRepository;
         private IGenericRepository<Tracking> _trackingRepository;
         private IGenericRepository<TrackingFile> _trackingFileRepository;
@@ -297,11 +297,11 @@ namespace FluffyPaw_Infrastructure.Repository
             get
             {
 
-                if (_StoreServiceRepository == null)
+                if (_storeServiceRepository == null)
                 {
-                    _StoreServiceRepository = new GenericRepository<StoreService>(_context);
+                    _storeServiceRepository = new GenericRepository<StoreService>(_context);
                 }
-                return _StoreServiceRepository;
+                return _storeServiceRepository;
             }
         }
 
