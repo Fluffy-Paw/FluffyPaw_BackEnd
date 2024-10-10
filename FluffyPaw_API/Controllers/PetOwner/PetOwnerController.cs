@@ -45,7 +45,7 @@ namespace FluffyPaw_API.Controllers.PetOwner
         }
 
         [HttpPost("CreateBooking")]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> CreateBooking(CreateBookingRequest createBookingRequest)
         {
             var booking = await _petOwnerService.CreateBooking(createBookingRequest);

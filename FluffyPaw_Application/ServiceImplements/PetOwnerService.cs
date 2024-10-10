@@ -118,9 +118,10 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<BookingResponse> CreateBooking(CreateBookingRequest createBookingRequest)
         {
-            var po = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var account = _unitOfWork.AccountRepository.GetByID(po);
-            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == account.Id).ToList();
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
             if (!pets.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
@@ -131,21 +132,22 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Thú cưng được đặt lịch không thuộc quyền quản lý của bạn.");
             }
 
-            if (createBookingRequest.PaymentMethod != BookingPaymentMethod.COD.ToString()
-                || createBookingRequest.PaymentMethod != BookingPaymentMethod.PayOS.ToString())
-            {
-                throw new CustomException.InvalidDataException("Phương thức thanh toán không hợp lệ.");
-            }
-
             var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
                                 ess => ess.Id == createBookingRequest.StoreServiceId,
-                                includeProperties: "Service").First();
+                                includeProperties: "Service").FirstOrDefault();
             if (existingStoreService == null)
             {
                 throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
             }
 
+            if (createBookingRequest.PaymentMethod != BookingPaymentMethod.COD.ToString()
+                && createBookingRequest.PaymentMethod != BookingPaymentMethod.PayOS.ToString())
+            {
+                throw new CustomException.InvalidDataException("Phương thức thanh toán không hợp lệ.");
+            }
+
             var newBooking = _mapper.Map<Booking>(createBookingRequest);
+            newBooking.Cost = existingStoreService.Service.Cost;
             newBooking.CreateDate = CoreHelper.SystemTimeNow;
             newBooking.StartTime = existingStoreService.StartTime;
             newBooking.EndTime = existingStoreService.StartTime + existingStoreService.Service.Duration;
@@ -174,9 +176,10 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> CancelBooking(long id)
         {
-            var po = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var account = _unitOfWork.AccountRepository.GetByID(po);
-            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == account.Id).ToList();
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
             if (!pets.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");

@@ -16,8 +16,6 @@ namespace FluffyPaw_Application.DTO.Request.BookingRequest
 
         public string PaymentMethod { get; set; }
 
-        public double Cost { get; set; }
-
         public string? Description { get; set; }
     }
 }
