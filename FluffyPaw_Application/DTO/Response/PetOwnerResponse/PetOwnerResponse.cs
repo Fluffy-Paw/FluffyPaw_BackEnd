@@ -25,5 +25,7 @@ namespace FluffyPaw_Application.DTO.Response.PetOwnerResponse
         public string Email { get; set; }
 
         public string? Avatar { get; set; }
+
+        public string Reputation { get; set; }
     }
 }
