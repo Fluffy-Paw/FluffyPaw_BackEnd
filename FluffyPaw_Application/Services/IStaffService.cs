@@ -1,6 +1,6 @@
 ﻿using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
-using FluffyPaw_Application.DTO.Response;
+using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using System;
@@ -18,7 +18,6 @@ namespace FluffyPaw_Application.Services
         Task<StoreServiceResponse> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest);
         Task<bool> DeleteStoreService(long id);
         Task<List<BookingResponse>> GetAllBookingByStoreServiceId(long id);
-        Task<BookingResponse> GetBookingById(long id);
         Task<bool> AcceptBooking(long id);
         Task<bool> DeniedBooking(long id);
     }
