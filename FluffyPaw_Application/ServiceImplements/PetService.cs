@@ -6,6 +6,7 @@ using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -23,14 +24,16 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IFirebaseConfiguration _firebaseConfiguration;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthentication _authentication;
+        private readonly IHashing _hashing;
 
-        public PetService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseConfiguration firebaseConfiguration, IHttpContextAccessor httpContextAccessor, IAuthentication authentication)
+        public PetService(IUnitOfWork unitOfWork, IMapper mapper, IFirebaseConfiguration firebaseConfiguration, IHttpContextAccessor httpContextAccessor, IAuthentication authentication, IHashing hashing)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _firebaseConfiguration = firebaseConfiguration;
             _httpContextAccessor = httpContextAccessor;
             _authentication = authentication;
+            _hashing = hashing;
         }
 
         public async Task<bool> ActiveDeactivePet(long petId)
@@ -69,6 +72,26 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.Save();
 
             return _unitOfWork.BehaviorCategoryRepository.Get(b => b.Name.ToLower() == Action.ToLower()).FirstOrDefault().Id;
+        }
+
+        public async Task<bool> ChangeOwnerOfPet(ChangePORequest changePORequest)
+        {
+            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var user = _unitOfWork.PetOwnerRepository.Get(u => u.Account.Username == changePORequest.NewOwnerUsername, includeProperties: "Account").FirstOrDefault();
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties: "Account").FirstOrDefault();
+            var pet = _unitOfWork.PetRepository.GetByID(changePORequest.PetId);
+
+            if (user == null) throw new CustomException.DataNotFoundException($"Không tìm thấy user với Username: {changePORequest.NewOwnerUsername}");
+            if (user.Account.RoleName != RoleName.PetOwner.ToString()) throw new CustomException.ForbbidenException("User không phải Pet Owner.");
+            if (user.Account.Status == (int)AccountStatus.Deactive) throw new CustomException.ForbbidenException($"Tài khoản có Username {changePORequest.NewOwnerUsername} đã bị cấm.");
+            if (pet == null) throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng");
+            if (pet.PetOwnerId != po.Id) throw new CustomException.ForbbidenException("Bạn không thể chuyển quyền nuôi dưỡng vì đây không phải thú cưng của bạn.");
+            if (_hashing.SHA512Hash(changePORequest.YourPassword) != po.Account.Password) throw new CustomException.ForbbidenException("Bạn đã nhập sai mật khẩu.");
+
+            pet.PetOwnerId = user.Id;
+            _unitOfWork.Save();
+
+            return true;
         }
 
         public async Task<bool> CreateNewPet(PetRequest petRequest)
