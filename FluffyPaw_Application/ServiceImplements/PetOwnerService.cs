@@ -197,7 +197,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Thú cưng trong đặt lịch không thuộc quyền quản lý của bạn.");
             }
 
-            pendingBooking.Status = BookingStatus.Cancel.ToString();
+            pendingBooking.Status = BookingStatus.Canceled.ToString();
             _unitOfWork.Save();
 
             //Handle xử lý thanh toán
