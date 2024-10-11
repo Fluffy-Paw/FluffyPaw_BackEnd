@@ -61,6 +61,14 @@ namespace FluffyPaw_API.Controllers.Staff
             return CustomResult("Xóa lịch trình thành công.");
         }
 
+        [HttpGet("GetAllBookingByStore")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetAllBookingByStore()
+        {
+            var bookings = await _staffService.GetAllBookingByStore();
+            return CustomResult("Tải dữ liệu thành công.", bookings);
+        }
+
         [HttpGet("GetAllBookingByStoreServiceId/{id}")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetAllBookingByStoreServiceId(long id)
