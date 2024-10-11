@@ -21,6 +21,14 @@ namespace FluffyPaw_API.Controllers.Staff
             _staffService = staffService;
         }
 
+        [HttpGet("GetAllServiceByBrandId/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetAllServiceByBrandId(long id)
+        {
+            var services = await _staffService.GetAllServiceByBrandId(id);
+            return CustomResult("Tải dữ liệu thành công.", services);
+        }
+
         [HttpGet("GetStoreByStaff")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetStoreByStaff()

@@ -59,14 +59,14 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<SerResponse>> GetAllServiceBySMId(long id)
         {
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
 
-            if (storeService == null)
+            if (services == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<List<SerResponse>>(storeService);
+            var serviceResponse = _mapper.Map<List<SerResponse>>(services);
             return serviceResponse;
         }
 
