@@ -57,15 +57,21 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Bạn không có truy cập vào thương hiệu này.");
             }
 
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
-
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id, includeProperties: "ServiceType").ToList();
             if (services == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<List<SerResponse>>(services);
-            return serviceResponse;
+            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(services.First().ServiceTypeId);
+
+            var serviceResponses = _mapper.Map<List<SerResponse>>(services);
+            foreach (SerResponse serviceResponse in serviceResponses)
+            {
+                serviceResponse.ServiceTypeName = serviceType.Name;
+            }
+
+            return serviceResponses;
         }
 
         public async Task<StoreResponse> GetStoreByStaff()
