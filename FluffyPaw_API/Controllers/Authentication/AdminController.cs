@@ -40,9 +40,9 @@ namespace FluffyPaw_API.Controllers.Authentication
 
         [HttpGet("GetAllBrandFalse")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetAllBrandFalse()
+        public async Task<IActionResult> GetAllBrandFalse()
         {
-            var brandResponse = _adminService.GetAllBrandFalse();
+            var brandResponse = await _adminService.GetAllBrandFalse();
             return CustomResult("Tải dữ liệu thành công.", brandResponse);
         }
 

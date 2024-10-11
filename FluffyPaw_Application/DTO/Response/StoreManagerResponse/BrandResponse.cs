@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.BrandResponse
 {
-    public class BrandResponse : IMapFrom<Brand>
+    public class BrandResponse : IMapFrom<Brand>, IMapFrom<Identification>
     {
         public long Id { get; set; }
 
@@ -18,8 +18,18 @@ namespace FluffyPaw_Application.DTO.Response.BrandResponse
 
         public string Logo { get; set; }
 
+        public string Hotline { get; set; }
+
+        public string BrandEmail { get; set; }
+
         public string BusinessLicense { get; set; }
 
+        public string MST { get; set; }
+
         public bool Status { get; set; }
+
+        public string Front { get; set; }
+
+        public string Back { get; set; }
     }
 }
