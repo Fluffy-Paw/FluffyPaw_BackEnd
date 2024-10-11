@@ -211,6 +211,30 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
+        public async Task<List<StoreBookingResponse>> GetAllBookingByStore()
+        {
+            var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(staff);
+
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).FirstOrDefault();
+            if (store == null)
+            {
+                throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế hoặc không tồn tại.");
+            }
+
+            var bookings = _unitOfWork.BookingRepository.Get(
+                                    b => b.StoreService.StoreId == store.Id
+                                    && b.Status == BookingStatus.Pending.ToString(),
+                                    includeProperties: "Pet,Pet.PetOwner,StoreService.Service").ToList();
+            if (!bookings.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch nào cho cửa hàng này.");
+            }
+
+            var storeBookingResponses = _mapper.Map<List<StoreBookingResponse>>(bookings);
+            return storeBookingResponses;
+        }
+
         public async Task<List<BookingResponse>> GetAllBookingByStoreServiceId(long id)
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
@@ -223,9 +247,9 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var existingstoreService = _unitOfWork.StoreServiceRepository.Get(
-                                                    ss => ss.Id == id 
-                                                    && ss.StoreId == store.Id 
-                                                    && ss.Status == StoreServiceStatus.Available.ToString(), 
+                                                    ss => ss.Id == id
+                                                    && ss.StoreId == store.Id
+                                                    && ss.Status == StoreServiceStatus.Available.ToString(),
                                                     includeProperties: "Store")
                                                     .FirstOrDefault();
             if (existingstoreService == null)
@@ -260,8 +284,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
             }
 
-            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId 
-                                                && ss.StoreId == store.Id 
+            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId
+                                                && ss.StoreId == store.Id
                                                 && ss.Status == StoreServiceStatus.Available.ToString())
                                                 .FirstOrDefault();
             if (storeService == null)
