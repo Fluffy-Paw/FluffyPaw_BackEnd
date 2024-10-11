@@ -86,7 +86,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataExistException("Username đã tồn tại.");
             }
 
-            if (registerAccountSMRequest.ComfirmPassword != registerAccountSMRequest.Password)
+            if (registerAccountSMRequest.ConfirmPassword != registerAccountSMRequest.Password)
             {
                 throw new CustomException.InvalidDataException("Password và ConfirmPassword không trùng khớp.");
             }

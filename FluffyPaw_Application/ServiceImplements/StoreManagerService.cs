@@ -262,7 +262,8 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 var bookings = _unitOfWork.BookingRepository.Get(b => b.StoreServiceId == storeService.Id
                                         && b.Status == BookingStatus.Pending.ToString()
-                                        || b.Status == BookingStatus.CheckedIn.ToString()).ToList();
+                                        || b.Status == BookingStatus.CheckedIn.ToString()
+                                        || b.Status == BookingStatus.Accepted.ToString()).ToList();
                 if (bookings.Any())
                 {
                     throw new CustomException.DataExistException($"Chi nhánh {store.Name} vẫn còn dịch vụ đang được book.");

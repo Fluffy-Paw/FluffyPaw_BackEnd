@@ -19,7 +19,7 @@ namespace FluffyPaw_Application.DTO.Request.AuthRequest
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập confirm password.")]
-        public string ComfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập tên.")]
         public string Name { get; set; }
