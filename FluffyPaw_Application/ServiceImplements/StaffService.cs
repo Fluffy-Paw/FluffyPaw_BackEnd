@@ -2,6 +2,7 @@
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
+using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
@@ -34,6 +35,37 @@ namespace FluffyPaw_Application.ServiceImplements
             _mapper = mapper;
             _authentication = authentication;
             _contextAccessor = contextAccessor;
+        }
+        public async Task<List<SerResponse>> GetAllServiceByBrandId(long id)
+        {
+            var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(staff);
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            if (store == null)
+            {
+                throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
+            }
+
+            var brand = _unitOfWork.BrandRepository.GetByID(id);
+            if (brand == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu.");
+            }
+
+            else if (store.BrandId != brand.Id)
+            {
+                throw new CustomException.InvalidDataException("Bạn không có truy cập vào thương hiệu này.");
+            }
+
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
+
+            if (services == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
+            }
+
+            var serviceResponse = _mapper.Map<List<SerResponse>>(services);
+            return serviceResponse;
         }
 
         public async Task<StoreResponse> GetStoreByStaff()
