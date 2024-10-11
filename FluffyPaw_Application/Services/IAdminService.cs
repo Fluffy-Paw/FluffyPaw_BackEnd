@@ -16,7 +16,7 @@ namespace FluffyPaw_Application.Services
     public interface IAdminService
     {
         Task<bool> CreateAdmin(AdminRequest adminRequest);
-        IEnumerable<BrandResponse> GetAllBrandFalse();
+        Task<List<BrandResponse>> GetAllBrandFalse();
         Task<bool> AcceptBrand(long id);
         Task<List<SerResponse>> GetAllServiceFalseByBrandId(long id);
         Task<bool> AcceptBrandService(long id);

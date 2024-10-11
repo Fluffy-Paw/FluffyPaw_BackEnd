@@ -56,10 +56,28 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public IEnumerable<BrandResponse> GetAllBrandFalse()
+        public async Task<List<BrandResponse>> GetAllBrandFalse()
         {
             var brands = _unitOfWork.BrandRepository.Get().Where(sm => sm.Status == false).ToList();
-            var brandResponses = _mapper.Map<IEnumerable<BrandResponse>>(brands);
+
+            var brandResponses = new List<BrandResponse>();
+            foreach (var brand in brands)
+            {
+                var account = _unitOfWork.AccountRepository.GetByID(brand.AccountId);
+
+                var identification = _unitOfWork.IdentificationRepository.Get(i => i.AccountId == account.Id).FirstOrDefault();
+
+                var brandResponse = _mapper.Map<BrandResponse>(brand);
+
+                if (identification != null)
+                {
+                    brandResponse.Front = identification.Front;
+                    brandResponse.Back = identification.Back;
+                }
+
+                brandResponses.Add(brandResponse);
+            }
+
             return brandResponses;
         }
 
