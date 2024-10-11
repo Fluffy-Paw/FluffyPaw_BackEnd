@@ -118,6 +118,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             services.AddScoped<IVaccineService, VaccineService>();
             services.AddScoped<IStoreManagerService, StoreManagerService>();
             services.AddScoped<IStaffService, StaffService>();
+            services.AddScoped<IBookingService, BookingService>();
         }
 
 

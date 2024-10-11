@@ -10,7 +10,7 @@ namespace FluffyPaw_Repository.Enum
     {
         Accepted,
         Pending,
-        Cancel,
+        Canceled,
         CheckedIn,
         Denied,
         Ended
