@@ -110,8 +110,10 @@ namespace FluffyPaw_Application.ServiceImplements
 
             _mapper.Map(vaccineRequest, vaccine);
 
+            if (vaccineRequest.VaccineImage != null) vaccine.Image = await _firebaseConfiguration.UploadImage(vaccineRequest.VaccineImage);
             if (vaccine.NextVaccineDate > DateTimeOffset.UtcNow) vaccine.Status = VaccineStatus.Incomplete.ToString();
             else vaccine.Status = VaccineStatus.Complete.ToString();
+
             _unitOfWork.Save();
 
             return vaccine;
