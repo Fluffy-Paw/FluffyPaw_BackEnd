@@ -40,9 +40,9 @@ namespace FluffyPaw_API.Controllers.Authentication
 
         [HttpGet("GetAllBrandFalse")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetAllBrandFalse()
+        public async Task<IActionResult> GetAllBrandFalse()
         {
-            var brandResponse = _adminService.GetAllBrandFalse();
+            var brandResponse = await _adminService.GetAllBrandFalse();
             return CustomResult("Tải dữ liệu thành công.", brandResponse);
         }
 
@@ -52,6 +52,14 @@ namespace FluffyPaw_API.Controllers.Authentication
         {
             var brand = await _adminService.AcceptBrand(id);
             return CustomResult("Xác thực hoàn tất.", brand);
+        }
+
+        [HttpGet("GetAllServiceFalse")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllServiceFalse()
+        {
+            var services = await _adminService.GetAllServiceFalse();
+            return CustomResult("Tải dữ liệu thành công.", services);
         }
 
         [HttpGet("GetAllServiceFalseByBrandId/{id}")]
@@ -68,6 +76,14 @@ namespace FluffyPaw_API.Controllers.Authentication
         {
             var brandService = await _adminService.AcceptBrandService(id);
             return CustomResult("Xác thực hoàn tất.", brandService);
+        }
+
+        [HttpGet("GetAllStoreFalse")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllStoreFalse()
+        {
+            var stores = await _adminService.GetAllStoreFalse();
+            return CustomResult("Tải dữ liệu thành công.", stores);
         }
 
         [HttpGet("GetAllStoreFalseByBrandId/{id}")]

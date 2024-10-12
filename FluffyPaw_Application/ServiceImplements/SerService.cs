@@ -38,36 +38,44 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
 
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == BrandId.Id,
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == BrandId.Id,
                 includeProperties: "Certificate").ToList();
 
-            if (!storeService.Any())
+            if (!services.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(storeService.First().ServiceTypeId);
+            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(services.First().ServiceTypeId);
 
-            var serviceResponse = _mapper.Map<List<SerResponse>>(storeService);
-            foreach (SerResponse serResponse in serviceResponse)
+            var serviceResponses = _mapper.Map<List<SerResponse>>(services);
+            foreach (SerResponse serviceResponse in serviceResponses)
             {
-                serResponse.ServiceTypeName = serviceType.Name;
+                serviceResponse.ServiceTypeName = serviceType.Name;
             }
 
-            return serviceResponse;
+            return serviceResponses;
         }
 
         public async Task<List<SerResponse>> GetAllServiceBySMId(long id)
         {
-            var storeService = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id).ToList();
-
-            if (storeService == null)
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id, includeProperties: "ServiceType").ToList();
+            if (services == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceResponse = _mapper.Map<List<SerResponse>>(storeService);
-            return serviceResponse;
+
+
+            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(services.First().ServiceTypeId);
+
+            var serviceResponses = _mapper.Map<List<SerResponse>>(services);
+            foreach (SerResponse serviceResponse in serviceResponses)
+            {
+                serviceResponse.ServiceTypeName = serviceType.Name;
+            }
+
+            return serviceResponses;
         }
 
         public async Task<SerResponse> CreateService(SerRequest serviceRequest)
