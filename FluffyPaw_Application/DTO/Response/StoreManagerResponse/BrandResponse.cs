@@ -8,11 +8,15 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.BrandResponse
 {
-    public class BrandResponse : IMapFrom<Brand>, IMapFrom<Identification>
+    public class BrandResponse : IMapFrom<Brand>, IMapFrom<Account>, IMapFrom<Identification>
     {
         public long Id { get; set; }
 
         public long AccountId { get; set; }
+
+        public string FullName { get; set; }
+
+        public DateTimeOffset CreateDate { get; set; }
 
         public string Name { get; set; }
 

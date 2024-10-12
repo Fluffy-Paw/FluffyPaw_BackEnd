@@ -68,9 +68,10 @@ namespace FluffyPaw_Application.ServiceImplements
                 var identification = _unitOfWork.IdentificationRepository.Get(i => i.AccountId == account.Id).FirstOrDefault();
 
                 var brandResponse = _mapper.Map<BrandResponse>(brand);
-
+                brandResponse.CreateDate = account.CreateDate;
                 if (identification != null)
                 {
+                    brandResponse.FullName = identification.FullName;
                     brandResponse.Front = identification.Front;
                     brandResponse.Back = identification.Back;
                 }
@@ -87,6 +88,19 @@ namespace FluffyPaw_Application.ServiceImplements
             Brand.Status = true;
             _unitOfWork.Save();
             return true;
+        }
+
+        public async Task<List<SerResponse>> GetAllServiceFalse()
+        {
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType").ToList();
+
+            if (services == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ đợi xác thực.");
+            }
+
+            var serviceResponse = _mapper.Map<List<SerResponse>>(services);
+            return serviceResponse;
         }
 
         public async Task<List<SerResponse>> GetAllServiceFalseByBrandId(long id)
@@ -108,6 +122,19 @@ namespace FluffyPaw_Application.ServiceImplements
             service.Status = true;
             _unitOfWork.Save();
             return true;
+        }
+
+        public async Task<List<StoreResponse>> GetAllStoreFalse()
+        {
+            var stores = _unitOfWork.StoreRepository.Get(ss => ss.Status == false, includeProperties: "Account").ToList();
+
+            if (stores == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy chi nhánh.");
+            }
+
+            var storeResponses = _mapper.Map<List<StoreResponse>>(stores);
+            return storeResponses;
         }
 
         public async Task<List<StoreResponse>> GetAllStoreFalseByBrandId(long id)
