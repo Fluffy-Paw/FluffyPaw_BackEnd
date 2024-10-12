@@ -37,7 +37,7 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Tải dữ liệu thành công.", stores);
         }
 
-        [HttpGet("GetAllStoreFalseBySM/{id}")]
+        [HttpGet("GetAllStoreFalseBySM")]
         [Authorize(Roles = "StoreManager")]
         public IActionResult GetAllStoreFalse()
         {
