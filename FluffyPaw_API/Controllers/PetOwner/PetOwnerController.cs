@@ -36,11 +36,19 @@ namespace FluffyPaw_API.Controllers.PetOwner
             return CustomResult("Cập nhật thành công.", po);
         }
 
+        [HttpGet("GetStoreById/{id}")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetStoreById(long id)
+        {
+            var store = await _petOwnerService.GetStoreById(id);
+            return CustomResult("Tải dữ liệu thành công.", store);
+        }
+
         [HttpGet("GetAllBookingByPetId/{id}")]
         [Authorize(Roles = "PetOwner")]
-        public async Task<IActionResult> GetAllBookingByPetId(long id)
+        public async Task<IActionResult> GetAllBookingByPetId(long id, string? bookingStatus)
         {
-            var bookings = await _petOwnerService.GetAllBookingByPetId(id);
+            var bookings = await _petOwnerService.GetAllBookingByPetId(id, bookingStatus);
             return CustomResult("Tải dữ liệu thành công.", bookings);
         }
 

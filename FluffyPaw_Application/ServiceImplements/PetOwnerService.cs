@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Request.BookingRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
-using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
-using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
+using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
@@ -14,13 +13,6 @@ using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -90,7 +82,33 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<List<BookingResponse>> GetAllBookingByPetId(long id)
+        public async Task<List<StoreResponse>> GetStoreById(long id)
+        {
+            var stores = _unitOfWork.StoreRepository.Get(s => s.Id == id).ToList();
+            if (!stores.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
+            }
+
+            var storeResponses = new List<StoreResponse>();
+
+            foreach (var store in stores)
+            {
+                var storeResponse = _mapper.Map<StoreResponse>(store);
+
+                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id, includeProperties: "Files")
+                                .Select(sf => sf.Files)
+                                .ToList();
+
+                storeResponse.Files = _mapper.Map<List<FileResponse>>(storeFiles);
+
+                storeResponses.Add(storeResponse);
+            }
+
+            return storeResponses;
+        }
+
+        public async Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -106,7 +124,9 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Thú cưng không thuộc quyền quản lý của bạn.");
             }
 
-            var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id);
+            var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id
+                                            && (string.IsNullOrEmpty(bookingStatus) || b.Status == bookingStatus), 
+                                            includeProperties: "StoreService,StoreService.Store,StoreService.Service");
             if (!bookings.Any())
             {
                 throw new CustomException.DataNotFoundException("Thú cưng này hiện chưa có lịch nào");
