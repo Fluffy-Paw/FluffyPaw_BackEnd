@@ -13,6 +13,7 @@ namespace FluffyPaw_Repository.Enum
         Canceled,
         CheckedIn,
         Denied,
+        OverTime,
         Ended
     }
 }
