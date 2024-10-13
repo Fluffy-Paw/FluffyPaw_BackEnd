@@ -1,4 +1,6 @@
-﻿using FluffyPaw_Application.DTO.Response.FilesResponse;
+﻿using AutoMapper;
+using FluffyPaw_Application.DTO.Response.FilesResponse;
+using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.Mapper;
 using FluffyPaw_Domain.Entities;
 using System;
@@ -9,13 +11,15 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
 {
-    public class StoreResponse : IMapFrom<Store>
+    public class StoreResponse : IMapFrom<Store>, IMapFrom<Brand>
     {
         public long Id { get; set; }
 
         public long AccountId { get; set; }
 
         public long BrandId { get; set; }
+
+        public string BrandName { get; set; }
 
         public string Name { get; set; }
 
@@ -30,5 +34,11 @@ namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
         public Account Account { get; set; }
 
         public List<FileResponse> Files { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<Store, StoreResponse>()
+                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name));
+        }
     }
 }
