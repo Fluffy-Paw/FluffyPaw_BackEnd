@@ -10,6 +10,7 @@ namespace FluffyPaw_Application.Services
     {
         Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest);
         Task<PetOwnerResponse> GetPetOwnerDetail();
+        Task<List<StoreResponse>> GetAllStore();
         Task<List<StoreResponse>> GetStoreById(long id);
         Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus);
         Task<BookingResponse> CreateBooking(CreateBookingRequest createBookingRequest);

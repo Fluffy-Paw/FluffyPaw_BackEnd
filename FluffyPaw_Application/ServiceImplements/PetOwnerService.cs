@@ -82,6 +82,18 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
+        public async Task<List<StoreResponse>> GetAllStore()
+        {
+            var stores = _unitOfWork.StoreRepository.Get(s => s.Status == true, includeProperties: "Brand");
+            if (!stores.Any())
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu chưa đăng kí các chi nhánh cửa hàng.");
+            }
+
+            var storeResponses = _mapper.Map<List<StoreResponse>>(stores);
+            return storeResponses;
+        }
+
         public async Task<List<StoreResponse>> GetStoreById(long id)
         {
             var stores = _unitOfWork.StoreRepository.Get(s => s.Id == id).ToList();
