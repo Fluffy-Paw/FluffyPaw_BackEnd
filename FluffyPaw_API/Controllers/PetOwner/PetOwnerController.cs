@@ -68,7 +68,7 @@ namespace FluffyPaw_API.Controllers.PetOwner
             return CustomResult("Đặt lịch thành công", booking);
         }
 
-        [HttpPatch("CancelBooking")]
+        [HttpPatch("CancelBooking/{id}")]
         [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> CancelBooking(long id)
         {
