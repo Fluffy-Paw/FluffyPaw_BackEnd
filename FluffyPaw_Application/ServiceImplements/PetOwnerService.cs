@@ -186,7 +186,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
                                 ess => ess.Id == createBookingRequest.StoreServiceId,
-                                includeProperties: "Service").FirstOrDefault();
+                                includeProperties: "Service,Store").FirstOrDefault();
             if (existingStoreService == null)
             {
                 throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
