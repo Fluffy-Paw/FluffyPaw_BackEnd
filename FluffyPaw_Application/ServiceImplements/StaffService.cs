@@ -142,6 +142,11 @@ namespace FluffyPaw_Application.ServiceImplements
                     throw new CustomException.InvalidDataException($"Thời gian {createScheduleRequest.StartTime} không phù hợp.");
                 }
 
+                if (createScheduleRequest.LimitPetOwner < 1)
+                {
+                    throw new CustomException.DataNotFoundException("Số lượng tối thiểu là 1");
+                } 
+
                 var newStoreService = new StoreService
                 {
                     StoreId = store.Id,
