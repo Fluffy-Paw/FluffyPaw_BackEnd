@@ -100,7 +100,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponse;
         }
 
-        public async Task<List<StoreServiceResponse>> CreateStoreService(CreateStoreServiceRequest createStoreServiceRequest)
+        public async Task<List<StoreSerResponse>> CreateStoreService(CreateStoreServiceRequest createStoreServiceRequest)
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
@@ -158,11 +158,11 @@ namespace FluffyPaw_Application.ServiceImplements
 
             await _unitOfWork.SaveAsync();
 
-            var storeServiceResponses = _mapper.Map<List<StoreServiceResponse>>(storeServices);
+            var storeServiceResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
             return storeServiceResponses;
         }
 
-        public async Task<StoreServiceResponse> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest)
+        public async Task<StoreSerResponse> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest)
         {
             var existingstoreService = _unitOfWork.StoreServiceRepository.GetByID(id);
             if (existingstoreService == null)
@@ -184,7 +184,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _mapper.Map(existingstoreService, updateStoreServiceRequest);
             _unitOfWork.Save();
 
-            var storeServiceResponses = _mapper.Map<StoreServiceResponse>(existingstoreService);
+            var storeServiceResponses = _mapper.Map<StoreSerResponse>(existingstoreService);
             return storeServiceResponses;
         }
 

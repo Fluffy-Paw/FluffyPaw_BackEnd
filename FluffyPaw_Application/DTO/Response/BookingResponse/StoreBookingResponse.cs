@@ -11,6 +11,7 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 {
     public class StoreBookingResponse : IMapFrom<Booking>, IMapFrom<PetOwner>, IMapFrom<Service>
     {
+        public long Id { get; set; }
         public string FullName { get; set; }
 
         public string Phone { get; set; }

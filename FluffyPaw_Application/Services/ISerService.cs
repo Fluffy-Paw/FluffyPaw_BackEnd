@@ -7,6 +7,7 @@ namespace FluffyPaw_Application.Services
     {
         Task<List<SerResponse>> GetAllServiceBySM();
         Task<List<SerResponse>> GetAllServiceBySMId(long id);
+        Task<List<SerResponse>> GetAllServiceByStoreId(long id);
         Task<SerResponse> CreateService(SerRequest serviceRequest);
         Task<UpdateServiceResponse> UpdateService(long id, UpdateServiceRequest updateServiceRequest);
         Task<bool> DeleteService(long id);

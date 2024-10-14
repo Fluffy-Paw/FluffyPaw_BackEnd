@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.StoreServiceResponse
 {
-    public class StoreServiceResponse : IMapFrom<StoreService>
+    public class StoreSerResponse : IMapFrom<StoreService>
     {
         public long Id { get; set; }
 

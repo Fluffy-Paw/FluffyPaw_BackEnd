@@ -28,10 +28,18 @@ namespace FluffyPaw_API.Controllers.Service
 
 
         [HttpGet("GetAllServiceBySMId/{id}")]
-        [Authorize(Roles = "Staff,PetOwner")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetAllServiceBySMId(long id)
         {
             var services = _serService.GetAllServiceBySMId(id);
+            return CustomResult("Tải dữ liệu thành công.", services);
+        }
+
+        [HttpGet("GetAllServiceByStoreId/{id}")]
+        [Authorize(Roles = "Staff,PetOwner")]
+        public async Task<IActionResult> GetAllServiceByStoreId(long id)
+        {
+            var services = await _serService.GetAllServiceByStoreId(id);
             return CustomResult("Tải dữ liệu thành công.", services);
         }
 

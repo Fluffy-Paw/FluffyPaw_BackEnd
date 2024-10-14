@@ -77,7 +77,7 @@ namespace FluffyPaw_API.Controllers.Staff
             return CustomResult("Tải dữ liệu thành công.", bookings);
         }
 
-        [HttpPatch("AcceptBooking")]
+        [HttpPatch("AcceptBooking/{id}")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> AcceptBooking(long id)
         {
@@ -85,7 +85,7 @@ namespace FluffyPaw_API.Controllers.Staff
             return CustomResult("Cập nhật đặt lịch thành công.", booking);
         }
 
-        [HttpPatch("DeniedBooking")]
+        [HttpPatch("DeniedBooking/{id}")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> DeniedBooking(long id)
         {

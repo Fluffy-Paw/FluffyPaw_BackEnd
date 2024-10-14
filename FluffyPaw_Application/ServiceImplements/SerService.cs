@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.ServiceRequest;
+using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
+using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
@@ -73,6 +75,44 @@ namespace FluffyPaw_Application.ServiceImplements
             foreach (SerResponse serviceResponse in serviceResponses)
             {
                 serviceResponse.ServiceTypeName = serviceType.Name;
+            }
+
+            return serviceResponses;
+        }
+
+        public async Task<List<SerResponse>> GetAllServiceByStoreId(long id)
+        {
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == id).ToList();
+            if (storeServices == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình của cửa hàng này.");
+            }
+
+            var groupedServices = storeServices.GroupBy(ss => ss.ServiceId);
+
+            var serviceResponses = new List<SerResponse>();
+            foreach (var group in groupedServices)
+            {
+                var serviceId = group.Key;
+
+                var service = _unitOfWork.ServiceRepository
+                    .Get(s => s.Id == serviceId, includeProperties: "ServiceType,Certificate")
+                    .FirstOrDefault();
+
+                if (service == null)
+                {
+                    throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của cửa hàng này.");
+                }
+
+                var serviceResponse = _mapper.Map<SerResponse>(service);
+
+                serviceResponse.ServiceTypeName = service.ServiceType.Name;
+
+                serviceResponses.Add(serviceResponse);
+            }
+            if (!serviceResponses.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
             }
 
             return serviceResponses;
