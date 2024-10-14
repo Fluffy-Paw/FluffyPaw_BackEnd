@@ -278,7 +278,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString()).First();
+                                            && pb.Status == BookingStatus.Pending.ToString()).FirstOrDefault();
             if (pendingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
