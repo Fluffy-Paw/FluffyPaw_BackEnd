@@ -5,6 +5,7 @@ using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
+using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
@@ -39,7 +40,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Reputation != AccountReputation.Ban.ToString(), includeProperties: "Account").FirstOrDefault();
-            if(po == null)
+            if (po == null)
             {
                 throw new CustomException.ForbbidenException("Bạn đã bị cấm, liên hệ admin để biết thêm thông tin.");
             }
@@ -54,7 +55,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var exitstingPo = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties : "Account").FirstOrDefault();
+            var exitstingPo = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties: "Account").FirstOrDefault();
             if (exitstingPo == null)
             {
                 throw new CustomException.DataNotFoundException("Bạn không phải Pet Owner.");
@@ -71,7 +72,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             exitstingPo.Account.Email = petOwnerRequest.Email;
-            if(petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
+            if (petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
             var po = _mapper.Map(petOwnerRequest, exitstingPo);
             _unitOfWork.Save();
 
@@ -120,6 +121,25 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponses;
         }
 
+        public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id)
+        {
+            var existingService = _unitOfWork.ServiceRepository.GetByID(id);
+            if (existingService == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ.");
+            }
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == existingService.Id
+                                                    && ss.Status == StoreServiceStatus.Available.ToString());
+            if (!storeServices.Any())
+            {
+                throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình của dịch vụ {existingService.Name}.");
+            }
+
+            var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
+            return storeSerResponses;
+        }
+
         public async Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
@@ -137,7 +157,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id
-                                            && (string.IsNullOrEmpty(bookingStatus) || b.Status == bookingStatus), 
+                                            && (string.IsNullOrEmpty(bookingStatus) || b.Status == bookingStatus),
                                             includeProperties: "StoreService,StoreService.Store,StoreService.Service");
             if (!bookings.Any())
             {
