@@ -335,6 +335,8 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             pendingBooking.Status = BookingStatus.Denied.ToString();
+            storeService.CurrentPetOwner -= 1;
+
             _unitOfWork.Save();
 
             //Handle xử lý thanh toán

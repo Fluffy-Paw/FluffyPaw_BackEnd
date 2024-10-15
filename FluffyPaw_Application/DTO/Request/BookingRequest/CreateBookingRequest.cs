@@ -10,7 +10,7 @@ namespace FluffyPaw_Application.DTO.Request.BookingRequest
 {
     public class CreateBookingRequest : IMapFrom<Booking>
     {
-        public long PetId { get; set; }
+        public List<long> PetId { get; set; }
 
         public long StoreServiceId { get; set; }
 

@@ -89,7 +89,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu liên kết với tài khoản của bạn.");
             }
 
-            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == true);
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == true, includeProperties: "Account");
 
             if (!stores.Any())
             {
@@ -129,7 +129,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu liên kết với tài khoản của bạn.");
             }
 
-            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == false);
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == false, includeProperties: "Account");
 
             if (!stores.Any())
             {
@@ -272,15 +272,20 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var staff = _unitOfWork.AccountRepository.GetByID(store.AccountId);
 
-            var fileIds = _unitOfWork.StoreFileRepository.Get(f => f.StoreId == store.Id).ToList();
+            var storeFiles = _unitOfWork.StoreFileRepository.Get(f => f.StoreId == store.Id).ToList();
             
-            foreach ( var fileId in fileIds)
+            foreach ( var storeFile in storeFiles)
             {
-                var file = _unitOfWork.FilesRepository.GetByID(fileId);
-                _unitOfWork.FilesRepository.Delete(file);
+                var file = _unitOfWork.FilesRepository.GetByID(storeFile.FileId);
+                if (file != null)
+                {
+                    _unitOfWork.FilesRepository.Delete(file);
+                }
+                _unitOfWork.StoreFileRepository.Delete(storeFile);
                 _unitOfWork.Save();
             }
-            _unitOfWork.StoreRepository.Delete(staff);
+            _unitOfWork.StoreRepository.Delete(store);
+            _unitOfWork.AccountRepository.Delete(staff);
 
             _unitOfWork.Save();
 
