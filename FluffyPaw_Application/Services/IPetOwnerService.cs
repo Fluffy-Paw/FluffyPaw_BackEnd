@@ -15,7 +15,7 @@ namespace FluffyPaw_Application.Services
         Task<List<StoreResponse>> GetStoreById(long id);
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id);
         Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus);
-        Task<BookingResponse> CreateBooking(CreateBookingRequest createBookingRequest);
+        Task<List<BookingResponse>> CreateBooking(CreateBookingRequest createBookingRequest);
         Task<bool> CancelBooking(long id);
 
     }

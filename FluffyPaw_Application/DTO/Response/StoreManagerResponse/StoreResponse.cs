@@ -11,11 +11,13 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
 {
-    public class StoreResponse : IMapFrom<Store>, IMapFrom<Brand>
+    public class StoreResponse : IMapFrom<Store>, IMapFrom<Brand>, IMapFrom<Account>
     {
         public long Id { get; set; }
 
         public long AccountId { get; set; }
+
+        public string Username { get; set; }
 
         public long BrandId { get; set; }
 
@@ -38,7 +40,8 @@ namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Store, StoreResponse>()
-                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name));
+                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Account.Username));
         }
     }
 }

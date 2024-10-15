@@ -89,7 +89,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu liên kết với tài khoản của bạn.");
             }
 
-            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == true);
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == true, includeProperties: "Account");
 
             if (!stores.Any())
             {
@@ -129,7 +129,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu liên kết với tài khoản của bạn.");
             }
 
-            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == false);
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == false, includeProperties: "Account");
 
             if (!stores.Any())
             {
