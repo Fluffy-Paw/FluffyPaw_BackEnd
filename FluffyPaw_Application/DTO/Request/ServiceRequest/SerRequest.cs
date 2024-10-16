@@ -25,6 +25,6 @@ namespace FluffyPaw_Application.DTO.Request.ServiceRequest
 
         public string? Description { get; set; }
 
-        public List<CreateCertificateRequest>? CertificateDtos { get; set; }
+        public List<ServiceCertificateRequest>? CertificateDtos { get; set; }
     }
 }
