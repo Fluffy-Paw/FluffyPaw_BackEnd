@@ -213,6 +213,17 @@ namespace FluffyPaw_Application.ServiceImplements
                 var newStartTime = existingStoreService.StartTime;
                 var newEndTime = existingStoreService.StartTime + existingStoreService.Service.Duration;
 
+                var timeDifference = newStartTime - CoreHelper.SystemTimeNow;
+                if (timeDifference < TimeSpan.FromMinutes(30))
+                {
+                    throw new CustomException.InvalidDataException("Không được đặt lịch trong vòng 30 phút trước khi bắt đầu dịch vụ.");
+                }
+
+                if (newStartTime <= CoreHelper.SystemTimeNow)
+                {
+                    throw new CustomException.InvalidDataException("Thời gian bắt đầu phải là tương lai.");
+                }
+
                 var overlappingBooking = _unitOfWork.BookingRepository.Get(b =>
                                                     b.PetId == petId &&
                                                     b.StoreServiceId == createBookingRequest.StoreServiceId &&
@@ -241,6 +252,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     CheckinTime = CoreHelper.SystemTimeNow,
                     Status = BookingStatus.Pending.ToString()
                 };
+
                 _unitOfWork.BookingRepository.Insert(newBooking);
                 bookings.Add(newBooking);
                 existingStoreService.CurrentPetOwner++;
