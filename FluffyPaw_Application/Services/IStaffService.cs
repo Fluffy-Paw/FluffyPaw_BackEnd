@@ -1,7 +1,9 @@
 ﻿using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
+using FluffyPaw_Application.DTO.Request.TrackingRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
+using FluffyPaw_Application.DTO.Response.StaffResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using System;
@@ -23,5 +25,10 @@ namespace FluffyPaw_Application.Services
         Task<List<BookingResponse>> GetAllBookingByStoreServiceId(long id);
         Task<bool> AcceptBooking(long id);
         Task<bool> DeniedBooking(long id);
+        Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id);
+        Task<TrackingResponse> GetTrackingById(long id);
+        Task<TrackingResponse> CreateTracking(TrackingRequest trackingRequest);
+        Task<TrackingResponse> UpdateTracking(long id, UpdateTrackingRequest updateTrackingRequest);
+        Task<bool> DeleteTracking(long id);
     }
 }
