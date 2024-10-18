@@ -20,7 +20,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var storeServiceId = Convert.ToInt64(context.JobDetail.JobDataMap.GetString("StoreServiceId"));
+            var storeServiceId = context.JobDetail.JobDataMap.GetLong("StoreServiceId");
             var storeService = _unitOfWork.StoreServiceRepository.GetByID(storeServiceId);
 
             if (storeService != null)
@@ -28,7 +28,6 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                 storeService.Status = StoreServiceStatus.NotAvailable.ToString();
                 _unitOfWork.StoreServiceRepository.Update(storeService);
                 await _unitOfWork.SaveAsync();
-
             }
         }
     }

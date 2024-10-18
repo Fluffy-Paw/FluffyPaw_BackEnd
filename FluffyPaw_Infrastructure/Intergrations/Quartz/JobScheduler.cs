@@ -37,7 +37,8 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var job = JobBuilder.Create<StoreServiceCloseNotificationJob>()
                 .WithIdentity(jobKey)
-                .UsingJobData("StoreServiceId", storeService.Id.ToString())
+                .UsingJobData("StoreServiceId", storeService.Id)
+                .UsingJobData("Status", storeService.Status)
                 .Build();
 
             var trigger = TriggerBuilder.Create()
