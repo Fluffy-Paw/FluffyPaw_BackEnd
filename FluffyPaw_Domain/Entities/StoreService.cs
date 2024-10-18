@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluffyPaw_Domain.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -31,5 +32,10 @@ namespace FluffyPaw_Domain.Entities
 
         [ForeignKey("ServiceId")]
         public virtual Service Service { get; set; }
+
+        public StoreService()
+        {
+            StartTime = CoreHelper.SystemTimeNow;
+        }
     }
 }
