@@ -144,7 +144,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
             var pet = _unitOfWork.PetRepository.GetByID(id);
             if (pet == null)
             {
@@ -172,7 +172,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
             var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
             if (!pets.Any())
             {
@@ -271,7 +271,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
             var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
             if (!pets.Any())
             {
@@ -279,7 +279,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString()).First();
+                                            && pb.Status == BookingStatus.Pending.ToString()).FirstOrDefault();
             if (pendingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");

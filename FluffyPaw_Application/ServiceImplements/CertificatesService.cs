@@ -75,7 +75,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<CertificatesResponse> UpdateCertificate(long id, UpdateCertificateRequest updateCertificateRequest)
         {
-            var existingCertificate = _unitOfWork.CertificateRepository.Get(c => c.Id == id).First();
+            var existingCertificate = _unitOfWork.CertificateRepository.Get(c => c.Id == id).FirstOrDefault();
             if (existingCertificate == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy Certificate này.");

@@ -48,7 +48,8 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                            .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
@@ -91,7 +92,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của Staff.");
             }
 
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                                .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng.");
@@ -112,7 +114,8 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                                .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
@@ -206,7 +209,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> DeleteStoreService(long id)
         {
-            var existingstoreService = _unitOfWork.StoreServiceRepository.Get(ess => ess.Id == id, includeProperties: "Store").First();
+            var existingstoreService = _unitOfWork.StoreServiceRepository.Get(ess => ess.Id == id, includeProperties: "Store")
+                                                            .FirstOrDefault();
             if (existingstoreService == null)
             {
                 throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
@@ -287,7 +291,8 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                            .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
@@ -323,7 +328,8 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                            .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
@@ -361,7 +367,8 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                            .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
