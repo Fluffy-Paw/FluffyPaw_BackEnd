@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluffyPaw_Domain.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -32,5 +33,11 @@ namespace FluffyPaw_Domain.Entities
 
         [ForeignKey("PetId")]
         public virtual Pet Pet { get; set; }
+
+        public VaccineHistory()
+        {
+            VaccineDate = CoreHelper.SystemTimeNow;
+            NextVaccineDate = CoreHelper.SystemTimeNow;
+        }
     }
 }

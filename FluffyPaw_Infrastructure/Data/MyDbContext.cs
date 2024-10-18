@@ -192,7 +192,7 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Booking>().HasData(
-                new Booking { Id = 1, PetId = 1, StoreServiceId = 1, PaymentMethod = "PayOS", Cost = 100000, Description = "test", CreateDate = CoreHelper.SystemTimeNow, StartTime = CoreHelper.SystemTimeNow, EndTime = CoreHelper.SystemTimeNow, Status = "Accept" }
+                new Booking { Id = 1, PetId = 1, StoreServiceId = 1, PaymentMethod = "PayOS", Cost = 100000, Description = "test", CreateDate = CoreHelper.SystemTimeNow, StartTime = CoreHelper.SystemTimeNow, EndTime = CoreHelper.SystemTimeNow, Status = "Accepted" }
                 );
 
             modelBuilder.Entity<BookingRating>().HasData(
