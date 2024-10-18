@@ -20,7 +20,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var storeServiceId = context.JobDetail.JobDataMap.GetLong("StoreServiceId"));
+            var storeServiceId = context.JobDetail.JobDataMap.GetLong("StoreServiceId");
             var storeService = _unitOfWork.StoreServiceRepository.GetByID(storeServiceId);
 
             if (storeService != null)
