@@ -28,7 +28,7 @@ namespace FluffyPaw_API.Controllers.Pet
         }
 
         [HttpGet("GetPet/{petId}")]
-        [Authorize(Roles = "PetOwner")]
+        [Authorize(Roles = "PetOwner,Staff")]
         public async Task<IActionResult> GetPet(long petId)
         {
             var pet = await _petService.GetPet(petId);
