@@ -1,6 +1,7 @@
 ﻿using CoreApiResponse;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
+using FluffyPaw_Application.DTO.Request.TrackingRequest;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
@@ -91,6 +92,46 @@ namespace FluffyPaw_API.Controllers.Staff
         {
             var booking = await _staffService.DeniedBooking(id);
             return CustomResult("Cập nhật đặt lịch thành công.", booking);
+        }
+
+        [HttpGet("GetAllTrackingByBookingId/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetAllTrackingByBookingId(long id)
+        {
+            var trackings = await _staffService.GetAllTrackingByBookingId(id);
+            return CustomResult("Tải dữ liệu thành công.", trackings);
+        }
+
+        [HttpGet("GetTrackingById/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetTrackingById(long id)
+        {
+            var trackings = await _staffService.GetTrackingById(id);
+            return CustomResult("Tải dữ liệu thành công.", trackings);
+        }
+
+        [HttpPost("CreateTracking")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> CreateTracking([FromForm] TrackingRequest trackingRequest)
+        {
+            var tracking = await _staffService.CreateTracking(trackingRequest);
+            return CustomResult("Tạo theo dõi thành công", tracking);
+        }
+
+        [HttpPatch("UpdateTracking/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> UpdateTracking(long id, [FromForm] UpdateTrackingRequest updateTrackingRequest)
+        {
+            var tracking = await _staffService.UpdateTracking(id, updateTrackingRequest);
+            return CustomResult("Cập nhật theo dõi thành công.", tracking);
+        }
+
+        [HttpDelete("DeleteTracking/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> DeleteTracking(long id)
+        {
+            var tracking = await _staffService.DeleteTracking(id);
+            return CustomResult("Xóa theo dõi thành công.");
         }
     }
 }

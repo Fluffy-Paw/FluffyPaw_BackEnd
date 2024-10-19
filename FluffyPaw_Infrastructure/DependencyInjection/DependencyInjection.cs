@@ -9,6 +9,7 @@ using FluffyPaw_Infrastructure.Authentication;
 using FluffyPaw_Infrastructure.Data;
 using FluffyPaw_Infrastructure.Hashing;
 using FluffyPaw_Infrastructure.Intergrations.Firebase;
+using FluffyPaw_Infrastructure.Intergrations.Quartz;
 using FluffyPaw_Infrastructure.Intergrations.SignalR;
 using FluffyPaw_Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +39,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
 
             //services.AddRabbitMQServices(configuration);
 
-            //services.AddQuartzAndSchedule();
+            services.AddQuartzAndSchedule();
 
             services.AddService();
 
@@ -101,6 +103,21 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             services.AddScoped<IAuthentication, Authen>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IHashing, Hash>();
+        }
+
+        public static void AddQuartzAndSchedule(this IServiceCollection services)
+        {
+            services.AddQuartz(options =>
+            {
+                options.UseMicrosoftDependencyInjectionJobFactory();
+            });
+
+            services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+            services.ConfigureOptions<QuartzJobSetup>();
+
+            services.AddSingleton(provider => provider.GetRequiredService<ISchedulerFactory>().GetScheduler().Result);
+
+            services.AddScoped<IJobScheduler, JobScheduler>();
         }
 
         public static void AddService(this IServiceCollection services)

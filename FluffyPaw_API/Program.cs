@@ -87,11 +87,12 @@ app.UseAuthentication();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
+
+app.MapControllers();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<NotificationHub>("/noti");
 });
 
-app.MapControllers();
 
 app.Run();

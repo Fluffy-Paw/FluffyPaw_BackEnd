@@ -46,6 +46,9 @@ namespace FluffyPaw_Domain.Entities
         public Booking()
         {
             CreateDate = CoreHelper.SystemTimeNow;
+            StartTime = CoreHelper.SystemTimeNow;
+            EndTime = CoreHelper.SystemTimeNow;
+            CheckinTime = CoreHelper.SystemTimeNow;
         }
     }
 }

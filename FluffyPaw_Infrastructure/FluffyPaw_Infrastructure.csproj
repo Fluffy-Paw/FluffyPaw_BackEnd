@@ -7,11 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Intergrations\Quartz\**" />
 	  <Compile Remove="Intergrations\RabbitMQ\**" />
-	  <EmbeddedResource Remove="Intergrations\Quartz\**" />
 	  <EmbeddedResource Remove="Intergrations\RabbitMQ\**" />
-	  <None Remove="Intergrations\Quartz\**" />
 	  <None Remove="Intergrations\RabbitMQ\**" />
 	</ItemGroup>
 

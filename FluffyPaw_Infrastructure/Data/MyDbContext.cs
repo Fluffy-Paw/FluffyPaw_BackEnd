@@ -187,12 +187,12 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<StoreService>().HasData(
-                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow, LimitPetOwner = 5, CurrentPetOwner = 0, Status = "Acepted" },
-                new StoreService { Id = 2, StoreId = 2, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow, LimitPetOwner = 10, CurrentPetOwner = 0, Status = "Acepted" }
+                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow, LimitPetOwner = 5, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 2, StoreId = 2, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow, LimitPetOwner = 10, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() }
                 );
 
             modelBuilder.Entity<Booking>().HasData(
-                new Booking { Id = 1, PetId = 1, StoreServiceId = 1, PaymentMethod = "PayOS", Cost = 100000, Description = "test", CreateDate = CoreHelper.SystemTimeNow, StartTime = CoreHelper.SystemTimeNow, EndTime = CoreHelper.SystemTimeNow, Status = "Accept" }
+                new Booking { Id = 1, PetId = 1, StoreServiceId = 1, PaymentMethod = "PayOS", Cost = 100000, Description = "test", CreateDate = CoreHelper.SystemTimeNow, StartTime = CoreHelper.SystemTimeNow, EndTime = CoreHelper.SystemTimeNow, Status = "Accepted" }
                 );
 
             modelBuilder.Entity<BookingRating>().HasData(

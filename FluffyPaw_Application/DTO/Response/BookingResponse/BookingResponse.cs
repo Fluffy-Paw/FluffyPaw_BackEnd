@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.BookingResponse
 {
-    public class BookingResponse : IMapFrom<Booking>, IMapFrom<Store>, IMapFrom<Service>
+    public class BookingResponse : IMapFrom<Booking>, IMapFrom<StoreService>, IMapFrom<Store>, IMapFrom<Service>
     {
         public long Id { get; set; }
 

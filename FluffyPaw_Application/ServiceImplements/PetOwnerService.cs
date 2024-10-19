@@ -5,6 +5,7 @@ using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
+using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
@@ -39,7 +40,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId && u.Reputation != AccountReputation.Ban.ToString(), includeProperties: "Account").FirstOrDefault();
-            if(po == null)
+            if (po == null)
             {
                 throw new CustomException.ForbbidenException("Bạn đã bị cấm, liên hệ admin để biết thêm thông tin.");
             }
@@ -54,7 +55,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var exitstingPo = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties : "Account").FirstOrDefault();
+            var exitstingPo = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId, includeProperties: "Account").FirstOrDefault();
             if (exitstingPo == null)
             {
                 throw new CustomException.DataNotFoundException("Bạn không phải Pet Owner.");
@@ -71,7 +72,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             exitstingPo.Account.Email = petOwnerRequest.Email;
-            if(petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
+            if (petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
             var po = _mapper.Map(petOwnerRequest, exitstingPo);
             _unitOfWork.Save();
 
@@ -120,11 +121,30 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponses;
         }
 
+        public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id)
+        {
+            var existingService = _unitOfWork.ServiceRepository.GetByID(id);
+            if (existingService == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ.");
+            }
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == existingService.Id
+                                                    && ss.Status == StoreServiceStatus.Available.ToString());
+            if (!storeServices.Any())
+            {
+                throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình của dịch vụ {existingService.Name}.");
+            }
+
+            var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
+            return storeSerResponses;
+        }
+
         public async Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
             var pet = _unitOfWork.PetRepository.GetByID(id);
             if (pet == null)
             {
@@ -137,7 +157,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id
-                                            && (string.IsNullOrEmpty(bookingStatus) || b.Status == bookingStatus), 
+                                            && (string.IsNullOrEmpty(bookingStatus) || b.Status == bookingStatus),
                                             includeProperties: "StoreService,StoreService.Store,StoreService.Service");
             if (!bookings.Any())
             {
@@ -148,69 +168,110 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponses;
         }
 
-        public async Task<BookingResponse> CreateBooking(CreateBookingRequest createBookingRequest)
+        public async Task<List<BookingResponse>> CreateBooking(CreateBookingRequest createBookingRequest)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
             var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
             if (!pets.Any())
             {
-                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng hoặc thú cưng không thuộc quyền sở hữu của bạn.");
             }
 
-            if (!pets.Any(p => p.Id == createBookingRequest.PetId))
+            var bookings = new List<Booking>();
+
+            foreach (var petId in createBookingRequest.PetId)
             {
-                throw new CustomException.InvalidDataException("Thú cưng được đặt lịch không thuộc quyền quản lý của bạn.");
+                if (!pets.Any(p => p.Id == petId))
+                {
+                    throw new CustomException.InvalidDataException("Thú cưng được đặt lịch không thuộc quyền quản lý của bạn.");
+                }
+
+                var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
+                                ess => ess.Id == createBookingRequest.StoreServiceId
+                                && ess.Status == StoreServiceStatus.Available.ToString(),
+                                includeProperties: "Service,Store").FirstOrDefault();
+                if (existingStoreService == null)
+                {
+                    throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
+                }
+
+                if (existingStoreService.CurrentPetOwner == existingStoreService.LimitPetOwner)
+                {
+                    throw new CustomException.InvalidDataException("Lịch trình đã đạt số người đặt tối đa.");
+                }
+
+                if (createBookingRequest.PaymentMethod != BookingPaymentMethod.COD.ToString()
+                    && createBookingRequest.PaymentMethod != BookingPaymentMethod.PayOS.ToString())
+                {
+                    throw new CustomException.InvalidDataException("Phương thức thanh toán không hợp lệ.");
+                }
+
+                var pet = _unitOfWork.PetRepository.GetByID(petId);
+
+                var newStartTime = existingStoreService.StartTime;
+                var newEndTime = existingStoreService.StartTime + existingStoreService.Service.Duration;
+
+                var timeDifference = newStartTime - CoreHelper.SystemTimeNow;
+                if (timeDifference < TimeSpan.FromMinutes(30))
+                {
+                    throw new CustomException.InvalidDataException("Không được đặt lịch trong vòng 30 phút trước khi bắt đầu dịch vụ.");
+                }
+
+                if (newStartTime <= CoreHelper.SystemTimeNow)
+                {
+                    throw new CustomException.InvalidDataException("Thời gian bắt đầu phải là tương lai.");
+                }
+
+                var overlappingBooking = _unitOfWork.BookingRepository.Get(b =>
+                                                    b.PetId == petId &&
+                                                    b.StoreServiceId == createBookingRequest.StoreServiceId &&
+                                                    (b.Status == BookingStatus.Pending.ToString()
+                                                    || b.Status == BookingStatus.CheckedIn.ToString()
+                                                    || b.Status == BookingStatus.Accepted.ToString()) &&
+                                                    b.StartTime < newEndTime &&
+                                                    b.EndTime > newStartTime
+                                                    );
+                if (overlappingBooking.Any())
+                {
+                    throw new CustomException.InvalidDataException($"Thú cưng {pet.Name} đã có lịch trong khung thời gian này.");
+                }
+
+                var newBooking = new Booking
+                {
+                    PetId = petId,
+                    StoreServiceId = createBookingRequest.StoreServiceId,
+                    PaymentMethod = createBookingRequest.PaymentMethod,
+                    Cost = existingStoreService.Service.Cost,
+                    Description = createBookingRequest.Description,
+                    CreateDate = CoreHelper.SystemTimeNow,
+                    StartTime = existingStoreService.StartTime,
+                    EndTime = existingStoreService.StartTime + existingStoreService.Service.Duration,
+                    Checkin = false,
+                    CheckinTime = CoreHelper.SystemTimeNow,
+                    Status = BookingStatus.Pending.ToString()
+                };
+
+                _unitOfWork.BookingRepository.Insert(newBooking);
+                bookings.Add(newBooking);
+                existingStoreService.CurrentPetOwner++;
+                _unitOfWork.Save();
             }
-
-            var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
-                                ess => ess.Id == createBookingRequest.StoreServiceId,
-                                includeProperties: "Service").FirstOrDefault();
-            if (existingStoreService == null)
-            {
-                throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
-            }
-
-            if (createBookingRequest.PaymentMethod != BookingPaymentMethod.COD.ToString()
-                && createBookingRequest.PaymentMethod != BookingPaymentMethod.PayOS.ToString())
-            {
-                throw new CustomException.InvalidDataException("Phương thức thanh toán không hợp lệ.");
-            }
-
-            var newBooking = _mapper.Map<Booking>(createBookingRequest);
-            newBooking.Cost = existingStoreService.Service.Cost;
-            newBooking.CreateDate = CoreHelper.SystemTimeNow;
-            newBooking.StartTime = existingStoreService.StartTime;
-            newBooking.EndTime = existingStoreService.StartTime + existingStoreService.Service.Duration;
-            newBooking.Checkin = false;
-            newBooking.CheckinTime = CoreHelper.SystemTimeNow;
-            newBooking.Status = BookingStatus.Pending.ToString();
-
-            _unitOfWork.BookingRepository.Insert(newBooking);
-            _unitOfWork.Save();
-
-            /*var newBooking = new Booking
-            {
-                PetId = createBookingRequest.PetId,
-                StoreServiceId = createBookingRequest.StoreServiceId,
-                PaymentMethod = createBookingRequest.PaymentMethod,
-                Cost = createBookingRequest.Cost,
-            };*/
 
             //Handle xử lý thanh toán
 
             //
 
-            var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
-            return bookingResponse;
+            var bookingResponses = _mapper.Map<List<BookingResponse>>(bookings);
+            return bookingResponses;
         }
 
         public async Task<bool> CancelBooking(long id)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).First();
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
             var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
             if (!pets.Any())
             {
@@ -218,7 +279,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString()).First();
+                                            && pb.Status == BookingStatus.Pending.ToString()).FirstOrDefault();
             if (pendingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -230,6 +291,10 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             pendingBooking.Status = BookingStatus.Canceled.ToString();
+
+            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId).FirstOrDefault();
+            storeService.CurrentPetOwner -= 1;
+
             _unitOfWork.Save();
 
             //Handle xử lý thanh toán

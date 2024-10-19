@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
+using FluffyPaw_Application.DTO.Request.TrackingRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
+using FluffyPaw_Application.DTO.Response.StaffResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
@@ -28,19 +30,26 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IMapper _mapper;
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IJobScheduler _jobScheduler;
+        private readonly IFirebaseConfiguration _firebaseConfiguration;
 
-        public StaffService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor contextAccessor)
+        public StaffService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
+                            IHttpContextAccessor contextAccessor, IJobScheduler jobScheduler,
+                            IFirebaseConfiguration firebaseConfiguration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authentication = authentication;
             _contextAccessor = contextAccessor;
+            _jobScheduler = jobScheduler;
+            _firebaseConfiguration = firebaseConfiguration;
         }
         public async Task<List<SerResponse>> GetAllServiceByBrandId(long id)
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                            .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
@@ -83,7 +92,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của Staff.");
             }
 
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                                .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng.");
@@ -104,7 +114,8 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                                .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
@@ -142,6 +153,11 @@ namespace FluffyPaw_Application.ServiceImplements
                     throw new CustomException.InvalidDataException($"Thời gian {createScheduleRequest.StartTime} không phù hợp.");
                 }
 
+                if (createScheduleRequest.LimitPetOwner < 1)
+                {
+                    throw new CustomException.DataNotFoundException("Số lượng tối thiểu là 1");
+                }
+
                 var newStoreService = new StoreService
                 {
                     StoreId = store.Id,
@@ -154,6 +170,9 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.StoreServiceRepository.Insert(newStoreService);
                 storeServices.Add(newStoreService);
                 _unitOfWork.Save();
+
+                Console.WriteLine($"{newStoreService.Id}");
+                await _jobScheduler.ScheduleStoreServiceClose(newStoreService);
             }
 
             await _unitOfWork.SaveAsync();
@@ -190,7 +209,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> DeleteStoreService(long id)
         {
-            var existingstoreService = _unitOfWork.StoreServiceRepository.Get(ess => ess.Id == id, includeProperties: "Store").First();
+            var existingstoreService = _unitOfWork.StoreServiceRepository.Get(ess => ess.Id == id, includeProperties: "Store")
+                                                            .FirstOrDefault();
             if (existingstoreService == null)
             {
                 throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
@@ -271,14 +291,15 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                            .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
             }
 
             var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString()).First();
+                                            && pb.Status == BookingStatus.Pending.ToString()).FirstOrDefault();
             if (pendingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -307,14 +328,15 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).First();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                            .FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
             }
 
             var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString()).First();
+                                            && pb.Status == BookingStatus.Pending.ToString()).FirstOrDefault();
             if (pendingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -330,11 +352,193 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             pendingBooking.Status = BookingStatus.Denied.ToString();
+            storeService.CurrentPetOwner -= 1;
+
             _unitOfWork.Save();
 
             //Handle xử lý thanh toán
 
             //
+
+            return true;
+        }
+
+        public async Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id)
+        {
+            var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(staff);
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                            .FirstOrDefault();
+            if (store == null)
+            {
+                throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
+            }
+
+            var duringBooking = _unitOfWork.BookingRepository.Get(db => db.Id == id
+                                            //&& db.StoreService.Store.Id == store.Id
+                                            && db.Status == BookingStatus.Accepted.ToString()
+                                            || db.Status == BookingStatus.CheckedIn.ToString(),
+                                            includeProperties: "StoreService,StoreService.Store").FirstOrDefault();
+            if (duringBooking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
+            }
+
+            var trackings = _unitOfWork.TrackingRepository.Get(t => t.BookingId == duringBooking.Id);
+            if (!trackings.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy theo dõi nào.");
+            }
+
+            var trackingResponses = new List<TrackingResponse>();
+
+            foreach (var tracking in trackings)
+            {
+                var trackingResponse = _mapper.Map<TrackingResponse>(tracking);
+
+                var trackingFile = _unitOfWork.TrackingFileRepository.Get(tf => tf.TrackingId == tracking.Id,
+                                                    includeProperties: "Tracking,Files")
+                                                    .Select(tf => tf.Files)
+                                                    .ToList();
+
+                trackingResponse.Files = _mapper.Map<List<FileResponse>>(trackingFile);
+
+                trackingResponses.Add(trackingResponse);
+            }
+
+            return trackingResponses;
+        }
+
+        public async Task<TrackingResponse> GetTrackingById(long id)
+        {
+            var tracking = _unitOfWork.TrackingRepository.GetByID(id);
+            if (tracking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy theo dõi.");
+            }
+
+            var trackingResponse = _mapper.Map<TrackingResponse>(tracking);
+
+            var trackingFiles = _unitOfWork.TrackingFileRepository.Get(tf => tf.TrackingId == tracking.Id,
+                                                    includeProperties: "Files")
+                                                    .Select(s => s.Files)
+                                                    .ToList();
+
+            
+            trackingResponse.Files = _mapper.Map<List<FileResponse>>(trackingFiles);
+
+            return trackingResponse;
+        }
+
+        public async Task<TrackingResponse> CreateTracking(TrackingRequest trackingRequest)
+        {
+            var existingBooking = _unitOfWork.BookingRepository.Get(eb => eb.Id == trackingRequest.BookingId
+                                                    && eb.Status == BookingStatus.Accepted.ToString()
+                                                    || eb.Status == BookingStatus.CheckedIn.ToString());
+            if (!existingBooking.Any())
+            {
+                throw new CustomException.DataNotFoundException("Đặt lịch không tìm thấy hoặc đã hết hạn.");
+            }
+
+            var newTracking = new Tracking
+            {
+                BookingId = trackingRequest.BookingId,
+                Description = trackingRequest.Description,
+                UploadDate = CoreHelper.SystemTimeNow,
+                Status = true
+            };
+            _unitOfWork.TrackingRepository.Insert(newTracking);
+            await _unitOfWork.SaveAsync();
+
+
+            var fileResponses = new List<FileResponse>();
+
+            foreach (var file in trackingRequest.Files)
+            {
+                var newFile = new Files
+                {
+                    File = await _firebaseConfiguration.UploadImage(file),
+                    CreateDate = CoreHelper.SystemTimeNow,
+                    Status = true
+                };
+                _unitOfWork.FilesRepository.Insert(newFile);
+                await _unitOfWork.SaveAsync();
+
+                var newTrackingFile = new TrackingFile
+                {
+                    TrackingId = newTracking.Id,
+                    FileId = newFile.Id
+                };
+                _unitOfWork.TrackingFileRepository.Insert(newTrackingFile);
+                _unitOfWork.Save();
+
+                var fileResponse = _mapper.Map<FileResponse>(newFile);
+                fileResponses.Add(fileResponse);
+            }
+
+            var trackingResponse = _mapper.Map<TrackingResponse>(newTracking);
+            trackingResponse.Files = fileResponses;
+
+            return trackingResponse;
+        }
+
+        public async Task<TrackingResponse> UpdateTracking(long id, UpdateTrackingRequest updateTrackingRequest)
+        {
+            var existingTracking = _unitOfWork.TrackingRepository.GetByID(id);
+            if (existingTracking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy theo dõi này.");
+            }
+
+            var fileResponses = new List<FileResponse>();
+
+            foreach (var file in updateTrackingRequest.Files)
+            {
+                var newFile = new Files
+                {
+                    File = await _firebaseConfiguration.UploadImage(file),
+                    Status = true
+                };
+                _unitOfWork.FilesRepository.Insert(newFile);
+                await _unitOfWork.SaveAsync();
+
+                var newTrackingFile = new TrackingFile
+                {
+                    TrackingId = existingTracking.Id,
+                    FileId = newFile.Id
+                };
+                _unitOfWork.TrackingFileRepository.Insert(newTrackingFile);
+                _unitOfWork.Save();
+
+                var fileResponse = _mapper.Map<FileResponse>(newFile);
+                fileResponses.Add(fileResponse);
+            }
+
+            var trackingResponse = _mapper.Map<TrackingResponse>(existingTracking);
+            trackingResponse.Files = fileResponses;
+
+            return trackingResponse;
+        }
+
+        public async Task<bool> DeleteTracking(long id)
+        {
+            var existingTracking = _unitOfWork.TrackingRepository.GetByID(id);
+            if (existingTracking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy theo dõi này.");
+            }
+
+            var trackingFiles = _unitOfWork.TrackingFileRepository.Get(lf => lf.TrackingId == existingTracking.Id,
+                                            includeProperties: "Files");
+            foreach (var trackingFile in trackingFiles)
+            {
+                var file = _unitOfWork.FilesRepository.GetByID(trackingFile.FileId);
+                _unitOfWork.FilesRepository.Delete(file);
+                await _unitOfWork.SaveAsync();
+            }
+
+            _unitOfWork.TrackingRepository.Delete(existingTracking);
+            _unitOfWork.Save();
 
             return true;
         }
