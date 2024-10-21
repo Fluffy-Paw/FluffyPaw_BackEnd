@@ -12,7 +12,5 @@ namespace FluffyPaw_Application.DTO.Request.EmailRequest
         [Required(ErrorMessage = "Vui lòng nhập email.")]
         [EmailAddress(ErrorMessage = "Vui lòng nhập đúng định dạng email.")]
         public string Email { get; set; }
-        public string? Title { get; set; }
-        public string? Message { get; set; }
     }
 }

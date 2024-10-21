@@ -8,5 +8,6 @@ namespace FluffyPaw_Application.Services
 {
     public interface IPaymentService
     {
+
     }
 }
