@@ -228,7 +228,6 @@ namespace FluffyPaw_Application.ServiceImplements
                                                     b.PetId == petId &&
                                                     b.StoreServiceId == createBookingRequest.StoreServiceId &&
                                                     (b.Status == BookingStatus.Pending.ToString()
-                                                    || b.Status == BookingStatus.CheckedIn.ToString()
                                                     || b.Status == BookingStatus.Accepted.ToString()) &&
                                                     b.StartTime < newEndTime &&
                                                     b.EndTime > newStartTime

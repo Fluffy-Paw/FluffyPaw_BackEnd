@@ -218,8 +218,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var bookings = _unitOfWork.BookingRepository.Get(b => b.StoreServiceId == existingstoreService.Id
                                         && b.Status == BookingStatus.Pending.ToString()
-                                        || b.Status == BookingStatus.Accepted.ToString()
-                                        || b.Status == BookingStatus.CheckedIn.ToString()).ToList();
+                                        || b.Status == BookingStatus.Accepted.ToString());
             if (bookings.Any())
             {
                 throw new CustomException.DataExistException($"Chi nhánh {existingstoreService.Store.Name} vẫn còn dịch vụ đang được book.");
@@ -376,8 +375,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var duringBooking = _unitOfWork.BookingRepository.Get(db => db.Id == id
                                             //&& db.StoreService.Store.Id == store.Id
-                                            && db.Status == BookingStatus.Accepted.ToString()
-                                            || db.Status == BookingStatus.CheckedIn.ToString(),
+                                            && db.Status == BookingStatus.Accepted.ToString(),
                                             includeProperties: "StoreService,StoreService.Store").FirstOrDefault();
             if (duringBooking == null)
             {
@@ -433,8 +431,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<TrackingResponse> CreateTracking(TrackingRequest trackingRequest)
         {
             var existingBooking = _unitOfWork.BookingRepository.Get(eb => eb.Id == trackingRequest.BookingId
-                                                    && eb.Status == BookingStatus.Accepted.ToString()
-                                                    || eb.Status == BookingStatus.CheckedIn.ToString());
+                                                    && eb.Status == BookingStatus.Accepted.ToString());
             if (!existingBooking.Any())
             {
                 throw new CustomException.DataNotFoundException("Đặt lịch không tìm thấy hoặc đã hết hạn.");
