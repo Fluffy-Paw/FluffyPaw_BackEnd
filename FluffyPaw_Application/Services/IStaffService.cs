@@ -1,4 +1,5 @@
-﻿using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
+﻿using FluffyPaw_Application.DTO.Request.BookingRequest;
+using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Request.TrackingRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
@@ -21,7 +22,7 @@ namespace FluffyPaw_Application.Services
         Task<List<StoreSerResponse>> CreateStoreService(CreateStoreServiceRequest createStoreServiceRequest);
         Task<bool> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest);
         Task<bool> DeleteStoreService(long id);
-        Task<List<StoreBookingResponse>> GetAllBookingByStore();
+        Task<List<StoreBookingResponse>> GetAllBookingByStore(FilterBookingRequest filterBookingRequest);
         Task<List<BookingResponse>> GetAllBookingByStoreServiceId(long id);
         Task<bool> AcceptBooking(long id);
         Task<bool> DeniedBooking(long id);
