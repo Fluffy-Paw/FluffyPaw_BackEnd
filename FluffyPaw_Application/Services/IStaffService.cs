@@ -19,7 +19,7 @@ namespace FluffyPaw_Application.Services
         Task<StoreResponse> GetStoreByStaff();
         Task<List<SerResponse>> GetAllServiceByBrandId(long id);
         Task<List<StoreSerResponse>> CreateStoreService(CreateStoreServiceRequest createStoreServiceRequest);
-        Task<StoreSerResponse> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest);
+        Task<bool> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest);
         Task<bool> DeleteStoreService(long id);
         Task<List<StoreBookingResponse>> GetAllBookingByStore();
         Task<List<BookingResponse>> GetAllBookingByStoreServiceId(long id);

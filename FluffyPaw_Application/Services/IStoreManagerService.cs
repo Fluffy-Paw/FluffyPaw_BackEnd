@@ -16,6 +16,7 @@ namespace FluffyPaw_Application.Services
         Task<List<StaffResponse>> GetAllStaffBySM();
         Task<List<StoreResponse>> GetAllStoreBySM();
         Task<List<StoreResponse>> GetAllStoreFalseBySM();
+        Task<List<SerResponse>> GetAllServiceFalseBySM();
         Task<StoreResponse> CreateStore(StoreRequest storeRequest);
         Task<StoreResponse> UpdateStore(long id, UpdateStoreRequest updateStoreRequest);
         Task<bool> DeleteStore(long id);
