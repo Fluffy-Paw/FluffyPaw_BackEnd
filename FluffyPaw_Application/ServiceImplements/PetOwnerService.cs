@@ -23,16 +23,18 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IMapper _mapper;
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IHashing _hashing;
+        private readonly IJobScheduler _jobScheduler;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
 
-        public PetOwnerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor, IHashing hashing, IFirebaseConfiguration firebaseConfiguration)
+        public PetOwnerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
+                    IHttpContextAccessor httpContextAccessor, IHashing hashing, 
+                    IFirebaseConfiguration firebaseConfiguration, IJobScheduler jobScheduler)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authentication = authentication;
             _httpContextAccessor = httpContextAccessor;
-            _hashing = hashing;
+            _jobScheduler = jobScheduler;
             _firebaseConfiguration = firebaseConfiguration;
         }
 
@@ -256,6 +258,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 bookings.Add(newBooking);
                 existingStoreService.CurrentPetOwner++;
                 _unitOfWork.Save();
+
+                _jobScheduler.ScheduleBookingNotificationJob(newBooking);
             }
 
             //Handle xử lý thanh toán

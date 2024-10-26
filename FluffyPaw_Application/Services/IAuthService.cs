@@ -1,4 +1,5 @@
 ﻿using FluffyPaw_Application.DTO.Request.AuthRequest;
+using FluffyPaw_Application.DTO.Request.EmailRequest;
 using FluffyPaw_Application.DTO.Response.AuthResponse;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,7 @@ namespace FluffyPaw_Application.Services
 
         Task<string> Login(LoginRequest loginRequest);
         Task<string> AdminLogin(LoginRequest loginRequest);
+        Task<bool> SendOtp(SendMailRequest sendMailRequest);
+        Task<bool> CheckOtp(string Mail, string Otp);
     }
 }

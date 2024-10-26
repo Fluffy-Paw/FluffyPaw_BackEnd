@@ -9,6 +9,7 @@ namespace FluffyPaw_Application.Services
 {
     public interface ISendMailService
     {
-        Task<bool> SendEmail(SendMailRequest sendMailRequest);
+        Task<bool> SendMailOtp(SendMailRequest sendMailRequest);
+        Task<bool> SendReceipt(SendMailRequest sendMailRequest);
     }
 }

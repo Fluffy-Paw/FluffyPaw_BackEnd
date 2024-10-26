@@ -158,7 +158,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public async Task<bool> ActiveDeactiveAccount(long userId)
+        public async Task<bool> ActiveInactiveAccount(long userId)
         {
             var user = _unitOfWork.AccountRepository.GetByID(userId);
             if(user == null)
@@ -168,7 +168,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (user.Status == (int)AccountStatus.Active)
             {
-                user.Status = (int)AccountStatus.Deactive;
+                user.Status = (int)AccountStatus.Inactive;
             } else user.Status = (int)AccountStatus.Active;
             _unitOfWork.Save();
 
@@ -196,12 +196,12 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 case "Bad":
                     user.Reputation = AccountReputation.Ban.ToString();
-                    await ActiveDeactiveAccount(userId);
+                    await ActiveInactiveAccount(userId);
                     break;
 
                 default:
                     user.Reputation = AccountReputation.Bad.ToString();
-                    await ActiveDeactiveAccount(userId); 
+                    await ActiveInactiveAccount(userId); 
                     break;
                 
             }

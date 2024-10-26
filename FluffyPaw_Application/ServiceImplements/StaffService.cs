@@ -162,7 +162,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     StoreId = store.Id,
                     ServiceId = createStoreServiceRequest.ServiceId,
-                    StartTime = createScheduleRequest.StartTime,
+                    StartTime = createScheduleRequest.StartTime.AddHours(7),
                     LimitPetOwner = createScheduleRequest.LimitPetOwner,
                     CurrentPetOwner = 0,
                     Status = StoreServiceStatus.Available.ToString()
@@ -171,7 +171,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 storeServices.Add(newStoreService);
                 _unitOfWork.Save();
 
-                Console.WriteLine($"{newStoreService.Id}");
                 await _jobScheduler.ScheduleStoreServiceClose(newStoreService);
             }
 
@@ -181,7 +180,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeServiceResponses;
         }
 
-        public async Task<StoreSerResponse> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest)
+        public async Task<bool> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest)
         {
             var existingstoreService = _unitOfWork.StoreServiceRepository.GetByID(id);
             if (existingstoreService == null)
@@ -200,11 +199,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataExistException("Khung giờ này đã có người đặt.");
             }
 
-            _mapper.Map(existingstoreService, updateStoreServiceRequest);
-            _unitOfWork.Save();
+            _mapper.Map(updateStoreServiceRequest, existingstoreService);
+            existingstoreService.StartTime = updateStoreServiceRequest.StartTime.AddHours(7);
+            await _unitOfWork.SaveAsync();
 
-            var storeServiceResponses = _mapper.Map<StoreSerResponse>(existingstoreService);
-            return storeServiceResponses;
+            await _jobScheduler.ScheduleStoreServiceClose(existingstoreService);
+
+            return true;
         }
 
         public async Task<bool> DeleteStoreService(long id)

@@ -23,7 +23,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
             var storeServiceId = context.JobDetail.JobDataMap.GetLong("StoreServiceId");
             var storeService = _unitOfWork.StoreServiceRepository.GetByID(storeServiceId);
 
-            if (storeService != null)
+            if (storeService != null && storeService.Status == StoreServiceStatus.Available.ToString())
             {
                 storeService.Status = StoreServiceStatus.NotAvailable.ToString();
                 _unitOfWork.StoreServiceRepository.Update(storeService);

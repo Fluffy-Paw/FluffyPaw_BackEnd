@@ -19,11 +19,19 @@ namespace FluffyPaw_API.Controllers.SendMessage
             _sendMailService = sendMailService;
         }
 
-        [HttpPost("SendEmail")]
-        public async Task<IActionResult> AddVaccine([FromBody] SendMailRequest sendMailRequest)
+        [HttpPost("SendMailOtp")]
+        public async Task<IActionResult> SendEmail([FromBody] SendMailRequest sendMailRequest)
         {
-            var result = await _sendMailService.SendEmail(sendMailRequest);
+            var result = await _sendMailService.SendMailOtp(sendMailRequest);
             if(result) return CustomResult("Gửi mail thành công.");
+            else return CustomResult("Gửi mail thất bại.");
+        }
+
+        [HttpPost("SendReceipt")]
+        public async Task<IActionResult> SendReceipt([FromBody] SendMailRequest sendMailRequest)
+        {
+            var result = await _sendMailService.SendReceipt(sendMailRequest);
+            if (result) return CustomResult("Gửi mail thành công.");
             else return CustomResult("Gửi mail thất bại.");
         }
     }

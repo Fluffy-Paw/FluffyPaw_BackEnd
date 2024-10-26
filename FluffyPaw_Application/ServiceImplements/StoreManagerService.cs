@@ -153,6 +153,34 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponses;
         }
 
+        public async Task<List<SerResponse>> GetAllServiceFalseBySM()
+        {
+            var storeManagerId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(storeManagerId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
+            }
+
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+            if (brand == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu liên kết với tài khoản của bạn.");
+            }
+
+            var services = _unitOfWork.ServiceRepository.Get(s => s.BrandId == brand.Id && s.Status == false,
+                                            includeProperties: "ServiceType,Certificate");
+            if (!services.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào chưa được xác thực.");
+            }
+
+            var serviceResponses = _mapper.Map<List<SerResponse>>(services);
+
+            return serviceResponses;
+
+        }
+
         public async Task<StoreResponse> CreateStore(StoreRequest storeRequest)
         {
             var storemanagerId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);

@@ -15,6 +15,12 @@ namespace FluffyPaw_Domain.Entities
 
         public double Balance { get; set; }
 
+        public string? BankName { get; set; }
+
+        public string? Number {  get; set; }
+
+        public string? QR {  get; set; }
+
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }
     }

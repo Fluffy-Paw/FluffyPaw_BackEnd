@@ -24,7 +24,7 @@ namespace FluffyPaw_Application.Services
         Task<List<StoreResponse>> GetAllStoreFalse();
         Task<List<StoreResponse>> GetAllStoreFalseByBrandId(long id);
         Task<bool> AcceptStore(long id);
-        Task<bool> ActiveDeactiveAccount(long userId);
+        Task<bool> ActiveInactiveAccount(long userId);
         Task<string> DowngradeReputation(long userId);
     }
 }

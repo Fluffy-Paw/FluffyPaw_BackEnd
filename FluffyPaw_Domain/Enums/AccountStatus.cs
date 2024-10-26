@@ -8,7 +8,7 @@ namespace FluffyPaw_Domain.Enums
 {
     public enum AccountStatus
     {
-        Deactive,
+        Inactive,
         Active
     }
 }

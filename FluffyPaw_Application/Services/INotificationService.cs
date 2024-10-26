@@ -14,6 +14,8 @@ namespace FluffyPaw_Application.Services
     public interface INotificationService
     {
         Task<NotificationResponse> CreateNotification(NotificationRequest notificationRequest);
+        Task<NotificationResponse> ScheduleCreateNotification(long receiverId, string name,
+                                                                string type, string description);
         Task<bool> DeleteNotification(long notificationId);
         Task<bool> ChangeNotificationStatus();
         Task<IPaginatedList<Notification>> GetNotifications(int numberNoti);
