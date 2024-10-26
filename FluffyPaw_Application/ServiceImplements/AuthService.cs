@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
+using FluffyPaw_Application.DTO.Request.EmailRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Response.AuthResponse;
 using FluffyPaw_Application.Services;
@@ -9,6 +10,7 @@ using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -137,7 +139,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             Account account = check.First();
-            if (account.Status == (int)AccountStatus.Deactive)
+            if (account.Status == (int)AccountStatus.Inactive)
             {
                 throw new CustomException.InvalidDataException("Tài khoản chưa được kích hoạt.");
             }
@@ -170,6 +172,16 @@ namespace FluffyPaw_Application.ServiceImplements
 
             string token = _authentication.GenerateJWTToken(account);
             return token;
+        }
+
+        public async Task<bool> SendOtp(SendMailRequest sendMailRequest)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> CheckOtp(string Mail, string Otp)
+        {
+            throw new NotImplementedException();
         }
     }
 }

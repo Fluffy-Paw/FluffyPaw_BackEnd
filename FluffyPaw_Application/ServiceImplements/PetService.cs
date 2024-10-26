@@ -89,7 +89,7 @@ namespace FluffyPaw_Application.ServiceImplements
             if (pet.PetOwnerId != po.Id) throw new CustomException.ForbbidenException("Bạn không thể chuyển quyền nuôi dưỡng vì đây không phải thú cưng của bạn.");
             if (petList.Count() == 5) throw new CustomException.DataExistException($"Tài khoản có Username {changePORequest.NewOwnerUsername} đã đạt số lượng tối đa 5 thú cưng.");
             if (_hashing.SHA512Hash(changePORequest.YourPassword) != po.Account.Password) throw new CustomException.ForbbidenException("Bạn đã nhập sai mật khẩu.");
-            if (user.Account.Status == (int)AccountStatus.Deactive) throw new CustomException.ForbbidenException($"Tài khoản có Username {changePORequest.NewOwnerUsername} đã bị cấm.");
+            if (user.Account.Status == (int)AccountStatus.Inactive) throw new CustomException.ForbbidenException($"Tài khoản có Username {changePORequest.NewOwnerUsername} đã bị cấm.");
 
             pet.PetOwnerId = user.Id;
             _unitOfWork.Save();

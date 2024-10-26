@@ -110,13 +110,13 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Tải dữ liệu thành công.", account);
         }*/
 
-        [HttpPatch("ActiveDeactiveAccount/{id}")]
+        [HttpPatch("ActiveInactiveAccount/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActiveDeactiveAccount(long id)
         {
-            var user = await _adminService.ActiveDeactiveAccount(id);
+            var user = await _adminService.ActiveInactiveAccount(id);
             if (user) return CustomResult("Đã chuyển thành Active.");
-            else return CustomResult("Đã chuyển thành Deactive");
+            else return CustomResult("Đã chuyển thành Inactive");
         }
 
         [HttpPatch("DowngradeReputation/{id}")]
