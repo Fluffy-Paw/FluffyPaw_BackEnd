@@ -1,4 +1,5 @@
 ﻿using CoreApiResponse;
+using FluffyPaw_Application.DTO.Request.BookingRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Request.TrackingRequest;
@@ -64,9 +65,9 @@ namespace FluffyPaw_API.Controllers.Staff
 
         [HttpGet("GetAllBookingByStore")]
         [Authorize(Roles = "Staff")]
-        public async Task<IActionResult> GetAllBookingByStore()
+        public async Task<IActionResult> GetAllBookingByStore([FromQuery] FilterBookingRequest filterBookingRequest)
         {
-            var bookings = await _staffService.GetAllBookingByStore();
+            var bookings = await _staffService.GetAllBookingByStore(filterBookingRequest);
             return CustomResult("Tải dữ liệu thành công.", bookings);
         }
 

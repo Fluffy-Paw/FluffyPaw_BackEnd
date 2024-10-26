@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluffyPaw_Application.DTO.Request.BookingRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Request.TrackingRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
@@ -231,7 +232,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public async Task<List<StoreBookingResponse>> GetAllBookingByStore()
+        public async Task<List<StoreBookingResponse>> GetAllBookingByStore(FilterBookingRequest filterBookingRequest)
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
@@ -244,7 +245,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var bookings = _unitOfWork.BookingRepository.Get(
                                     b => b.StoreService.StoreId == store.Id
-                                    && b.Status == BookingStatus.Pending.ToString(),
+                                    && (string.IsNullOrEmpty(filterBookingRequest.Status) || b.Status == filterBookingRequest.Status),
                                     includeProperties: "Pet,Pet.PetOwner,StoreService.Service").ToList();
             if (!bookings.Any())
             {
