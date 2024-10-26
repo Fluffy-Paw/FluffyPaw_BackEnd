@@ -129,8 +129,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu liên kết với tài khoản của bạn.");
             }
 
-            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == false, includeProperties: "Account");
-
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == false,
+                                            includeProperties: "Account").ToList();
             if (!stores.Any())
             {
                 throw new CustomException.DataNotFoundException("Thương hiệu chưa đăng kí các chi nhánh cửa hàng.");
@@ -290,7 +290,6 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 var bookings = _unitOfWork.BookingRepository.Get(b => b.StoreServiceId == storeService.Id
                                         && b.Status == BookingStatus.Pending.ToString()
-                                        || b.Status == BookingStatus.CheckedIn.ToString()
                                         || b.Status == BookingStatus.Accepted.ToString()).ToList();
                 if (bookings.Any())
                 {

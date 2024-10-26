@@ -11,7 +11,6 @@ namespace FluffyPaw_Repository.Enum
         Accepted,
         Pending,
         Canceled,
-        CheckedIn,
         Denied,
         OverTime,
         Ended
