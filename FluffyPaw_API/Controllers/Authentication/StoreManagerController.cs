@@ -45,6 +45,14 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Tải dữ liệu thành công.", stores);
         }
 
+        [HttpGet("GetAllServiceFalseBySM")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> GetAllServiceFalseBySM()
+        {
+            var services = await _storeManagerService.GetAllServiceFalseBySM();
+            return CustomResult("Tải dữ liệu thành công.", services);
+        }
+
         [HttpPost("CreateStore")]
         [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> CreateStore([FromForm] StoreRequest storeRequest)

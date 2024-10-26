@@ -51,7 +51,7 @@ namespace FluffyPaw_API.Controllers.Staff
         public async Task<IActionResult> UpdateStoreService(long id, [FromBody] UpdateStoreServiceRequest updateStoreServiceRequest)
         {
             var storeService = await _staffService.UpdateStoreService(id, updateStoreServiceRequest);
-            return CustomResult("Cập nhật lịch trình thành công.", storeService);
+            return CustomResult("Cập nhật lịch trình thành công.");
         }
 
         [HttpDelete("DeleteStoreService/{id}")]
