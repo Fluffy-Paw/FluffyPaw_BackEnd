@@ -18,6 +18,8 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public string ServiceName { get; set; }
 
+        public double Cost { get; set; }
+
         public DateTimeOffset CreateDate { get; set; }
 
         public DateTimeOffset StartTime { get; set; }
@@ -30,6 +32,7 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
                    .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Pet.PetOwner.FullName))
                    .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Pet.PetOwner.Phone))
                    .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.StoreService.Service.Name))
+                   .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.StoreService.Service.Cost))
                    .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => src.CreateDate))
                    .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StoreService.StartTime));
         }
