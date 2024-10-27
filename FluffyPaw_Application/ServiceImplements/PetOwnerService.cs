@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.BookingRequest;
+using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
@@ -25,10 +26,12 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IJobScheduler _jobScheduler;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
+        private readonly INotificationService _notificationService;
 
         public PetOwnerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
                     IHttpContextAccessor httpContextAccessor, IHashing hashing, 
-                    IFirebaseConfiguration firebaseConfiguration, IJobScheduler jobScheduler)
+                    IFirebaseConfiguration firebaseConfiguration, IJobScheduler jobScheduler,
+                    INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -36,6 +39,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _httpContextAccessor = httpContextAccessor;
             _jobScheduler = jobScheduler;
             _firebaseConfiguration = firebaseConfiguration;
+            _notificationService = notificationService;
         }
 
         public async Task<PetOwnerResponse> GetPetOwnerDetail()
@@ -193,7 +197,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
                                 ess => ess.Id == createBookingRequest.StoreServiceId
                                 && ess.Status == StoreServiceStatus.Available.ToString(),
-                                includeProperties: "Service,Store").FirstOrDefault();
+                                includeProperties: "Service,Store,Store.Account").FirstOrDefault();
                 if (existingStoreService == null)
                 {
                     throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
@@ -260,6 +264,16 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.Save();
 
                 _jobScheduler.ScheduleBookingNotificationJob(newBooking);
+
+                var storeAccountId = existingStoreService.Store.Account.Id;
+                var notificationRequest = new NotificationRequest
+                {
+                    ReceiverId = storeAccountId,
+                    Name = "Đặt lịch mới",
+                    Type = "Booking",
+                    Description = $"Đặt lịch mới cho dịch vụ {existingStoreService.Service.Name} cho thú cưng {pet.Name}."
+                };
+                await _notificationService.CreateNotification(notificationRequest);
             }
 
             //Handle xử lý thanh toán
@@ -270,7 +284,14 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponses;
         }
 
-        public async Task<bool> CancelBooking(long id)
+        /*public async Task<BookingResponse> CreateBookingTimeSelection(CreateBookingRequest createBookingRequest)
+        {
+
+            var bookingResponse = _mapper.Map<BookingResponse>(booking);
+            return bookingResponse;
+        }*/
+
+            public async Task<bool> CancelBooking(long id)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -282,7 +303,8 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString()).FirstOrDefault();
+                                            && pb.Status == BookingStatus.Pending.ToString(),
+                                            includeProperties: "Pet").FirstOrDefault();
             if (pendingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -303,6 +325,16 @@ namespace FluffyPaw_Application.ServiceImplements
             //Handle xử lý thanh toán
 
             //
+
+            var storeAccountId = storeService.Store.Account.Id;
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = storeAccountId,
+                Name = "Huỷ đặt lịch",
+                Type = "Cancel Booking",
+                Description = $"Hủy đặt lịch cho dịch vụ {storeService.Service.Name} cho thú cưng {pendingBooking.Pet.Name}."
+            };
+            await _notificationService.CreateNotification(notificationRequest);
 
             return true;
         }

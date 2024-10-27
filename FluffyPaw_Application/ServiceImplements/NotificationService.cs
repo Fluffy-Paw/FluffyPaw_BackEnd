@@ -57,8 +57,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<NotificationResponse> CreateNotification(NotificationRequest notificationRequest)
         {
-            var existingUser = _unitOfWork.AccountRepository.Get(n => n.Id == notificationRequest.ReceiverId);
-            if (!existingUser.Any())
+            var existingUser = _unitOfWork.AccountRepository.Get(n => n.Id == notificationRequest.ReceiverId).FirstOrDefault();
+            if (existingUser == null)
             {
                 throw new CustomException.DataNotFoundException("Người dùng không tồn tại.");
             }
@@ -70,7 +70,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
 
-            await _notiHub.SendNotification("displayNotification");
+            await _notiHub.SendNotification("displayNotification", existingUser.Id);
 
             return _mapper.Map<NotificationResponse>(notification);
         }
@@ -93,7 +93,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
 
-            await _notiHub.SendNotification("displayNotification");
+            await _notiHub.SendNotification("displayNotification", notification.ReceiverId);
 
             return _mapper.Map<NotificationResponse>(notification);
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.BookingRequest;
+using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Request.TrackingRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
@@ -33,10 +34,11 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IJobScheduler _jobScheduler;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
+        private readonly INotificationService _notificationService;
 
         public StaffService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
                             IHttpContextAccessor contextAccessor, IJobScheduler jobScheduler,
-                            IFirebaseConfiguration firebaseConfiguration)
+                            IFirebaseConfiguration firebaseConfiguration, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -44,6 +46,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _contextAccessor = contextAccessor;
             _jobScheduler = jobScheduler;
             _firebaseConfiguration = firebaseConfiguration;
+            _notificationService = notificationService;
         }
         public async Task<List<SerResponse>> GetAllServiceByBrandId(long id)
         {
@@ -300,7 +303,8 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString()).FirstOrDefault();
+                                            && pb.Status == BookingStatus.Pending.ToString(),
+                                            includeProperties: "Pet,Pet.PetOwner,Pet.PetOwner.Account").FirstOrDefault();
             if (pendingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -308,7 +312,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId
                                                 && ss.StoreId == store.Id
-                                                && ss.Status == StoreServiceStatus.Available.ToString())
+                                                && ss.Status == StoreServiceStatus.Available.ToString(),
+                                                includeProperties: "Service")
                                                 .FirstOrDefault();
             if (storeService == null)
             {
@@ -321,6 +326,17 @@ namespace FluffyPaw_Application.ServiceImplements
             //Handle xử lý thanh toán
 
             //
+            var pet = _unitOfWork.PetRepository.GetByID(pendingBooking.PetId);
+
+            var poAccountId = pet.PetOwner.AccountId;
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = poAccountId,
+                Name = "Xác thực yêu cầu đặt lịch",
+                Type = "Booking",
+                Description = $"Đặt lịch mới cho dịch vụ {storeService.Service.Name} cho thú cưng {pet.Name} thành công."
+            };
+            await _notificationService.CreateNotification(notificationRequest);
 
             return true;
         }
@@ -360,6 +376,16 @@ namespace FluffyPaw_Application.ServiceImplements
             //Handle xử lý thanh toán
 
             //
+
+            var poAccountId = pendingBooking.Pet.PetOwner.Account.Id;
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = poAccountId,
+                Name = "Từ chối yêu cầu đặt lịch",
+                Type = "Denied Booking",
+                Description = $"Đặt lịch mới cho dịch vụ {storeService.Service.Name} cho thú cưng {pendingBooking.Pet.Name} không thành công."
+            };
+            await _notificationService.CreateNotification(notificationRequest);
 
             return true;
         }
