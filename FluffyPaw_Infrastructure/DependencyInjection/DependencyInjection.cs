@@ -43,10 +43,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
 
             services.AddService();
 
-            services.AddSignalR(options =>
-            {
-                options.KeepAliveInterval = TimeSpan.FromSeconds(60);
-            });
+            services.AddSignalR();
 
             services.AddAuthen(configuration);
 
