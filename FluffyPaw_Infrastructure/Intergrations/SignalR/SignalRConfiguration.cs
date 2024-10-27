@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Identity.Client;
 
 
 namespace FluffyPaw_Infrastructure.Intergrations.SignalR
@@ -21,9 +22,9 @@ namespace FluffyPaw_Infrastructure.Intergrations.SignalR
             _notificationHub = notificationHub;
         }
 
-        public async Task SendNotification(string noti)
+        public async Task SendNotification(string noti, long accountId)
         {
-            await _notificationHub.Clients.All.SendAsync("ReceiveNoti", noti);
+            await _notificationHub.Clients.User(accountId.ToString()).SendAsync("ReceiveNoti", noti);
         }
     }
 }

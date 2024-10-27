@@ -9,6 +9,9 @@ namespace FluffyPaw_Infrastructure.Intergrations.SignalR
 {
     public class NotificationHub : Hub
     {
-
+        /*public async Task SendNotification(string noti, long accountId)
+        {
+            await Clients.User(accountId.ToString()).SendAsync("ReceiveNoti", noti);
+        }*/
     }
 }
