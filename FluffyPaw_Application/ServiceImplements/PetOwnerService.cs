@@ -254,7 +254,9 @@ namespace FluffyPaw_Application.ServiceImplements
                     StartTime = existingStoreService.StartTime,
                     EndTime = existingStoreService.StartTime + existingStoreService.Service.Duration,
                     Checkin = false,
-                    CheckinTime = CoreHelper.SystemTimeNow,
+                    CheckinTime = existingStoreService.StartTime,
+                    CheckOut = false,
+                    CheckOutTime = existingStoreService.StartTime + existingStoreService.Service.Duration,
                     Status = BookingStatus.Pending.ToString()
                 };
 
@@ -284,14 +286,114 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponses;
         }
 
-        /*public async Task<BookingResponse> CreateBookingTimeSelection(CreateBookingRequest createBookingRequest)
+        public async Task<BookingResponse> CreateBookingTimeSelection(TimeSelectionRequest timeSelectionRequest)
         {
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
+            if (!pets.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng hoặc thú cưng không thuộc quyền sở hữu của bạn.");
+            }
 
-            var bookingResponse = _mapper.Map<BookingResponse>(booking);
+            if (!pets.Any(p => p.Id == timeSelectionRequest.PetId))
+            {
+                throw new CustomException.InvalidDataException("Thú cưng được đặt lịch không thuộc quyền quản lý của bạn.");
+            }
+
+            if (timeSelectionRequest.PaymentMethod != BookingPaymentMethod.COD.ToString()
+                    && timeSelectionRequest.PaymentMethod != BookingPaymentMethod.PayOS.ToString())
+            {
+                throw new CustomException.InvalidDataException("Phương thức thanh toán không hợp lệ.");
+            }
+
+            var pet = _unitOfWork.PetRepository.GetByID(timeSelectionRequest.PetId);
+
+            var firstStoreServiceId = timeSelectionRequest.StoreServiceIds.First();
+            var lastStoreServiceId = timeSelectionRequest.StoreServiceIds.Last();
+
+            var firstStoreService = _unitOfWork.StoreServiceRepository.Get(
+                                    ess => ess.Id == firstStoreServiceId && ess.Status == StoreServiceStatus.Available.ToString(),
+                                    includeProperties: "Service,Store,Store.Account").FirstOrDefault();
+            var lastStoreService = _unitOfWork.StoreServiceRepository.Get(
+                                    ess => ess.Id == lastStoreServiceId && ess.Status == StoreServiceStatus.Available.ToString(),
+                                    includeProperties: "Service,Store,Store.Account").FirstOrDefault();
+
+            if (firstStoreService == null || lastStoreService == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình hoặc lịch trình không khả dụng.");
+            }
+
+            var startDate = firstStoreService.StartTime;
+            var newEndTime = firstStoreService.StartTime + firstStoreService.Service.Duration;
+            var endDate = lastStoreService.StartTime + lastStoreService.Service.Duration;
+
+            foreach (var storeServiceId in timeSelectionRequest.StoreServiceIds)
+            {
+                var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
+                                ess => ess.Id == storeServiceId
+                                && ess.Status == StoreServiceStatus.Available.ToString()
+                                && ess.Service.ServiceType.Name == "Hotel",
+                                includeProperties: "Service,Store,Store.Account").FirstOrDefault();
+                if (existingStoreService == null)
+                {
+                    throw new CustomException.DataNotFoundException("Lịch trình không tồn tại.");
+                }
+
+                if (existingStoreService.CurrentPetOwner == existingStoreService.LimitPetOwner)
+                {
+                    throw new CustomException.InvalidDataException($"Lịch trình {existingStoreService.StartTime} đã đạt số người đặt tối đa.");
+                }
+
+                if (existingStoreService.StartTime <= CoreHelper.SystemTimeNow)
+                {
+                    throw new CustomException.InvalidDataException("Thời gian bắt đầu phải là tương lai.");
+                }
+
+                var overlappingBooking = _unitOfWork.BookingRepository.Get(b =>
+                                            b.PetId == timeSelectionRequest.PetId &&
+                                            b.StoreServiceId == storeServiceId &&
+                                            (b.Status == BookingStatus.Pending.ToString()
+                                            || b.Status == BookingStatus.Accepted.ToString()) &&
+                                            b.StartTime < newEndTime &&
+                                            b.EndTime > existingStoreService.StartTime
+                                            );
+                if (overlappingBooking.Any())
+                {
+                    throw new CustomException.InvalidDataException($"Thú cưng {pet.Name} đã có lịch trong khung thời gian này.");
+                }
+
+                existingStoreService.CurrentPetOwner += 1;
+                _unitOfWork.StoreServiceRepository.Update(existingStoreService);
+                await _unitOfWork.SaveAsync();
+            }
+
+
+            var newBooking = new Booking
+            {
+                PetId = timeSelectionRequest.PetId,
+                StoreServiceId = firstStoreServiceId,
+                PaymentMethod = timeSelectionRequest.PaymentMethod,
+                Cost = firstStoreService.Service.Cost * timeSelectionRequest.StoreServiceIds.Count(),
+                Description = timeSelectionRequest.Description,
+                CreateDate = CoreHelper.SystemTimeNow,
+                StartTime = startDate,
+                EndTime = endDate,
+                Checkin = false,
+                CheckinTime = startDate,
+                CheckOut = false,
+                CheckOutTime = endDate,
+                Status = BookingStatus.Pending.ToString()
+            };
+            _unitOfWork.BookingRepository.Insert(newBooking);
+            await _unitOfWork.SaveAsync();
+
+            var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
             return bookingResponse;
-        }*/
+        }
 
-            public async Task<bool> CancelBooking(long id)
+        public async Task<bool> CancelBooking(long id)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);

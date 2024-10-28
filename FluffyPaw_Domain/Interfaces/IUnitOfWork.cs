@@ -25,6 +25,8 @@ namespace FluffyPaw_Domain.Interfaces
         public IGenericRepository<PetCategory> PetCategoryRepository { get; }
         public IGenericRepository<PetOwner> PetOwnerRepository { get; }
         public IGenericRepository<PetType> PetTypeRepository { get; }
+        public IGenericRepository<Report> ReportRepository { get; }
+        public IGenericRepository<ReportCategory> ReportCategoryRepository { get; }
         public IGenericRepository<Service> ServiceRepository { get; }
         public IGenericRepository<ServiceType> ServiceTypeRepository { get; }
         public IGenericRepository<Store> StoreRepository { get; }

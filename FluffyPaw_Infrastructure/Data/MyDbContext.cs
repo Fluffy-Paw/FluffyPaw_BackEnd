@@ -33,6 +33,8 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<PetCategory> PetCategories { get; set; }
         public DbSet<PetOwner> PetOwners { get; set; }
         public DbSet<PetType> PetTypes { get; set; }
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<ReportCategory> ReportCategories { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<Store> Stores { get; set; }
@@ -72,8 +74,6 @@ namespace FluffyPaw_Infrastructure.Data
                 new Account { Id = 7, Username = "test6", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
                 new Account { Id = 8, Username = "test7", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
                 new Account { Id = 9, Username = "test8", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active }
-
-
                 );
 
             modelBuilder.Entity<Wallet>().HasData(
@@ -91,6 +91,22 @@ namespace FluffyPaw_Infrastructure.Data
                 new BehaviorCategory { Id = 4, Name = "Rung lắc đuôi khi vui mừng"},
                 new BehaviorCategory { Id = 5, Name = "Gầm gừ khi cảm thấy bị đe dọa" },
                 new BehaviorCategory { Id = 6, Name = "Cào móng để đánh dấu lãnh thổ" }
+                );
+
+            modelBuilder.Entity<ReportCategory>().HasData(
+                new ReportCategory { Id = 1, Type = "General", Name = "Tên đặt nhạy cảm" },
+                new ReportCategory { Id = 2, Type = "Staff", Name = "Hủy book quá nhiều lần cho một dịch vụ - Book xong hủy liên tục" },
+                new ReportCategory { Id = 3, Type = "Staff", Name = "Report sai thông tin" },
+                new ReportCategory { Id = 4, Type = "Staff", Name = "Nội dung phản cảm, Hình ảnh & ngôn từ nhạy cảm" },
+                new ReportCategory { Id = 5, Type = "Staff", Name = "Thông tin sai sự thật, lừa đảo" },
+                new ReportCategory { Id = 6, Type = "Staff", Name = "Nghi vấn buôn bán động vật trái phép" },
+                new ReportCategory { Id = 7, Type = "Staff", Name = "Khác" },
+                new ReportCategory { Id = 8, Type = "PO", Name = "Dịch bị cấm buôn bán (nhằm mục đích trao đổi vật quý hiếm, hoang dã, 18+,....)" },
+                new ReportCategory { Id = 9, Type = "PO", Name = "Dịch vụ có dấu hiệu lừa đảo" },
+                new ReportCategory { Id = 10, Type = "PO", Name = "Dịch vụ gây ảnh hưởng/ tác động tiêu cực đến người dùng hoặc thú cưng" },
+                new ReportCategory { Id = 11, Type = "PO", Name = "Hình ảnh không rõ ràng, sai sự thật, phản cảm,...." },
+                new ReportCategory { Id = 12, Type = "PO", Name = "Dịch vụ có dấu hiệu tăng đơn ảo." },
+                new ReportCategory { Id = 13, Type = "PO", Name = "Khác" }
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(
@@ -154,12 +170,14 @@ namespace FluffyPaw_Infrastructure.Data
 
             modelBuilder.Entity<ServiceType>().HasData(
                 new ServiceType { Id = 1, Name = "Grooming"},
-                new ServiceType { Id = 2, Name = "Vaccine"}
+                new ServiceType { Id = 2, Name = "Vaccine" },
+                new ServiceType { Id = 3, Name = "Hotel" },
+                new ServiceType { Id = 4, Name = "Training" }
                 );
 
             modelBuilder.Entity<Brand>().HasData(
-                new Brand { Id = 1, AccountId = 2, Name = "StoreA", BrandEmail = "test1@gmail.com", BusinessLicense = "none", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "none", Address = "test", Status = true },
-                new Brand { Id = 2, AccountId = 3, Name = "StoreB", BrandEmail = "test1@gmail.com", BusinessLicense = "none", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "none", Address = "test", Status = true }
+                new Brand { Id = 1, AccountId = 2, Name = "BrandA", BrandEmail = "test1@gmail.com", BusinessLicense = "https://gray-wnem-prod.gtv-cdn.com/resizer/v2/ZRIYMJKRXFG4NGEORU4Z7MVE4U.png?auth=ca7b7f352a656d265f22b46ca0a9b36c6ecdb78546fc48e2cb1f260980998bd4&width=980&height=690&smart=true", Hotline = "0123456789", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "AAAAAAAAAAAA", Address = "A đường AA tổ AAA", Status = true },
+                new Brand { Id = 2, AccountId = 3, Name = "BrandB", BrandEmail = "test1@gmail.com", BusinessLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Hotline = "0123456788", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "BBBBBBBBBBBB", Address = "B đường BB tổ BBB", Status = true }
                 );
 
             modelBuilder.Entity<Store>().HasData(
@@ -170,25 +188,43 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Service>().HasData(
-                new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Grooming", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
-                new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Vaccine", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
-                new Service { Id = 3, ServiceTypeId = 1, BrandId = 1, Name = "Hotel", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.Zero, Cost = 100000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
-                new Service { Id = 4, ServiceTypeId = 2, BrandId = 1, Name = "Training", Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true }
+                new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Pet Grooming", Image = "https://phongkhamthuythithipet.com/wp-content/uploads/2024/07/dich-vu-cham-soc-lam-dep-cho-thu-cung.jpg", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", BookingCount = 1, TotalRating = 0, Status = true },
+                new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Vaccine", Image = "https://hillcrestvets.co.za/wp-content/uploads/2020/10/Pet-Vaccinations.jpg", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
+                new Service { Id = 3, ServiceTypeId = 3, BrandId = 2, Name = "Hotel for your Boss", Image = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", Duration = TimeSpan.Zero, Cost = 100000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
+                new Service { Id = 4, ServiceTypeId = 4, BrandId = 2, Name = "Training", Image = "https://vcdn1-english.vnecdn.net/2021/11/05/z2893300584650-ad86419a6f7874b-6822-8198-1636082644.jpg?w=680&h=0&q=100&dpr=2&fit=crop&s=6F3t0DSkxIaWZRW5zGXZ5g", Duration = TimeSpan.FromHours(1.5), Cost = 500000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true }
                 );
 
             modelBuilder.Entity<Certificate>().HasData(
                 new Certificate { Id = 1, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
                 new Certificate { Id = 2, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
-                new Certificate { Id = 3, ServiceId = 2, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
-                new Certificate { Id = 4, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
-                new Certificate { Id = 5, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
-                new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
-                new Certificate { Id = 7, ServiceId = 4, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" }
+                new Certificate { Id = 3, ServiceId = 2, Name = "Certificate of Excellence in Pet Vaccine", File = "test", Description = "none" },
+                new Certificate { Id = 4, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" },
+                new Certificate { Id = 5, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" },
+                new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" },
+                new Certificate { Id = 7, ServiceId = 4, Name = "Certificate of Excellence in Pet Training", File = "test", Description = "none" }
                 );
 
             modelBuilder.Entity<StoreService>().HasData(
-                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddHours(7), LimitPetOwner = 5, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 2, StoreId = 2, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddHours(7), LimitPetOwner = 10, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() }
+                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 2, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(10), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 3, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(14), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 4, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(31).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 5, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(31).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 6, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(32).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 7, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 8, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 9, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 10, StoreId = 3, ServiceId = 3, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 11, StoreId = 3, ServiceId = 3, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 12, StoreId = 3, ServiceId = 3, StartTime = CoreHelper.SystemTimeNow.AddDays(31).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 13, StoreId = 3, ServiceId = 3, StartTime = CoreHelper.SystemTimeNow.AddDays(32).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 14, StoreId = 3, ServiceId = 3, StartTime = CoreHelper.SystemTimeNow.AddDays(33).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 15, StoreId = 3, ServiceId = 3, StartTime = CoreHelper.SystemTimeNow.AddDays(34).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 16, StoreId = 3, ServiceId = 3, StartTime = CoreHelper.SystemTimeNow.AddDays(35).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 17, StoreId = 4, ServiceId = 4, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 18, StoreId = 4, ServiceId = 4, StartTime = CoreHelper.SystemTimeNow.AddDays(31).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 19, StoreId = 4, ServiceId = 4, StartTime = CoreHelper.SystemTimeNow.AddDays(32).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 20, StoreId = 4, ServiceId = 4, StartTime = CoreHelper.SystemTimeNow.AddDays(33).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() }
                 );
 
             modelBuilder.Entity<Booking>().HasData(
@@ -196,7 +232,7 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<BookingRating>().HasData(
-                new BookingRating { Id = 1, BookingId = 1, PetOwnerId = 1, Description = "test", Status = true }
+                new BookingRating { Id = 1, BookingId = 1, PetOwnerId = 1, Vote = 5, Description = "test", Status = true }
                 );
 
             modelBuilder.Entity<Tracking>().HasData(
