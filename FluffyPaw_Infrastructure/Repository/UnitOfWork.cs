@@ -28,6 +28,8 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<PetCategory> _petCategoryRepository;
         private IGenericRepository<PetOwner> _petOwnerRepository;
         private IGenericRepository<PetType> _petTypeRepository;
+        private IGenericRepository<Report> _reportRepository;
+        private IGenericRepository<ReportCategory> _reportCategoryRepository;
         private IGenericRepository<Service> _serviceRepository;
         private IGenericRepository<ServiceType> _serviceTypeRepository;
         private IGenericRepository<Store> _storeRepository;
@@ -237,6 +239,32 @@ namespace FluffyPaw_Infrastructure.Repository
                     _petTypeRepository = new GenericRepository<PetType>(_context);
                 }
                 return _petTypeRepository;
+            }
+        }
+
+        public IGenericRepository<Report> ReportRepository
+        {
+            get
+            {
+
+                if (_reportRepository == null)
+                {
+                    _reportRepository = new GenericRepository<Report>(_context);
+                }
+                return _reportRepository;
+            }
+        }
+
+        public IGenericRepository<ReportCategory> ReportCategoryRepository
+        {
+            get
+            {
+
+                if (_reportCategoryRepository == null)
+                {
+                    _reportCategoryRepository = new GenericRepository<ReportCategory>(_context);
+                }
+                return _reportCategoryRepository;
             }
         }
 
