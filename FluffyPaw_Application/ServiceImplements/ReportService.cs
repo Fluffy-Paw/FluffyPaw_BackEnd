@@ -35,7 +35,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<List<ReportResponse>> GetAllReport()
         {
             var reports = _unitOfWork.ReportRepository.Get(orderBy: ob => ob.OrderByDescending(o => o.CreateDate),
-                                            includeProperties: "Account");
+                                            includeProperties: "SenderAccount,TargetAccount");
             if (!reports.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy báo cáo nào.");
@@ -57,7 +57,11 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var reports = _unitOfWork.ReportRepository.Get(rps => rps.TargetId == account.Id,
                                                 orderBy: ob => ob.OrderByDescending(o => o.CreateDate),
-                                                includeProperties: "Account");
+                                                includeProperties: "TargetAccount,SenderAccount");
+            if (!reports.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy báo cáo này.");
+            }
 
             var reportResponses = _mapper.Map<List<ReportResponse>>(reports);
             return reportResponses;
@@ -75,7 +79,11 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var reports = _unitOfWork.ReportRepository.Get(rps => rps.TargetId == account.Id,
                                                 orderBy: ob => ob.OrderByDescending(o => o.CreateDate),
-                                                includeProperties: "Account");
+                                                includeProperties: "TargetAccount,SenderAccount");
+            if (!reports.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy báo cáo này.");
+            }
 
             var reportResponses = _mapper.Map<List<ReportResponse>>(reports);
             return reportResponses;
@@ -96,21 +104,11 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản để báo cáo.");
             }
 
-            if (senderAccount.RoleName == RoleName.PetOwner.ToString())
+            var reportCategories = _unitOfWork.ReportCategoryRepository.Get(rpcs => rpcs.Type == senderAccount.RoleName
+                                                    && rpcs.Type == "General");
+            if (!reportCategories.Any(p => p.Id == createReportRequest.ReportCategoryId))
             {
-                var reportCategories = _unitOfWork.ReportCategoryRepository.Get(rpcs => rpcs.Type == "PO");
-                if (!reportCategories.Any(p => p.Id == createReportRequest.ReportCategoryId))
-                {
-                    throw new CustomException.InvalidDataException("Báo cáo này không thuộc quyền sử dụng của bạn.");
-                }
-            }
-            else if (senderAccount.RoleName == RoleName.Staff.ToString())
-            {
-                var reportCategories = _unitOfWork.ReportCategoryRepository.Get(rpcs => rpcs.Type == "Staff");
-                if (!reportCategories.Any(p => p.Id == createReportRequest.ReportCategoryId))
-                {
-                    throw new CustomException.InvalidDataException("Báo cáo này không thuộc quyền sử dụng của bạn.");
-                }
+                throw new CustomException.InvalidDataException("Báo cáo này không thuộc quyền sử dụng của bạn.");
             }
 
             var newReport = new Report
@@ -131,7 +129,14 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> DeleteReport(long id)
         {
-            var report = _unitOfWork.ReportRepository.GetByID(id);
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var senderAccount = _unitOfWork.AccountRepository.GetByID(userId);
+            if (senderAccount == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
+            }
+
+            var report = _unitOfWork.ReportRepository.Get(rp => rp.Id == id && rp.SenderId == senderAccount.Id).FirstOrDefault();
             if (report == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy báo cáo này.");
