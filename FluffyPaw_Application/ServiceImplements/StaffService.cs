@@ -115,6 +115,57 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponse;
         }
 
+        public async Task<List<StoreSerResponse>> CreateScheduleStoreService(ScheduleStoreServiceRequest scheduleStoreServiceRequest)
+        {
+            var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(staff);
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+                                                .FirstOrDefault();
+            if (store == null)
+            {
+                throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
+            }
+
+
+            var storeServices = new List<StoreService>();
+
+            var existingStoreServices = _unitOfWork.StoreServiceRepository.Get(s => scheduleStoreServiceRequest.Id.Contains(s.Id)
+                                                            && s.StoreId == store.Id
+                                                            && s.Service.ServiceType.Name == "Hotel").ToList();
+            if (existingStoreServices.Count != scheduleStoreServiceRequest.Id.Count)
+            {
+                throw new CustomException.DataNotFoundException("Một hoặc nhiều lịch trình cho dịch vụ Hotel không tồn tại" +
+                                                                " hoặc không thuộc quyền sở hữu của cửa hàng.");
+            }
+
+            for (int i = 0; i < existingStoreServices.Count * scheduleStoreServiceRequest.DuplicateNumber; i++)
+            {
+                var serviceIndex = i / scheduleStoreServiceRequest.DuplicateNumber; // Xác định StoreService nào
+                var duplicateIndex = i % scheduleStoreServiceRequest.DuplicateNumber; // Xác định duplicate nào
+                var daysToAdd = (duplicateIndex + 1) * 7;
+
+                var existingStoreService = existingStoreServices[serviceIndex];
+
+                var newStoreService = new StoreService
+                {
+                    StoreId = existingStoreService.StoreId,
+                    ServiceId = existingStoreService.ServiceId,
+                    StartTime = existingStoreService.StartTime.AddDays(daysToAdd),
+                    Status = StoreServiceStatus.Available.ToString(),
+                    LimitPetOwner = existingStoreService.LimitPetOwner,
+                    CurrentPetOwner = 0
+                };
+
+                storeServices.Add(newStoreService);
+                _unitOfWork.StoreServiceRepository.Insert(newStoreService);
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            var scheduleStoreServiceResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
+            return scheduleStoreServiceResponses;
+        }
+
         public async Task<List<StoreSerResponse>> CreateStoreService(CreateStoreServiceRequest createStoreServiceRequest)
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
@@ -134,12 +185,12 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Dịch vụ này chưa được xác thực hoặc chưa thuộc thương hiệu này.");
             }
 
-            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == createStoreServiceRequest.ServiceId,
+            /*var service = _unitOfWork.ServiceRepository.Get(s => s.Id == createStoreServiceRequest.ServiceId,
                                             includeProperties: "ServiceType").FirstOrDefault();
             if (service.ServiceType.Name == "Hotel")
             {
                 throw new CustomException.InvalidDataException($"Dịch vụ {service.ServiceType.Name} không phù hợp để tạo lịch trình này.");
-            }
+            }*/
 
             var existingStoreServiceTimes = _unitOfWork.StoreServiceRepository.Get(
                             ss => ss.ServiceId == createStoreServiceRequest.ServiceId)
@@ -466,7 +517,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                                     .Select(s => s.Files)
                                                     .ToList();
 
-            
+
             trackingResponse.Files = _mapper.Map<List<FileResponse>>(trackingFiles);
 
             return trackingResponse;

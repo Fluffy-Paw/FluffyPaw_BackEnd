@@ -39,6 +39,14 @@ namespace FluffyPaw_API.Controllers.Staff
             return CustomResult("Tải dữ liệu thành công.", store);
         }
 
+        [HttpPost("CreateScheduleStoreService")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> CreateScheduleStoreService([FromBody] ScheduleStoreServiceRequest scheduleStoreServiceRequest)
+        {
+            var storeServices = await _staffService.CreateScheduleStoreService(scheduleStoreServiceRequest);
+            return CustomResult("Tạo lịch trình thành công", storeServices);
+        }
+
         [HttpPost("CreateStoreService")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> CreateStoreService([FromBody] CreateStoreServiceRequest createStoreServiceRequest)
