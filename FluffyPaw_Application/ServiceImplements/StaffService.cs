@@ -133,6 +133,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Dịch vụ này chưa được xác thực hoặc chưa thuộc thương hiệu này.");
             }
 
+            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == createStoreServiceRequest.ServiceId,
+                                            includeProperties: "ServiceType").FirstOrDefault();
+            if (service.ServiceType.Name == "Hotel")
+            {
+                throw new CustomException.InvalidDataException($"Dịch vụ {service.ServiceType.Name} không phù hợp để tạo lịch trình này.");
+            }
+
             var existingStoreServiceTimes = _unitOfWork.StoreServiceRepository.Get(
                             ss => ss.ServiceId == createStoreServiceRequest.ServiceId)
                             .Select(ss => ss.StartTime)
@@ -183,6 +190,14 @@ namespace FluffyPaw_Application.ServiceImplements
             var storeServiceResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
             return storeServiceResponses;
         }
+
+        /*public async Task<List<StoreSerResponse>> CreateStoreServiceHotel()
+        {
+
+
+            var storeServiceResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
+            return storeServiceResponses;
+        }*/
 
         public async Task<bool> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest)
         {
@@ -274,7 +289,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                                     ss => ss.Id == id
                                                     && ss.StoreId == store.Id
                                                     && ss.Status == StoreServiceStatus.Available.ToString(),
-                                                    includeProperties: "Store")
+                                                    includeProperties: "Store,Store.Service")
                                                     .FirstOrDefault();
             if (existingstoreService == null)
             {
