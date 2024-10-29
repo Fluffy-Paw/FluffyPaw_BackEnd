@@ -96,7 +96,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của Staff.");
             }
 
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true,
+                                            includeProperties: "Brand")
                                                 .FirstOrDefault();
             if (store == null)
             {
@@ -289,7 +290,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                                     ss => ss.Id == id
                                                     && ss.StoreId == store.Id
                                                     && ss.Status == StoreServiceStatus.Available.ToString(),
-                                                    includeProperties: "Store,Store.Service")
+                                                    includeProperties: "Store")
                                                     .FirstOrDefault();
             if (existingstoreService == null)
             {
