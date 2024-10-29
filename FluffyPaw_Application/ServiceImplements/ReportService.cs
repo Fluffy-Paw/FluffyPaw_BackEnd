@@ -99,7 +99,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var reportCategories = _unitOfWork.ReportCategoryRepository.Get(rpcs => rpcs.Type == account.RoleName
-                                                    && rpcs.Type == "General");
+                                                    || rpcs.Type == "General");
             if (!reportCategories.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy danh sách báo cáo.");
@@ -126,7 +126,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var reportCategories = _unitOfWork.ReportCategoryRepository.Get(rpcs => rpcs.Type == senderAccount.RoleName
-                                                    && rpcs.Type == "General");
+                                                    || rpcs.Type == "General");
             if (!reportCategories.Any(p => p.Id == createReportRequest.ReportCategoryId))
             {
                 throw new CustomException.InvalidDataException("Báo cáo này không thuộc quyền sử dụng của bạn.");
