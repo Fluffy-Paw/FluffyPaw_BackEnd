@@ -389,6 +389,8 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.BookingRepository.Insert(newBooking);
             await _unitOfWork.SaveAsync();
 
+            await _jobScheduler.ScheduleBookingNotification(newBooking);
+
             var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
             return bookingResponse;
         }

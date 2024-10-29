@@ -9,7 +9,7 @@ namespace FluffyPaw_Domain.Interfaces
 {
     public interface IJobScheduler
     {
-        Task ScheduleBookingNotificationJob(Booking booking);
+        Task ScheduleBookingNotification(Booking booking);
         Task ScheduleStoreServiceClose(StoreService storeService);
     }
 }

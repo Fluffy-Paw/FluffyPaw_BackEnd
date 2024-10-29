@@ -18,7 +18,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
             _scheduler = scheduler;
         }
 
-        public async Task ScheduleBookingNotificationJob(Booking booking)
+        public async Task ScheduleBookingNotification(Booking booking)
         {
             var jobKey = new JobKey($"BookingStartNotificationJob-{booking.Id}");
             var triggerKeyOneDay = new TriggerKey($"BookingStartNotificationTriggerOneDay-{booking.Id}");
