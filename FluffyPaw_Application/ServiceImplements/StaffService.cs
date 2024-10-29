@@ -131,7 +131,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var existingStoreServices = _unitOfWork.StoreServiceRepository.Get(s => scheduleStoreServiceRequest.Id.Contains(s.Id)
                                                             && s.StoreId == store.Id
-                                                            && s.Service.ServiceType.Name == "Hotel").ToList();
+                                                            && s.Service.ServiceType.Name == "Hotel",
+                                                            includeProperties: "Service").ToList();
             if (existingStoreServices.Count != scheduleStoreServiceRequest.Id.Count)
             {
                 throw new CustomException.DataNotFoundException("Một hoặc nhiều lịch trình cho dịch vụ Hotel không tồn tại" +
@@ -146,6 +147,18 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 var existingStoreService = existingStoreServices[serviceIndex];
 
+                var newStartTime = existingStoreService.StartTime.AddDays(daysToAdd);
+                var newEndTime = existingStoreService.StartTime + existingStoreService.Service.Duration;
+
+                var overlappingService = _unitOfWork.StoreServiceRepository.Get(s =>
+                                            s.StoreId == existingStoreService.StoreId &&
+                                            ((s.StartTime < newEndTime && (s.StartTime + s.Service.Duration) > newStartTime) || 
+                                            s.StartTime == newStartTime)).FirstOrDefault(); // Kiểm tra chồng chéo thời gian
+                if (overlappingService != null)
+                {
+                    throw new CustomException.InvalidDataException($"Lịch trình mới trùng với lịch trình hiện có vào ngày {newStartTime}.");
+                }
+
                 var newStoreService = new StoreService
                 {
                     StoreId = existingStoreService.StoreId,
@@ -158,6 +171,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 storeServices.Add(newStoreService);
                 _unitOfWork.StoreServiceRepository.Insert(newStoreService);
+
+                await _jobScheduler.ScheduleStoreServiceClose(newStoreService);
             }
 
             await _unitOfWork.SaveAsync();
