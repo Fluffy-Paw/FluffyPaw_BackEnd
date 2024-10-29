@@ -89,6 +89,27 @@ namespace FluffyPaw_Application.ServiceImplements
             return reportResponses;
         }
 
+        public async Task<List<ReportCategoryResponse>> GetAllReportCategoryName()
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
+            }
+
+            var reportCategories = _unitOfWork.ReportCategoryRepository.Get(rpcs => rpcs.Type == account.RoleName
+                                                    && rpcs.Type == "General");
+            if (!reportCategories.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy danh sách báo cáo.");
+            }
+
+            var reportCategoryResponses = _mapper.Map<List<ReportCategoryResponse>>(reportCategories);
+            return reportCategoryResponses;
+        }
+
+
         public async Task<ReportResponse> CreateReport(CreateReportRequest createReportRequest)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);

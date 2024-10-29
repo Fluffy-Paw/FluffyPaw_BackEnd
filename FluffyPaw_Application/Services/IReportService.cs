@@ -14,6 +14,7 @@ namespace FluffyPaw_Application.Services
         Task<List<ReportResponse>> GetAllReport();
         Task<List<ReportResponse>> GetAllReportByStoreId(long id);
         Task<List<ReportResponse>> GetAllReportByPOId(long id);
+        Task<List<ReportCategoryResponse>> GetAllReportCategoryName();
         Task<ReportResponse> CreateReport(CreateReportRequest createReportRequest);
         Task<bool> DeleteReport(long id);
 
