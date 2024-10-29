@@ -44,6 +44,14 @@ namespace FluffyPaw_API.Controllers.Report
             return CustomResult("Lấy thông tin thành công.", reports);
         }
 
+        [HttpGet("GetAllReportCategoryName")]
+        [Authorize(Roles = "Staff,PetOwner")]
+        public async Task<IActionResult> GetAllReportCategoryName()
+        {
+            var reportCateogories = await _reportService.GetAllReportCategoryName();
+            return CustomResult("Lấy thông tin thành công.", reportCateogories);
+        }
+
         [HttpPost("CreateReport")]
         [Authorize(Roles = "Staff,PetOwner")]
         public async Task<IActionResult> CreateReport(CreateReportRequest createReportRequest)
