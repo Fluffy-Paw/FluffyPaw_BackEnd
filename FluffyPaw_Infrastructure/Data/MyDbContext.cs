@@ -1,6 +1,7 @@
 ﻿using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Utils;
+using FluffyPaw_Repository.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -95,18 +96,22 @@ namespace FluffyPaw_Infrastructure.Data
 
             modelBuilder.Entity<ReportCategory>().HasData(
                 new ReportCategory { Id = 1, Type = "General", Name = "Tên đặt nhạy cảm" },
-                new ReportCategory { Id = 2, Type = "Staff", Name = "Hủy book quá nhiều lần cho một dịch vụ - Book xong hủy liên tục" },
-                new ReportCategory { Id = 3, Type = "Staff", Name = "Report sai thông tin" },
-                new ReportCategory { Id = 4, Type = "Staff", Name = "Nội dung phản cảm, Hình ảnh & ngôn từ nhạy cảm" },
-                new ReportCategory { Id = 5, Type = "Staff", Name = "Thông tin sai sự thật, lừa đảo" },
-                new ReportCategory { Id = 6, Type = "Staff", Name = "Nghi vấn buôn bán động vật trái phép" },
-                new ReportCategory { Id = 7, Type = "Staff", Name = "Khác" },
-                new ReportCategory { Id = 8, Type = "PO", Name = "Dịch bị cấm buôn bán (nhằm mục đích trao đổi vật quý hiếm, hoang dã, 18+,....)" },
-                new ReportCategory { Id = 9, Type = "PO", Name = "Dịch vụ có dấu hiệu lừa đảo" },
-                new ReportCategory { Id = 10, Type = "PO", Name = "Dịch vụ gây ảnh hưởng/ tác động tiêu cực đến người dùng hoặc thú cưng" },
-                new ReportCategory { Id = 11, Type = "PO", Name = "Hình ảnh không rõ ràng, sai sự thật, phản cảm,...." },
-                new ReportCategory { Id = 12, Type = "PO", Name = "Dịch vụ có dấu hiệu tăng đơn ảo." },
-                new ReportCategory { Id = 13, Type = "PO", Name = "Khác" }
+                new ReportCategory { Id = 2, Type = RoleName.Staff.ToString(), Name = "Hủy book quá nhiều lần cho một dịch vụ - Book xong hủy liên tục" },
+                new ReportCategory { Id = 3, Type = RoleName.Staff.ToString(), Name = "Report sai thông tin" },
+                new ReportCategory { Id = 4, Type = RoleName.Staff.ToString(), Name = "Nội dung phản cảm, Hình ảnh & ngôn từ nhạy cảm" },
+                new ReportCategory { Id = 5, Type = RoleName.Staff.ToString(), Name = "Thông tin sai sự thật, lừa đảo" },
+                new ReportCategory { Id = 6, Type = RoleName.Staff.ToString(), Name = "Nghi vấn buôn bán động vật trái phép" },
+                new ReportCategory { Id = 7, Type = RoleName.Staff.ToString(), Name = "Khác" },
+                new ReportCategory { Id = 8, Type = RoleName.PetOwner.ToString(), Name = "Dịch bị cấm buôn bán (nhằm mục đích trao đổi vật quý hiếm, hoang dã, 18+,....)" },
+                new ReportCategory { Id = 9, Type = RoleName.PetOwner.ToString(), Name = "Dịch vụ có dấu hiệu lừa đảo" },
+                new ReportCategory { Id = 10, Type = RoleName.PetOwner.ToString(), Name = "Dịch vụ gây ảnh hưởng/ tác động tiêu cực đến người dùng hoặc thú cưng" },
+                new ReportCategory { Id = 11, Type = RoleName.PetOwner.ToString(), Name = "Hình ảnh không rõ ràng, sai sự thật, phản cảm,...." },
+                new ReportCategory { Id = 12, Type = RoleName.PetOwner.ToString(), Name = "Dịch vụ có dấu hiệu tăng đơn ảo." },
+                new ReportCategory { Id = 13, Type = RoleName.PetOwner.ToString(), Name = "Khác" }
+                );
+
+            modelBuilder.Entity<Report>().HasData(
+                new Report { Id = 1, SenderId = 7, TargetId = 4, ReportCategoryId = 9, CreateDate = CoreHelper.SystemTimeNow, Description = "None", Status = true}
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -35,13 +36,36 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<List<ReportResponse>> GetAllReport()
         {
             var reports = _unitOfWork.ReportRepository.Get(orderBy: ob => ob.OrderByDescending(o => o.CreateDate),
-                                            includeProperties: "SenderAccount,TargetAccount");
+                                            includeProperties: "TargetAccount,SenderAccount,ReportCategory");
             if (!reports.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy báo cáo nào.");
             }
 
-            var reportResponses = _mapper.Map<List<ReportResponse>>(reports);
+            var reportResponses = new List<ReportResponse>();
+
+            foreach (var report in reports)
+            {
+                var reportResponse = _mapper.Map<ReportResponse>(report);
+                var senderAccount = _unitOfWork.AccountRepository.Get(a => a.Id == report.SenderId).FirstOrDefault();
+                if (senderAccount.RoleName == RoleName.Staff.ToString())
+                {
+                    var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == report.SenderId).FirstOrDefault();
+                    var po = _unitOfWork.PetOwnerRepository.Get(s => s.AccountId == report.TargetId).FirstOrDefault();
+                    reportResponse.SenderName = store.Name;
+                    reportResponse.TargetName = po.FullName;
+                    reportResponses.Add(reportResponse);
+                }
+                else if (senderAccount.RoleName == RoleName.PetOwner.ToString())
+                {
+                    var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == report.TargetId).FirstOrDefault();
+                    var po = _unitOfWork.PetOwnerRepository.Get(s => s.AccountId == report.SenderId).FirstOrDefault();
+                    reportResponse.SenderName = po.FullName;
+                    reportResponse.TargetName = store.Name;
+                    reportResponses.Add(reportResponse);
+                }
+            }
+
             return reportResponses;
         }
 
@@ -57,13 +81,23 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var reports = _unitOfWork.ReportRepository.Get(rps => rps.TargetId == account.Id,
                                                 orderBy: ob => ob.OrderByDescending(o => o.CreateDate),
-                                                includeProperties: "TargetAccount,SenderAccount");
+                                                includeProperties: "TargetAccount,SenderAccount,ReportCategory");
             if (!reports.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy báo cáo này.");
             }
 
-            var reportResponses = _mapper.Map<List<ReportResponse>>(reports);
+            var reportResponses = new List<ReportResponse>();
+
+            foreach (var report in reports)
+            {
+                var reportResponse = _mapper.Map<ReportResponse>(report);
+                var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == report.SenderId).FirstOrDefault();
+                reportResponse.SenderName = po.FullName;
+                reportResponse.TargetName = store.Name;
+                reportResponses.Add(reportResponse);
+            }
+
             return reportResponses;
         }
 
@@ -79,13 +113,23 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var reports = _unitOfWork.ReportRepository.Get(rps => rps.TargetId == account.Id,
                                                 orderBy: ob => ob.OrderByDescending(o => o.CreateDate),
-                                                includeProperties: "TargetAccount,SenderAccount");
+                                                includeProperties: "TargetAccount,SenderAccount,ReportCategory");
             if (!reports.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy báo cáo này.");
             }
 
-            var reportResponses = _mapper.Map<List<ReportResponse>>(reports);
+            var reportResponses = new List<ReportResponse>();
+
+            foreach (var report in reports)
+            {
+                var reportResponse = _mapper.Map<ReportResponse>(report);
+                var store = _unitOfWork.StoreRepository.Get(po => po.AccountId == report.SenderId).FirstOrDefault();
+                reportResponse.SenderName = store.Name;
+                reportResponse.TargetName = po.FullName;
+                reportResponses.Add(reportResponse);
+            }
+
             return reportResponses;
         }
 

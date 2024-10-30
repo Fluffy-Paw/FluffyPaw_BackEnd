@@ -33,6 +33,9 @@ namespace FluffyPaw_Domain.Entities
         [ForeignKey("TargetId")]
         public virtual Account TargetAccount { get; set; }
 
+        [ForeignKey("ReportCategoryId")]
+        public virtual ReportCategory ReportCategory { get; set; }
+
         public Report()
         {
             CreateDate = CoreHelper.SystemTimeNow;
