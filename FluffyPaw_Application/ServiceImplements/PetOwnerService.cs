@@ -265,7 +265,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 existingStoreService.CurrentPetOwner++;
                 _unitOfWork.Save();
 
-                _jobScheduler.ScheduleBookingNotificationJob(newBooking);
+                await _jobScheduler.ScheduleBookingNotification(newBooking);
 
                 var storeAccountId = existingStoreService.Store.Account.Id;
                 var notificationRequest = new NotificationRequest
