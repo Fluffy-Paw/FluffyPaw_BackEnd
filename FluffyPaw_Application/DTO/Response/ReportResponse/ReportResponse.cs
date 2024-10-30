@@ -22,7 +22,7 @@ namespace FluffyPaw_Application.DTO.Response.ReportResponse
 
         public string TargetName { get; set; }
 
-        public string ReportCateogyType { get; set; }
+        public string ReportCategoryType { get; set; }
 
         public string ReportCategoryName { get; set; }
 
@@ -36,7 +36,7 @@ namespace FluffyPaw_Application.DTO.Response.ReportResponse
         {
             profile.CreateMap<Report, ReportResponse>()
                 .ForMember(dest => dest.ReportCategoryName, opt => opt.MapFrom(src => src.ReportCategory.Name))
-                .ForMember(dest => dest.ReportCateogyType, opt => opt.MapFrom(src => src.ReportCategory.Type));
+                .ForMember(dest => dest.ReportCategoryType, opt => opt.MapFrom(src => src.ReportCategory.Type));
         }
     }
 }
