@@ -163,7 +163,12 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
             }
 
-            var targetAccount = _unitOfWork.AccountRepository.Get(a => a.Id == createReportRequest.TargetId).FirstOrDefault();
+            var requiredTargetRole = senderAccount.RoleName == RoleName.Staff.ToString()
+                             ? RoleName.PetOwner.ToString()
+                             : RoleName.Staff.ToString();
+
+            var targetAccount = _unitOfWork.AccountRepository.Get(a => a.Id == createReportRequest.TargetId 
+                                                && a.RoleName == requiredTargetRole).FirstOrDefault();
             if (targetAccount == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản để báo cáo.");
@@ -188,7 +193,29 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.ReportRepository.Insert(newReport);
             _unitOfWork.Save();
 
+            string senderName, targetName;
+
+            if (senderAccount.RoleName == RoleName.Staff.ToString())
+            {
+                var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == senderAccount.Id).FirstOrDefault();
+                var petOwner = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == targetAccount.Id).FirstOrDefault();
+
+                senderName = store?.Name ?? "Unknown Store";
+                targetName = petOwner?.FullName ?? "Unknown PetOwner";
+            }
+            else
+            {
+                var petOwner = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == senderAccount.Id).FirstOrDefault();
+                var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == targetAccount.Id).FirstOrDefault();
+
+                senderName = petOwner?.FullName ?? "Unknown PetOwner";
+                targetName = store?.Name ?? "Unknown Store";
+            }
+
+            // Mapping ReportResponse và set thêm SenderName, TargetName
             var reportResponse = _mapper.Map<ReportResponse>(newReport);
+            reportResponse.SenderName = senderName;
+            reportResponse.TargetName = targetName;
             return reportResponse;
         }
 
