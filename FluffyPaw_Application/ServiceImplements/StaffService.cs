@@ -356,7 +356,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                                     ss => ss.Id == id
                                                     && ss.StoreId == store.Id
                                                     && ss.Status == StoreServiceStatus.Available.ToString(),
-                                                    includeProperties: "Store")
+                                                    includeProperties: "Store,Service")
                                                     .FirstOrDefault();
             if (existingstoreService == null)
             {

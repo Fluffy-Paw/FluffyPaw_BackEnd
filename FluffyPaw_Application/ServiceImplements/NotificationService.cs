@@ -70,7 +70,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
 
-            await _notiHub.SendNotification("ReceiveNoti", existingUser.Id);
+            await _notiHub.SendNotification(notification.Description, existingUser.Id);
 
             return _mapper.Map<NotificationResponse>(notification);
         }
