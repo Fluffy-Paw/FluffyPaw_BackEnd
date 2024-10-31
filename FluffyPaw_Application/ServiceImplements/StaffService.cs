@@ -115,6 +115,35 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponse;
         }
 
+        public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId (long id)
+        {
+            var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(staff);
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true,
+                                                includeProperties: "Brand")
+                                                .FirstOrDefault();
+            if (store == null)
+            {
+                throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
+            }
+
+            var service = _unitOfWork.ServiceRepository.Get(ss => ss.Id == id && ss.BrandId == store.BrandId).FirstOrDefault();
+            if (service == null)
+            {
+                throw new CustomException.DataNotFoundException($"Không tìm thấy dịch vụ của thương hiệu {store.Brand.Name}");
+            }
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == service.Id
+                                                    && ss.StoreId == store.Id);
+            if (!storeServices.Any())
+            {
+                throw new CustomException.DataNotFoundException($"Cửa hàng này không có lịch trình cho dịch vụ {service.Name}.");
+            }
+
+            var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
+            return storeSerResponses;
+        } 
+
         public async Task<List<StoreSerResponse>> CreateScheduleStoreService(ScheduleStoreServiceRequest scheduleStoreServiceRequest)
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);

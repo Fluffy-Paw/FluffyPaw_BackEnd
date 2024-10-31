@@ -14,18 +14,20 @@ namespace FluffyPaw_Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        public long PetOwnerId { get; set; }
+        public long PoAccountId { get; set; }
 
-        public long StoreId { get; set; }
+        public long StaffAccountId { get; set; }
 
         public string LastMessege { get; set; }
 
         public bool IsOpen { get; set; }
 
-        [ForeignKey("PetOwnerId")]
-        public virtual PetOwner PetOwner { get; set; }
+        [ForeignKey("PoAccountId")]
+        public virtual Account PoAccount { get; set; }
 
-        [ForeignKey("StoreId")]
-        public virtual Store Store { get; set; }
+        [ForeignKey("StaffAccountId")]
+        public virtual Account StaffAccount { get; set; }
+
+        public virtual ICollection<ConversationMessage> Messages { get; set; }
     }
 }
