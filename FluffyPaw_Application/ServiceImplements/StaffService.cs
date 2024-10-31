@@ -142,7 +142,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
             return storeSerResponses;
-        } 
+        }
 
         public async Task<List<StoreSerResponse>> CreateScheduleStoreService(ScheduleStoreServiceRequest scheduleStoreServiceRequest)
         {
@@ -159,12 +159,11 @@ namespace FluffyPaw_Application.ServiceImplements
             var storeServices = new List<StoreService>();
 
             var existingStoreServices = _unitOfWork.StoreServiceRepository.Get(s => scheduleStoreServiceRequest.Id.Contains(s.Id)
-                                                            && s.StoreId == store.Id
-                                                            && s.Service.ServiceType.Name == "Hotel",
+                                                            && s.StoreId == store.Id,
                                                             includeProperties: "Service").ToList();
             if (existingStoreServices.Count != scheduleStoreServiceRequest.Id.Count)
             {
-                throw new CustomException.DataNotFoundException("Một hoặc nhiều lịch trình cho dịch vụ Hotel không tồn tại" +
+                throw new CustomException.DataNotFoundException($"Một hoặc nhiều lịch trình cho dịch vụ không tồn tại" +
                                                                 " hoặc không thuộc quyền sở hữu của cửa hàng.");
             }
 
