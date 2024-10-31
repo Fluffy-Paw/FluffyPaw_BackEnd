@@ -268,7 +268,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     StoreId = store.Id,
                     ServiceId = createStoreServiceRequest.ServiceId,
-                    StartTime = createScheduleRequest.StartTime.AddHours(7),
+                    //StartTime = createScheduleRequest.StartTime.AddHours(7), // chạy local
+                    StartTime = createScheduleRequest.StartTime, // chạy server
                     LimitPetOwner = createScheduleRequest.LimitPetOwner,
                     CurrentPetOwner = 0,
                     Status = StoreServiceStatus.Available.ToString()
