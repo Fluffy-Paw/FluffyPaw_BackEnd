@@ -36,12 +36,14 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var triggerOneDay = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneDay)
-                .StartAt(booking.StartTime.AddHours(-31))
+                .StartAt(booking.StartTime.AddHours(-31)) // local
+                .StartAt(booking.StartTime.AddDays(-1)) // server
                 .Build();
 
             var triggerOneHour = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneHour)
-                .StartAt(booking.StartTime.AddHours(-8))
+                //.StartAt(booking.StartTime.AddHours(-8)) // local
+                .StartAt(booking.StartTime.AddHours(-1)) // server
                 .Build();
 
             await _scheduler.ScheduleJob(job, new HashSet<ITrigger> { triggerOneDay, triggerOneHour }, true);
@@ -49,7 +51,8 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
         public async Task ScheduleStoreServiceClose(StoreService storeService)
         {
-            var threeMinutesBeforeClose = storeService.StartTime.AddHours(-7.5);
+            //var threeMinutesBeforeClose = storeService.StartTime.AddHours(-7.5); //local
+            var threeMinutesBeforeClose = storeService.StartTime.AddMinutes(-30); // server
 
             var jobKey = new JobKey($"StoreServiceCloseNotificationJob-{storeService.Id}");
             var triggerKey = new TriggerKey($"StoreServiceCloseNotificationJob-{storeService.Id}");
