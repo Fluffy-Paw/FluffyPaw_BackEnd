@@ -157,6 +157,36 @@ namespace FluffyPaw_Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Conversations",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PoAccountId = table.Column<long>(type: "bigint", nullable: false),
+                    StaffAccountId = table.Column<long>(type: "bigint", nullable: false),
+                    LastMessege = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsOpen = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conversations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Conversations_Accounts_PoAccountId",
+                        column: x => x.PoAccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Conversations_Accounts_StaffAccountId",
+                        column: x => x.StaffAccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Identifications",
                 columns: table => new
                 {
@@ -406,6 +436,39 @@ namespace FluffyPaw_Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "ConversationMessages",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConversationId = table.Column<long>(type: "bigint", nullable: false),
+                    SenderId = table.Column<long>(type: "bigint", nullable: false),
+                    CreateTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    Content = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsSeen = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    DeleteAt = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    IsDelete = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ReplyMessageId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConversationMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConversationMessages_ConversationMessages_ReplyMessageId",
+                        column: x => x.ReplyMessageId,
+                        principalTable: "ConversationMessages",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ConversationMessages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Pets",
                 columns: table => new
                 {
@@ -483,36 +546,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Conversations",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PetOwnerId = table.Column<long>(type: "bigint", nullable: false),
-                    StoreId = table.Column<long>(type: "bigint", nullable: false),
-                    LastMessege = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsOpen = table.Column<bool>(type: "tinyint(1)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Conversations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Conversations_PetOwners_PetOwnerId",
-                        column: x => x.PetOwnerId,
-                        principalTable: "PetOwners",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Conversations_Stores_StoreId",
-                        column: x => x.StoreId,
-                        principalTable: "Stores",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "StoreFiles",
                 columns: table => new
                 {
@@ -572,6 +605,33 @@ namespace FluffyPaw_Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "MessageFiles",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    MessageId = table.Column<long>(type: "bigint", nullable: false),
+                    FileId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MessageFiles_ConversationMessages_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "ConversationMessages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MessageFiles_Files_FileId",
+                        column: x => x.FileId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "VaccineHistories",
                 columns: table => new
                 {
@@ -597,32 +657,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                         name: "FK_VaccineHistories_Pets_PetId",
                         column: x => x.PetId,
                         principalTable: "Pets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "ConversationMessages",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ConversationId = table.Column<long>(type: "bigint", nullable: false),
-                    CreateTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
-                    Content = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsSeen = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    IsDelete = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    DeleteAt = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConversationMessages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ConversationMessages_Conversations_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -664,33 +698,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                         name: "FK_Bookings_StoreServices_StoreServiceId",
                         column: x => x.StoreServiceId,
                         principalTable: "StoreServices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "MessageFiles",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    MessageId = table.Column<long>(type: "bigint", nullable: false),
-                    FileId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MessageFiles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MessageFiles_ConversationMessages_MessageId",
-                        column: x => x.MessageId,
-                        principalTable: "ConversationMessages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MessageFiles_Files_FileId",
-                        column: x => x.FileId,
-                        principalTable: "Files",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -805,15 +812,15 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "Avatar", "CreateDate", "Email", "Password", "RoleName", "Status", "Username" },
                 values: new object[,]
                 {
-                    { 1L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2299), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", "Admin", 1, "FluffyPaw" },
-                    { 2L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2319), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "test1" },
-                    { 3L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2326), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "test2" },
-                    { 4L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2332), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test3" },
-                    { 5L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2338), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test4" },
-                    { 6L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2345), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "test5" },
-                    { 7L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2351), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "test6" },
-                    { 8L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2357), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test7" },
-                    { 9L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2362), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test8" }
+                    { 1L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3194), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", "Admin", 1, "FluffyPaw" },
+                    { 2L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3237), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "test1" },
+                    { 3L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3241), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "test2" },
+                    { 4L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3245), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test3" },
+                    { 5L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3249), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test4" },
+                    { 6L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3252), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "test5" },
+                    { 7L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3255), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "test6" },
+                    { 8L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3259), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test7" },
+                    { 9L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3262), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "test8" }
                 });
 
             migrationBuilder.InsertData(
@@ -883,8 +890,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "AccountId", "Address", "Dob", "FullName", "Gender", "Phone", "Reputation" },
                 values: new object[,]
                 {
-                    { 1L, 6L, "test", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2918), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "1234567890", "Good" },
-                    { 2L, 7L, "test", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2925), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "0123456789", "Good" }
+                    { 1L, 6L, "test", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3687), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "1234567890", "Good" },
+                    { 2L, 7L, "test", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3692), new TimeSpan(0, 7, 0, 0, 0)), "Test", "Male", "0123456789", "Good" }
                 });
 
             migrationBuilder.InsertData(
@@ -933,7 +940,7 @@ namespace FluffyPaw_Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Reports",
                 columns: new[] { "Id", "CreateDate", "Description", "ReportCategoryId", "SenderId", "Status", "TargetId" },
-                values: new object[] { 1L, new DateTimeOffset(new DateTime(2024, 10, 30, 12, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(2874), new TimeSpan(0, 7, 0, 0, 0)), "None", 9L, 7L, true, 4L });
+                values: new object[] { 1L, new DateTimeOffset(new DateTime(2024, 10, 31, 13, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(3653), new TimeSpan(0, 7, 0, 0, 0)), "None", 9L, 7L, true, 4L });
 
             migrationBuilder.InsertData(
                 table: "Wallets",
@@ -997,26 +1004,26 @@ namespace FluffyPaw_Infrastructure.Migrations
                 columns: new[] { "Id", "CurrentPetOwner", "LimitPetOwner", "ServiceId", "StartTime", "Status", "StoreId" },
                 values: new object[,]
                 {
-                    { 1L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 11, 29, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3714), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
-                    { 2L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 11, 29, 22, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3730), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
-                    { 3L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 11, 30, 2, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3737), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
-                    { 4L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 11, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3743), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
-                    { 5L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 11, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3750), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
-                    { 6L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 12, 1, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3756), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
-                    { 7L, 0, 100, 2L, new DateTimeOffset(new DateTime(2024, 11, 29, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3763), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 8L, 0, 100, 2L, new DateTimeOffset(new DateTime(2024, 11, 29, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3770), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 9L, 0, 100, 2L, new DateTimeOffset(new DateTime(2024, 11, 29, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3776), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 10L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 11, 29, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3782), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 11L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 11, 29, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3789), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 12L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 11, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3795), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 13L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 1, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3801), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 14L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 2, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3808), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 15L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 3, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3814), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 16L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 4, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3820), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 17L, 0, 100, 4L, new DateTimeOffset(new DateTime(2024, 11, 29, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3826), new TimeSpan(0, 7, 0, 0, 0)), "Available", 4L },
-                    { 18L, 0, 100, 4L, new DateTimeOffset(new DateTime(2024, 11, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3833), new TimeSpan(0, 7, 0, 0, 0)), "Available", 4L },
-                    { 19L, 0, 100, 4L, new DateTimeOffset(new DateTime(2024, 12, 1, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3840), new TimeSpan(0, 7, 0, 0, 0)), "Available", 4L },
-                    { 20L, 0, 100, 4L, new DateTimeOffset(new DateTime(2024, 12, 2, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3846), new TimeSpan(0, 7, 0, 0, 0)), "Available", 4L }
+                    { 1L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 11, 30, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4255), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
+                    { 2L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 11, 30, 23, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4266), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
+                    { 3L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 12, 1, 3, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4271), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
+                    { 4L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 12, 1, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4275), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
+                    { 5L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 12, 1, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4280), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
+                    { 6L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 12, 2, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4285), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
+                    { 7L, 0, 100, 2L, new DateTimeOffset(new DateTime(2024, 11, 30, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4289), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 8L, 0, 100, 2L, new DateTimeOffset(new DateTime(2024, 11, 30, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4293), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 9L, 0, 100, 2L, new DateTimeOffset(new DateTime(2024, 11, 30, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4298), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 10L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 11, 30, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4302), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 11L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 11, 30, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4307), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 12L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 1, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4311), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 13L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 2, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4315), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 14L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 3, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4319), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 15L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 4, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4324), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 16L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 5, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4328), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
+                    { 17L, 0, 100, 4L, new DateTimeOffset(new DateTime(2024, 11, 30, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4332), new TimeSpan(0, 7, 0, 0, 0)), "Available", 4L },
+                    { 18L, 0, 100, 4L, new DateTimeOffset(new DateTime(2024, 12, 1, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4336), new TimeSpan(0, 7, 0, 0, 0)), "Available", 4L },
+                    { 19L, 0, 100, 4L, new DateTimeOffset(new DateTime(2024, 12, 2, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4341), new TimeSpan(0, 7, 0, 0, 0)), "Available", 4L },
+                    { 20L, 0, 100, 4L, new DateTimeOffset(new DateTime(2024, 12, 3, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4345), new TimeSpan(0, 7, 0, 0, 0)), "Available", 4L }
                 });
 
             migrationBuilder.InsertData(
@@ -1025,13 +1032,13 @@ namespace FluffyPaw_Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1L, "Vaccine test", "none", "Vaccine 1", new DateTimeOffset(new DateTime(2024, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), 4f, 1L, "Incomplete", new DateTimeOffset(new DateTime(2024, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)) },
-                    { 2L, "Vaccine test", "none", "Vaccine 2", new DateTimeOffset(new DateTime(2024, 10, 30, 12, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3336), new TimeSpan(0, 7, 0, 0, 0)), 4f, 2L, "Complete", new DateTimeOffset(new DateTime(2024, 9, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)) }
+                    { 2L, "Vaccine test", "none", "Vaccine 2", new DateTimeOffset(new DateTime(2024, 10, 31, 13, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4046), new TimeSpan(0, 7, 0, 0, 0)), 4f, 2L, "Complete", new DateTimeOffset(new DateTime(2024, 9, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Bookings",
                 columns: new[] { "Id", "CheckOut", "CheckOutTime", "Checkin", "CheckinTime", "Cost", "CreateDate", "Description", "EndTime", "PaymentMethod", "PetId", "StartTime", "Status", "StoreServiceId" },
-                values: new object[] { 1L, false, null, false, new DateTimeOffset(new DateTime(2024, 10, 30, 12, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3909), new TimeSpan(0, 7, 0, 0, 0)), 100000.0, new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3921), new TimeSpan(0, 7, 0, 0, 0)), "test", new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3926), new TimeSpan(0, 7, 0, 0, 0)), "PayOS", 1L, new DateTimeOffset(new DateTime(2024, 10, 30, 19, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(3924), new TimeSpan(0, 7, 0, 0, 0)), "Accepted", 1L });
+                values: new object[] { 1L, false, null, false, new DateTimeOffset(new DateTime(2024, 10, 31, 13, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4429), new TimeSpan(0, 7, 0, 0, 0)), 100000.0, new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4435), new TimeSpan(0, 7, 0, 0, 0)), "test", new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4439), new TimeSpan(0, 7, 0, 0, 0)), "PayOS", 1L, new DateTimeOffset(new DateTime(2024, 10, 31, 20, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4437), new TimeSpan(0, 7, 0, 0, 0)), "Accepted", 1L });
 
             migrationBuilder.InsertData(
                 table: "BookingRatings",
@@ -1041,7 +1048,7 @@ namespace FluffyPaw_Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Trackings",
                 columns: new[] { "Id", "BookingId", "Description", "Status", "UploadDate" },
-                values: new object[] { 1L, 1L, "test", true, new DateTimeOffset(new DateTime(2024, 10, 30, 12, 20, 24, 295, DateTimeKind.Unspecified).AddTicks(4007), new TimeSpan(0, 7, 0, 0, 0)) });
+                values: new object[] { 1L, 1L, "test", true, new DateTimeOffset(new DateTime(2024, 10, 31, 13, 27, 23, 54, DateTimeKind.Unspecified).AddTicks(4491), new TimeSpan(0, 7, 0, 0, 0)) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookingRatings_BookingId",
@@ -1079,14 +1086,19 @@ namespace FluffyPaw_Infrastructure.Migrations
                 column: "ConversationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Conversations_PetOwnerId",
-                table: "Conversations",
-                column: "PetOwnerId");
+                name: "IX_ConversationMessages_ReplyMessageId",
+                table: "ConversationMessages",
+                column: "ReplyMessageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Conversations_StoreId",
+                name: "IX_Conversations_PoAccountId",
                 table: "Conversations",
-                column: "StoreId");
+                column: "PoAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Conversations_StaffAccountId",
+                table: "Conversations",
+                column: "StaffAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Identifications_AccountId",

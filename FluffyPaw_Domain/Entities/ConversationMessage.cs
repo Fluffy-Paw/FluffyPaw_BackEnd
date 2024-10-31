@@ -17,18 +17,29 @@ namespace FluffyPaw_Domain.Entities
 
         public long ConversationId { get; set; }
 
+        public long SenderId { get; set; }
+
         public DateTimeOffset CreateTime { get; set; }
 
         public string Content { get; set; }
 
         public bool IsSeen { get; set; }
 
+        public DateTimeOffset? DeleteAt { get; set; }
+
         public bool IsDelete { get; set; }
 
-        public DateTimeOffset DeleteAt { get; set; }
+        public long? ReplyMessageId { get; set; }
 
         [ForeignKey("ConversationId")]
         public virtual Conversation Conversation { get; set; }
+
+        [ForeignKey("ReplyMessageId")]
+        public virtual ConversationMessage ReplyMessage { get; set; }
+
+        public virtual ICollection<ConversationMessage> Replies { get; set; }
+
+        public virtual ICollection<MessageFile> MessageFiles { get; set; }
 
         public ConversationMessage()
         {
