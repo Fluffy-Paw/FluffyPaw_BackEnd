@@ -76,7 +76,7 @@ namespace FluffyPaw_API.Controllers.Staff
         public async Task<IActionResult> DeleteStoreService(long id)
         {
             var storeService = await _staffService.DeleteStoreService(id);
-            return CustomResult("Xóa lịch trình thành công.");
+            return CustomResult("Xóa lịch trình thành công.", storeService);
         }
 
         [HttpGet("GetAllBookingByStore")]
@@ -148,7 +148,7 @@ namespace FluffyPaw_API.Controllers.Staff
         public async Task<IActionResult> DeleteTracking(long id)
         {
             var tracking = await _staffService.DeleteTracking(id);
-            return CustomResult("Xóa theo dõi thành công.");
+            return CustomResult("Xóa theo dõi thành công.", tracking);
         }
     }
 }
