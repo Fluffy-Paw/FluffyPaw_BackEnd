@@ -11,18 +11,18 @@ namespace FluffyPaw_API.Controllers.Payment
     [ApiController]
     public class WalletController : BaseController
     {
-        private readonly IWalletService _paymentService;
+        private readonly IWalletService _walletService;
 
         public WalletController(IWalletService paymentService)
         {
-            _paymentService = paymentService;
+            _walletService = paymentService;
         }
 
         [HttpGet("ViewWallet")]
         [Authorize]
         public async Task<IActionResult> ViewWallet()
         {
-            var result = await _paymentService.ViewWallet();
+            var result = await _walletService.ViewWallet();
             return CustomResult("Thông tin ví: ", result);
         }
 
@@ -30,15 +30,15 @@ namespace FluffyPaw_API.Controllers.Payment
         [Authorize]
         public async Task<IActionResult> ViewBalance()
         {
-            var result = await _paymentService.ViewBalance();
+            var result = await _walletService.ViewBalance();
             return CustomResult("Số dư: ", result);
         }
 
         [HttpPatch("UpdateBankInfomation")]
         [Authorize]
-        public async Task<IActionResult> UpdateBankInfomation(BankAccountRequest bankAccountRequest)
+        public async Task<IActionResult> UpdateBankInfomation([FromForm]BankAccountRequest bankAccountRequest)
         {
-            var result = await _paymentService.UpdateBankInfo(bankAccountRequest);
+            var result = await _walletService.UpdateBankInfo(bankAccountRequest);
             return CustomResult("Cập nhật thông tin ngân hàng thành công.", result);
         }
 
@@ -46,7 +46,7 @@ namespace FluffyPaw_API.Controllers.Payment
         [Authorize]
         public async Task<IActionResult> WithdrawMoney(double amount)
         {
-            var result = await _paymentService.WithdrawMoney(amount);
+            var result = await _walletService.WithdrawMoney(amount);
             return CustomResult("Rút tiền thành công, số dư mới: ", result);
         }
 
@@ -54,7 +54,7 @@ namespace FluffyPaw_API.Controllers.Payment
         [Authorize]
         public async Task<IActionResult> DepositMoney(double amount)
         {
-            var result = await _paymentService.DepositMoney(amount);
+            var result = await _walletService.DepositMoney(amount);
             return CustomResult("Nạp tiền thành công, số dư mới: ", result);
         }
     }
