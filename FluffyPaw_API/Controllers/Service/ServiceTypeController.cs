@@ -56,7 +56,7 @@ namespace FluffyPaw_API.Controllers.Service
         public async Task<IActionResult> DeleteServiceType(long id)
         {
             var serviceType = await _serviceTypeService.DeleteServiceType(id);
-            return CustomResult("Xóa loại dịch vụ thành công.");
+            return CustomResult("Xóa loại dịch vụ thành công.", serviceType);
         }
     }
 }

@@ -184,7 +184,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                             s.StartTime == newStartTime)).FirstOrDefault(); // Kiểm tra chồng chéo thời gian
                 if (overlappingService != null)
                 {
-                    throw new CustomException.InvalidDataException($"Lịch trình mới trùng với lịch trình hiện có vào ngày {newStartTime}.");
+                    throw new CustomException.InvalidDataException($"Lịch trình mới trùng với lịch trình hiện có vào ngày {newStartTime:dd/MM/yyyy HH:mm:ss}.");
                 }
 
                 var newStoreService = new StoreService
@@ -268,8 +268,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     StoreId = store.Id,
                     ServiceId = createStoreServiceRequest.ServiceId,
-                    //StartTime = createScheduleRequest.StartTime.AddHours(7), // chạy local
-                    StartTime = createScheduleRequest.StartTime, // chạy server
+                    StartTime = createScheduleRequest.StartTime.AddHours(7),
                     LimitPetOwner = createScheduleRequest.LimitPetOwner,
                     CurrentPetOwner = 0,
                     Status = StoreServiceStatus.Available.ToString()

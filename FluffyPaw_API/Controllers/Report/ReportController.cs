@@ -65,7 +65,7 @@ namespace FluffyPaw_API.Controllers.Report
         public async Task<IActionResult> DeleteReport(long id)
         {
             var report = await _reportService.DeleteReport(id);
-            return CustomResult("Xóa báo cáo thành công.");
+            return CustomResult("Xóa báo cáo thành công.", report);
         }
     }
 }

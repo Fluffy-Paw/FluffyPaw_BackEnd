@@ -139,6 +139,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             services.AddScoped<ISendMailService, SendMailService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<IConversationService, ConversationService>();
         }
 
 
