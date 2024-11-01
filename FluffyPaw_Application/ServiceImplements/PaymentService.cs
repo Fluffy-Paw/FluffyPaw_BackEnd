@@ -1,113 +1,54 @@
-﻿using AutoMapper;
-using FluffyPaw_Application.DTO.Request.WalletRequest;
+﻿using FluffyPaw_Application.DTO.Request.PaymentRequest;
 using FluffyPaw_Application.Services;
-using FluffyPaw_Domain.CustomException;
-using FluffyPaw_Domain.Entities;
-using FluffyPaw_Domain.Interfaces;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Net.payOS.Types;
+using Net.payOS;
+using Microsoft.AspNetCore.Http;
+using FluffyPaw_Domain.CustomException;
+using FluffyPaw_Domain.Interfaces;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
     public class PaymentService : IPaymentService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IFirebaseConfiguration _firebaseConfiguration;
+        private readonly PayOS _payOS;
+        private readonly IAuthentication _authentication;
 
-        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration)
+        public PaymentService(IHttpContextAccessor httpContextAccessor, PayOS payOS, IAuthentication authentication)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _authentication = authentication;
             _httpContextAccessor = httpContextAccessor;
-            _firebaseConfiguration = firebaseConfiguration;
+            _payOS = payOS;
+            _authentication = authentication;
         }
 
-        public async Task<double> DepositMoney(double amount)
+        public async Task<string> CreatePayment(CreatePaymentRequest createPaymentRequest)
         {
-            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            if (userId == 0) throw new CustomException.UnAuthorizedException("Vui lòng đăng nhập để xem ví.");
+            if (createPaymentRequest.Amount < 2000) throw new CustomException.InvalidDataException("Bạn phải nạp tối thiểu 50000 VND.");
+            int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+            ItemData item = new ItemData($"Nạp {createPaymentRequest.Amount}VND vào ví FluffyPay", 1, (int)createPaymentRequest.Amount);
+            List<ItemData> items = new List<ItemData> { item };
 
-            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
-            if (wallet == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy ví.");
-            }
+            // Get the current request's base URL
+            var request = _httpContextAccessor.HttpContext.Request;
+            var baseUrl = $"{request.Scheme}://{request.Host}";
 
-            wallet.Balance += amount;
-            await _unitOfWork.SaveAsync();
+            PaymentData paymentData = new PaymentData(
+                orderCode,
+                createPaymentRequest.Amount,
+                "Nap tien vao Fluffy Paw",
+                items,
+                $"{baseUrl}/wallet",
+                $"{baseUrl}/wallet?amount={createPaymentRequest.Amount}"
+            );
 
-            return wallet.Balance;
-        }
+            CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
-        public async Task<bool> UpdateBankInfo(BankAccountRequest bankAccountRequest)
-        {
-            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            if (userId == 0) throw new CustomException.UnAuthorizedException("Vui lòng đăng nhập để xem ví.");
-
-            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
-            if (wallet == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy ví.");
-            }
-
-            _mapper.Map(bankAccountRequest,wallet);
-            if (bankAccountRequest.ImageQR != null) wallet.QR = await _firebaseConfiguration.UploadImage(bankAccountRequest.ImageQR);
-            await _unitOfWork.SaveAsync();
-
-            return true;
-        }
-
-        public async Task<double> ViewBalance()
-        {
-            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            if (userId == 0) throw new CustomException.UnAuthorizedException("Vui lòng đăng nhập để xem ví.");
-
-            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
-            if (wallet == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy ví.");
-            }
-
-            return wallet.Balance;
-        }
-
-        public async Task<Wallet> ViewWallet()
-        {
-            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            if (userId == 0) throw new CustomException.UnAuthorizedException("Vui lòng đăng nhập để xem ví.");
-
-            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
-            if (wallet == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy ví.");
-            }
-
-            return wallet;
-        }
-
-        public async Task<double> WithdrawMoney(double amount)
-        {
-            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            if (userId == 0) throw new CustomException.UnAuthorizedException("Vui lòng đăng nhập để xem ví.");
-
-            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
-            if (wallet == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy ví.");
-            }
-
-            wallet.Balance -= amount;
-            await _unitOfWork.SaveAsync();
-
-            return wallet.Balance;
+            return createPayment.checkoutUrl;
         }
     }
 }
