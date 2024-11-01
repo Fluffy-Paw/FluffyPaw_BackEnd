@@ -43,14 +43,6 @@ namespace FluffyPaw_API.Controllers.Pet
             return CustomResult("Thêm thú cưng thành công.", pet);
         }
 
-        [HttpPost("AddBehavior")]
-        [Authorize(Roles = "PetOwner,Admin")]
-        public async Task<IActionResult> AddBehavior([Required] string Action)
-        {
-            var id = await _petService.AddBehavior(Action);
-            return CustomResult("Id hành vi:", id);
-        }
-
         [HttpPatch("UpdatePet/{petId}")]
         [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> UpdatePet(long petId, [FromForm] PetRequest petRequest)
@@ -97,6 +89,22 @@ namespace FluffyPaw_API.Controllers.Pet
         {
             var pet = await _petService.GetBehavior(behaviorId);
             return CustomResult("Sở thích:", pet);
+        }
+
+        [HttpPost("AddBehavior")]
+        [Authorize(Roles = "PetOwner,Admin")]
+        public async Task<IActionResult> AddBehavior(string Action)
+        {
+            var id = await _petService.AddBehavior(Action);
+            return CustomResult("Id hành vi:", id);
+        }
+
+        [HttpDelete("DeleteBehavior/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteBehavior(long id)
+        {
+            await _petService.DeleteBehavior(id);
+            return CustomResult("Xóa thành công hành vi.");
         }
 
         [HttpPatch("ActiveDeactivePet/{petId}")]

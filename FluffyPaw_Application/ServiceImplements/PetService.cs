@@ -134,6 +134,27 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
+        public async Task<bool> DeleteBehavior(long id)
+        {
+            var existingBehavior = _unitOfWork.BehaviorCategoryRepository.Get(b => b.Id == id).FirstOrDefault();
+
+            if (existingBehavior == null) throw new CustomException.DataNotFoundException("Không tìm thấy hành vi cần xóa");
+
+            var existingPet = _unitOfWork.PetRepository.Get(p => p.BehaviorCategoryId == id);
+            if (existingPet.Any())
+            {
+                foreach (var pet in existingPet)
+                {
+                    pet.BehaviorCategoryId = 1;
+                }
+            }
+
+            _unitOfWork.BehaviorCategoryRepository.Delete(existingBehavior);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
         public async Task<bool> DeletePet(long petId)
         {
             var existingPet = _unitOfWork.PetRepository.GetByID(petId);
@@ -142,7 +163,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
             existingPet.Status = PetStatus.Deleted.ToString();
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
 
             return true;
         }

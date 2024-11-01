@@ -22,9 +22,8 @@ namespace FluffyPaw_API.Controllers.SendMessage
         [HttpPost("SendMailOtp")]
         public async Task<IActionResult> SendEmail([FromBody] SendMailRequest sendMailRequest)
         {
-            var result = await _sendMailService.SendMailOtp(sendMailRequest);
-            if(result) return CustomResult("Gửi mail thành công.");
-            else return CustomResult("Gửi mail thất bại.");
+            var otp = await _sendMailService.SendMailOtp(sendMailRequest);
+            return CustomResult("Gửi mail thành công, otp: ", otp);
         }
 
         [HttpPost("SendReceipt")]

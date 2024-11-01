@@ -1,5 +1,4 @@
-﻿using FluffyPaw_Application.DTO.Request.WalletRequest;
-using FluffyPaw_Domain.Entities;
+﻿using FluffyPaw_Application.DTO.Request.PaymentRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +9,6 @@ namespace FluffyPaw_Application.Services
 {
     public interface IPaymentService
     {
-        Task<double> WithdrawMoney(double amount);
-        Task<double> DepositMoney(double amount);
-        Task<double> ViewBalance();
-        Task<Wallet> ViewWallet();
-        Task<bool> UpdateBankInfo(BankAccountRequest bankAccountRequest);
+        Task<string> CreatePayment(CreatePaymentRequest createPaymentRequest);
     }
 }
