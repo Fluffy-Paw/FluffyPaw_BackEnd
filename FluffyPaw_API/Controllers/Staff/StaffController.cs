@@ -1,4 +1,5 @@
 ﻿using CoreApiResponse;
+using FluffyPaw_Application.DTO.Request.BookingRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Request.TrackingRequest;
@@ -38,6 +39,14 @@ namespace FluffyPaw_API.Controllers.Staff
             return CustomResult("Tải dữ liệu thành công.", store);
         }
 
+        [HttpGet("GetAllStoreServiceByServiceId/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetAllStoreServiceByServiceId(long id)
+        {
+            var storeSers = await _staffService.GetAllStoreServiceByServiceId(id);
+            return CustomResult("Tải dữ liệu thành công.", storeSers);
+        }
+
         [HttpPost("CreateStoreService")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> CreateStoreService([FromBody] CreateStoreServiceRequest createStoreServiceRequest)
@@ -46,12 +55,20 @@ namespace FluffyPaw_API.Controllers.Staff
             return CustomResult("Tạo lịch trình thành công", storeServices);
         }
 
+        [HttpPost("CreateScheduleStoreService")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> CreateScheduleStoreService([FromBody] ScheduleStoreServiceRequest scheduleStoreServiceRequest)
+        {
+            var storeServices = await _staffService.CreateScheduleStoreService(scheduleStoreServiceRequest);
+            return CustomResult("Tạo lịch trình thành công", storeServices);
+        }
+
         [HttpPatch("UpdateStoreService/{id}")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> UpdateStoreService(long id, [FromBody] UpdateStoreServiceRequest updateStoreServiceRequest)
         {
             var storeService = await _staffService.UpdateStoreService(id, updateStoreServiceRequest);
-            return CustomResult("Cập nhật lịch trình thành công.", storeService);
+            return CustomResult("Cập nhật lịch trình thành công.");
         }
 
         [HttpDelete("DeleteStoreService/{id}")]
@@ -64,9 +81,9 @@ namespace FluffyPaw_API.Controllers.Staff
 
         [HttpGet("GetAllBookingByStore")]
         [Authorize(Roles = "Staff")]
-        public async Task<IActionResult> GetAllBookingByStore()
+        public async Task<IActionResult> GetAllBookingByStore([FromQuery] FilterBookingRequest filterBookingRequest)
         {
-            var bookings = await _staffService.GetAllBookingByStore();
+            var bookings = await _staffService.GetAllBookingByStore(filterBookingRequest);
             return CustomResult("Tải dữ liệu thành công.", bookings);
         }
 

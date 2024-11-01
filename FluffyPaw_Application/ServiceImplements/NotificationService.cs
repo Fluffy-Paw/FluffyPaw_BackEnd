@@ -57,8 +57,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<NotificationResponse> CreateNotification(NotificationRequest notificationRequest)
         {
-            var existingUser = _unitOfWork.AccountRepository.Get(n => n.Id == notificationRequest.ReceiverId);
-            if (!existingUser.Any())
+            var existingUser = _unitOfWork.AccountRepository.Get(n => n.Id == notificationRequest.ReceiverId).FirstOrDefault();
+            if (existingUser == null)
             {
                 throw new CustomException.DataNotFoundException("Người dùng không tồn tại.");
             }
@@ -70,7 +70,30 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
 
-            await _notiHub.SendNotification("displayNotification");
+            await _notiHub.SendNotification(notification.Description, existingUser.Id);
+
+            return _mapper.Map<NotificationResponse>(notification);
+        }
+
+        public async Task<NotificationResponse> ScheduleCreateNotification(long accountId, string name,
+                                                                string type, string description)
+        {
+            var notification = new Notification
+            {
+                ReceiverId = accountId,
+                Name = name,
+                Type = type,
+                Description = description,
+                CreateDate = CoreHelper.SystemTimeNow,
+                IsSeen = false,
+                Status = NotificationStatus.Unread.ToString()
+            };
+
+
+            _unitOfWork.NotificationRepository.Insert(notification);
+            _unitOfWork.Save();
+
+            await _notiHub.SendNotification("ReceiveNoti", notification.ReceiverId);
 
             return _mapper.Map<NotificationResponse>(notification);
         }
@@ -78,7 +101,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<bool> DeleteNotification(long notificationId)
         {
             var existingNoti = _unitOfWork.NotificationRepository.GetByID(notificationId) ?? throw new CustomException.DataNotFoundException("Thông báo không tồn tại.");
-            
+
             existingNoti.Status = NotificationStatus.Deleted.ToString();
             _unitOfWork.NotificationRepository.Update(existingNoti);
             _unitOfWork.Save();
@@ -89,7 +112,8 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<IPaginatedList<Notification>> GetNotifications(int numberNoti)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var noti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == userId && s.Status != NotificationStatus.Deleted.ToString(), orderBy: ob=>ob.OrderByDescending(o=>o.CreateDate)).AsQueryable();
+            var noti = _unitOfWork.NotificationRepository.Get(s => s.ReceiverId == userId && s.Status != NotificationStatus.Deleted.ToString(),
+                                                orderBy: ob => ob.OrderByDescending(o => o.CreateDate)).AsQueryable();
 
             if (!noti.Any())
             {

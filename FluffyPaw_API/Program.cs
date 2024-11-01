@@ -15,9 +15,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", builder =>
     {
         builder
+            //.WithOrigins("https://localhost:7287")
             .AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowAnyHeader();
+            .AllowAnyHeader()
+            /*.AllowCredentials()*/;
     });
 });
 
@@ -91,7 +93,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<NotificationHub>("/noti");
+    endpoints.MapHub<NotificationHub>("/NotificationHub");
 });
 
 

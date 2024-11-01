@@ -1,4 +1,5 @@
-﻿using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
+﻿using FluffyPaw_Application.DTO.Request.BookingRequest;
+using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Request.TrackingRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
@@ -16,12 +17,14 @@ namespace FluffyPaw_Application.Services
 {
     public interface IStaffService
     {
-        Task<StoreResponse> GetStoreByStaff();
         Task<List<SerResponse>> GetAllServiceByBrandId(long id);
+        Task<StoreResponse> GetStoreByStaff();
+        Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id);
+        Task<List<StoreSerResponse>> CreateScheduleStoreService(ScheduleStoreServiceRequest scheduleStoreServiceRequest);
         Task<List<StoreSerResponse>> CreateStoreService(CreateStoreServiceRequest createStoreServiceRequest);
-        Task<StoreSerResponse> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest);
+        Task<bool> UpdateStoreService(long id, UpdateStoreServiceRequest updateStoreServiceRequest);
         Task<bool> DeleteStoreService(long id);
-        Task<List<StoreBookingResponse>> GetAllBookingByStore();
+        Task<List<StoreBookingResponse>> GetAllBookingByStore(FilterBookingRequest filterBookingRequest);
         Task<List<BookingResponse>> GetAllBookingByStoreServiceId(long id);
         Task<bool> AcceptBooking(long id);
         Task<bool> DeniedBooking(long id);

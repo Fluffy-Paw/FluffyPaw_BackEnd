@@ -96,7 +96,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy certificate.");
             }
 
-            _unitOfWork.ServiceRepository.Delete(certificate);
+            _unitOfWork.CertificateRepository.Delete(certificate);
 
             _unitOfWork.Save();
 

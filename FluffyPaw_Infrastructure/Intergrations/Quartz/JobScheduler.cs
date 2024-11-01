@@ -18,14 +18,41 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
             _scheduler = scheduler;
         }
 
-        public async Task BookingStartTimeNotificationJob(Booking booking)
+        public async Task ScheduleBookingNotification(Booking booking)
         {
+            var jobKey = new JobKey($"BookingStartNotificationJob-{booking.Id}");
+            var triggerKeyOneDay = new TriggerKey($"BookingStartNotificationTriggerOneDay-{booking.Id}");
+            var triggerKeyOneHour = new TriggerKey($"BookingStartNotificationTriggerOneHour-{booking.Id}");
 
+            if (await _scheduler.CheckExists(jobKey))
+            {
+                await _scheduler.DeleteJob(jobKey);
+            }
+
+            var job = JobBuilder.Create<BookingStartTimeNotificationJob>()
+                .WithIdentity(jobKey)
+                .UsingJobData("BookingId", booking.Id)
+                .Build();
+
+            var triggerOneDay = TriggerBuilder.Create()
+                .WithIdentity(triggerKeyOneDay)
+                .StartAt(booking.StartTime.AddHours(-31)) // local
+                .StartAt(booking.StartTime.AddDays(-1)) // server
+                .Build();
+
+            var triggerOneHour = TriggerBuilder.Create()
+                .WithIdentity(triggerKeyOneHour)
+                //.StartAt(booking.StartTime.AddHours(-8)) // local
+                .StartAt(booking.StartTime.AddHours(-1)) // server
+                .Build();
+
+            await _scheduler.ScheduleJob(job, new HashSet<ITrigger> { triggerOneDay, triggerOneHour }, true);
         }
 
         public async Task ScheduleStoreServiceClose(StoreService storeService)
         {
-            var threeMinutesBeforeClose = storeService.StartTime.AddMinutes(-30);
+            //var threeMinutesBeforeClose = storeService.StartTime.AddHours(-7.5); //local
+            var threeMinutesBeforeClose = storeService.StartTime.AddMinutes(-30); // server
 
             var jobKey = new JobKey($"StoreServiceCloseNotificationJob-{storeService.Id}");
             var triggerKey = new TriggerKey($"StoreServiceCloseNotificationJob-{storeService.Id}");
@@ -46,7 +73,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                 .StartAt(threeMinutesBeforeClose)
                 .Build();
 
-            await _scheduler.ScheduleJob(job,trigger);
+            await _scheduler.ScheduleJob(job, trigger);
         }
     }
 }
