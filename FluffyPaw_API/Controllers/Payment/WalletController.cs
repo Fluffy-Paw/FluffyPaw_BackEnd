@@ -9,11 +9,11 @@ namespace FluffyPaw_API.Controllers.Payment
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentController : BaseController
+    public class WalletController : BaseController
     {
-        private readonly IPaymentService _paymentService;
+        private readonly IWalletService _paymentService;
 
-        public PaymentController(IPaymentService paymentService)
+        public WalletController(IWalletService paymentService)
         {
             _paymentService = paymentService;
         }

@@ -1,5 +1,6 @@
 ﻿using FluffyPaw_Application.DTO.Request.EmailRequest;
 using FluffyPaw_Application.Services;
+using System;
 using System.Net.Mail;
 
 namespace FluffyPaw_Application.ServiceImplements
@@ -10,10 +11,16 @@ namespace FluffyPaw_Application.ServiceImplements
         {
         }
 
-        public async Task<bool> SendMailOtp(SendMailRequest sendMailRequest)
+        public async Task<string> SendMailOtp(SendMailRequest sendMailRequest)
         {
             try
             {
+                string otp = "";
+                for (int i = 0; i < 6; i++)
+                {
+                    Random random = new Random();
+                    otp += random.Next(0, 10).ToString();
+                }
                 using (MailMessage mail = new MailMessage())
                 {
                     mail.From = new MailAddress("Fluffy Paw <fluffypaw4u@gmail.com>");
@@ -27,7 +34,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                         "<div style=\"padding: 20px; text-align: center; border-top: 1px solid #ddd\">" +
                                             "<p style=\"font-size: 16px; color: #333; text-align: left\">Xin chào,</p>" +
                                             "<p style=\"font-size: 16px; color: #333; text-align: left\">Đây là mã bảo mật tạm thời cho Tài khoản Fluffy Paw của bạn. Nó chỉ có thể được sử dụng một lần trong vòng <strong>5 phút</strong> tới, sau đó sẽ hết hạn: </p>" +
-                                            "<div style=\" background-color: #f36fdd; color: white; font-size: 36px; font-weight: bold; padding: 20px; border-radius: 8px; margin: 20px 0; \">267582</div>" +
+                                            "<div style=\" background-color: #f36fdd; color: white; font-size: 36px; font-weight: bold; padding: 20px; border-radius: 8px; margin: 20px 0; \">" + otp + "</div>" +
                                                 "<p style=\"font-size: 16px; color: #333; text-align: left\">Bạn nhận được email này mà không có yêu cầu nhập mã xác thực nào từ Fluffy Paw? Nếu vậy, bảo mật tài khoản Fluffy Paw của bạn có thể đã bị xâm phạm. Vui lòng thay đổi mật khẩu của bạn càng sớm càng tốt.</p>" +
                                             "</div>" +
                                             "<div style=\" font-size: 14px; color: #666; text-align: center; padding: 10px; border-top: 1px solid #ddd;\">" +
@@ -47,11 +54,11 @@ namespace FluffyPaw_Application.ServiceImplements
                     }
                 }
 
-                return true;
+                return otp;
             }
             catch
             {
-                return false;
+                throw new Exception();
             }
         }
 

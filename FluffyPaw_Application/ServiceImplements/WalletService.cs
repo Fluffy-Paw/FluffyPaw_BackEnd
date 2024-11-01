@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
-    public class PaymentService : IPaymentService
+    public class WalletService : IWalletService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
 
-        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration)
+        public WalletService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -34,6 +34,8 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             if (userId == 0) throw new CustomException.UnAuthorizedException("Vui lòng đăng nhập để xem ví.");
+
+            if (amount < 0) throw new CustomException.InvalidDataException("Bạn không thể nhập số âm.");
 
             var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
             if (wallet == null)
@@ -98,12 +100,15 @@ namespace FluffyPaw_Application.ServiceImplements
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             if (userId == 0) throw new CustomException.UnAuthorizedException("Vui lòng đăng nhập để xem ví.");
 
+            if (amount < 0) throw new CustomException.InvalidDataException("Bạn không thể nhập số âm.");
+
             var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
             if (wallet == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy ví.");
             }
 
+            if (wallet.Balance < amount) throw new CustomException.InvalidDataException("Số dư của bạn không đủ.");
             wallet.Balance -= amount;
             await _unitOfWork.SaveAsync();
 

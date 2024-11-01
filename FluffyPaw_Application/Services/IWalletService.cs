@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.Services
 {
-    public interface IPaymentService
+    public interface IWalletService
     {
         Task<double> WithdrawMoney(double amount);
         Task<double> DepositMoney(double amount);

@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
+using Net.payOS;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
 
             services.AddExternalServices();
 
-            //services.AddPayOS(configuration);
+            services.AddPayOS(configuration);
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -137,7 +138,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<ISendMailService, SendMailService>();
-            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IWalletService, WalletService>();
         }
 
 
@@ -148,7 +149,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             services.AddScoped<ISignalRConfiguration, SignalRConfiguration>();
         }
 
-        /*public static void AddPayOS(this IServiceCollection services, IConfiguration configuration)
+        public static void AddPayOS(this IServiceCollection services, IConfiguration configuration)
         {
             PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
                                     configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
@@ -166,6 +167,6 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
                         policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
                     });
             });
-        }*/
+        }
     }
 }
