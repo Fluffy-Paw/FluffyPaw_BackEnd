@@ -64,7 +64,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var notification = _mapper.Map<Notification>(notificationRequest);
-
+            notification.CreateDate = CoreHelper.SystemTimeNow;
             notification.IsSeen = false;
             notification.Status = NotificationStatus.Unread.ToString();
             _unitOfWork.NotificationRepository.Insert(notification);
