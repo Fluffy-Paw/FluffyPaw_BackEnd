@@ -17,6 +17,6 @@ namespace FluffyPaw_Application.DTO.Request.ConversationRequest
 
         public long? ReplyMessageId { get; set; } = null;
 
-        public List<IFormFile> Files { get; set; }
+        public List<IFormFile>? Files { get; set; }
     }
 }
