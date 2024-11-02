@@ -87,8 +87,10 @@ namespace FluffyPaw_Application.ServiceImplements
                     .FirstOrDefault();
 
                 conversationResponse.LastMessage = lastMessage?.Content ?? "Hãy nhắn tin để bắt đầu cuộc trò chuyện.";
-                conversationResponse.TimeSinceLastMessage = CoreHelper.SystemTimeNow - lastMessage.CreateTime;
-
+                if (lastMessage != null)
+                {
+                    conversationResponse.TimeSinceLastMessage = CoreHelper.SystemTimeNow - lastMessage.CreateTime;
+                }
                 var petOwner = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == conversation.PoAccountId,
                                                 includeProperties: "Account").FirstOrDefault();
                 if (petOwner != null)
