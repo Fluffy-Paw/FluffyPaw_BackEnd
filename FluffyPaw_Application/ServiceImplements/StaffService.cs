@@ -247,6 +247,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Danh sách yêu cầu lịch trình trống.");
             }
 
+            var storeSerResponses = new List<StoreSerResponse>();
+
             foreach (var createScheduleRequest in createStoreServiceRequest.CreateScheduleRequests)
             {
                 if (existingStoreServiceTimes.Contains(createScheduleRequest.StartTime))
@@ -278,12 +280,15 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.Save();
 
                 await _jobScheduler.ScheduleStoreServiceClose(newStoreService);
+
+                var storeSerResponse = _mapper.Map<StoreSerResponse>(newStoreService);
+                storeSerResponse.StartTime = newStoreService.StartTime.AddHours(-7);
+                storeSerResponses.Add(storeSerResponse);
             }
 
             await _unitOfWork.SaveAsync();
 
-            var storeServiceResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
-            return storeServiceResponses;
+            return storeSerResponses;
         }
 
         /*public async Task<List<StoreSerResponse>> CreateStoreServiceHotel()
