@@ -1,5 +1,6 @@
 ﻿using FluffyPaw_Application.DTO.Request.ConversationRequest;
 using FluffyPaw_Application.DTO.Response.ConversationResponse;
+using FluffyPaw_Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace FluffyPaw_Application.Services
         Task<bool> OpenConversation(long id);
         Task<bool> CloseConversation(long id);
         Task<bool> DeleteConversation(long id);
-        Task<List<ConversationMessageResponse>> GetAllConversationMessageByConversationId(long id);
+        Task<IPaginatedList<ConversationMessageResponse>> GetAllConversationMessageByConversationId(long id, int pageNumber, int pageSize);
         Task<ConversationMessageResponse> SendMessage(ConversationMessageRequest conversationMessageRequest);
     }
 }

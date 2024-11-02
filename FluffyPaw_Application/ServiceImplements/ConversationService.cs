@@ -3,6 +3,7 @@ using FluffyPaw_Application.DTO.Request.ConversationRequest;
 using FluffyPaw_Application.DTO.Response.ConversationResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.Services;
+using FluffyPaw_Application.Utils.Pagination;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Interfaces;
@@ -84,7 +85,9 @@ namespace FluffyPaw_Application.ServiceImplements
                 var lastMessage = conversation.ConversationMessages
                     .OrderByDescending(m => m.CreateTime)
                     .FirstOrDefault();
-                conversationResponse.LastMessege = lastMessage?.Content ?? "Hãy nhắn tin để bắt đầu cuộc trò chuyện.";
+
+                conversationResponse.LastMessage = lastMessage?.Content ?? "Hãy nhắn tin để bắt đầu cuộc trò chuyện.";
+                conversationResponse.TimeSinceLastMessage = CoreHelper.SystemTimeNow - lastMessage.CreateTime;
 
                 var petOwner = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == conversation.PoAccountId,
                                                 includeProperties: "Account").FirstOrDefault();
@@ -104,7 +107,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             conversationResponses = conversationResponses
-                .OrderByDescending(c => c.LastMessege)
+                .OrderByDescending(c => c.LastMessage)
                 .ToList();
 
             return conversationResponses;
@@ -139,7 +142,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     PoAccountId = conversationRequest.PersonId,
                     StaffAccountId = account.Id,
-                    LastMessege = "Hãy nhắn tin để bắt đầu cuộc trò chuyện.",
+                    LastMessage = "Hãy nhắn tin để bắt đầu cuộc trò chuyện.",
                     IsOpen = true
                 };
             }
@@ -149,7 +152,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     PoAccountId = account.Id,
                     StaffAccountId = conversationRequest.PersonId,
-                    LastMessege = "Hãy nhắn tin để bắt đầu cuộc trò chuyện.",
+                    LastMessage = "Hãy nhắn tin để bắt đầu cuộc trò chuyện.",
                     IsOpen = true
                 };
             }
@@ -160,6 +163,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var conversationResponse = _mapper.Map<ConversationResponse>(newConversation);
 
             PopulateAdditionalFields(conversationResponse, newConversation);
+            conversationResponse.TimeSinceLastMessage = TimeSpan.Zero;
 
             return conversationResponse;
         }
@@ -260,7 +264,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
-        public async Task<List<ConversationMessageResponse>> GetAllConversationMessageByConversationId(long id)
+        public async Task<IPaginatedList<ConversationMessageResponse>> GetAllConversationMessageByConversationId(long id, int pageNumber, int pageSize)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -292,13 +296,46 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy cuộc trò chuyện hoặc bạn không có quyền truy cập.");
             }
 
-            conversationMessages = _unitOfWork.ConversationMessageRepository.Get(
-                cm => cm.ConversationId == conversation.Id,
-                orderBy: cm => cm.OrderBy(m => m.CreateTime)
-            );
+            /*conversationMessages = _unitOfWork.ConversationMessageRepository.Get(cm => cm.ConversationId == conversation.Id,
+                                                        orderBy: cm => cm.OrderByDescending(m => m.CreateTime),
+                                                        pageIndex: pageNumber,
+                                                        pageSize: pageSize);*/
+            var allMessages = _unitOfWork.ConversationMessageRepository.Get(
+                                                cm => cm.ConversationId == conversation.Id,
+                                                orderBy: cm => cm.OrderByDescending(m => m.CreateTime)
+                                                ).ToList();
 
-            var conversationMessageResponses = _mapper.Map<List<ConversationMessageResponse>>(conversationMessages);
-            return conversationMessageResponses;
+            // Tổng số tin nhắn
+            var totalMessages = allMessages.Count;
+
+            // Áp dụng phân trang trên danh sách đã tải về
+            var paginatedMessages = allMessages
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            foreach (var message in paginatedMessages)
+            {
+                if (message.SenderId != account.Id)
+                {
+                    message.IsSeen = true;
+                }
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            var conversationMessageResponses = _mapper.Map<List<ConversationMessageResponse>>(paginatedMessages);
+
+            foreach (var messageResponse in conversationMessageResponses)
+            {
+                var messageFiles = _unitOfWork.MessageFileRepository.Get(mf => mf.MessageId == messageResponse.Id,
+                    includeProperties: "Files");
+
+                var fileResponses = _mapper.Map<List<FileResponse>>(messageFiles.Select(mf => mf.Files));
+                messageResponse.Files = fileResponses;
+            }
+
+            return new PaginatedList<ConversationMessageResponse>(conversationMessageResponses, totalMessages, pageNumber, pageSize);
         }
 
         public async Task<ConversationMessageResponse> SendMessage(ConversationMessageRequest conversationMessageRequest)
@@ -340,30 +377,32 @@ namespace FluffyPaw_Application.ServiceImplements
             await _unitOfWork.SaveAsync();
 
             var fileResponses = new List<FileResponse>();
-
-            foreach (var file in conversationMessageRequest.Files)
+            if (conversationMessageRequest.Files != null)
             {
-                var newFile = new Files
+                foreach (var file in conversationMessageRequest.Files)
                 {
-                    File = await _firebaseConfiguration.UploadImage(file),
-                    Status = true
-                };
-                _unitOfWork.FilesRepository.Insert(newFile);
-                await _unitOfWork.SaveAsync();
+                    var newFile = new Files
+                    {
+                        File = await _firebaseConfiguration.UploadImage(file),
+                        Status = true
+                    };
+                    _unitOfWork.FilesRepository.Insert(newFile);
+                    await _unitOfWork.SaveAsync();
 
-                var newMessageFile = new MessageFile
-                {
-                    FileId = newFile.Id,
-                    MessageId = newMessage.Id,
-                };
-                _unitOfWork.MessageFileRepository.Insert(newMessageFile);
-                _unitOfWork.Save();
+                    var newMessageFile = new MessageFile
+                    {
+                        FileId = newFile.Id,
+                        MessageId = newMessage.Id,
+                    };
+                    _unitOfWork.MessageFileRepository.Insert(newMessageFile);
+                    _unitOfWork.Save();
 
-                var fileResponse = _mapper.Map<FileResponse>(newFile);
-                fileResponses.Add(fileResponse);
+                    var fileResponse = _mapper.Map<FileResponse>(newFile);
+                    fileResponses.Add(fileResponse);
+                }
             }
 
-            conversation.LastMessege = newMessage.Content;
+            conversation.LastMessage = newMessage.Content;
             _unitOfWork.Save();
 
             var conversationMessageResponse = _mapper.Map<ConversationMessageResponse>(newMessage);
