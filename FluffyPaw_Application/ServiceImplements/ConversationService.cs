@@ -273,18 +273,15 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản của bạn.");
             }
 
-            IEnumerable<ConversationMessage> conversationMessages;
             Conversation conversation;
 
             if (account.RoleName == RoleName.Staff.ToString())
             {
-                conversation = _unitOfWork.ConversationRepository.Get(c => c.Id == id && c.StaffAccountId == account.Id
-                                                    && c.IsOpen == true).FirstOrDefault();
+                conversation = _unitOfWork.ConversationRepository.Get(c => c.Id == id && c.StaffAccountId == account.Id && c.IsOpen == true).FirstOrDefault();
             }
             else if (account.RoleName == RoleName.PetOwner.ToString())
             {
-                conversation = _unitOfWork.ConversationRepository.Get(c => c.Id == id && c.PoAccountId == account.Id
-                                                    && c.IsOpen == true).FirstOrDefault();
+                conversation = _unitOfWork.ConversationRepository.Get(c => c.Id == id && c.PoAccountId == account.Id && c.IsOpen == true).FirstOrDefault();
             }
             else
             {
@@ -296,14 +293,11 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy cuộc trò chuyện hoặc bạn không có quyền truy cập.");
             }
 
-            /*conversationMessages = _unitOfWork.ConversationMessageRepository.Get(cm => cm.ConversationId == conversation.Id,
-                                                        orderBy: cm => cm.OrderByDescending(m => m.CreateTime),
-                                                        pageIndex: pageNumber,
-                                                        pageSize: pageSize);*/
+            // Lấy tất cả tin nhắn và sắp xếp theo thời gian giảm dần
             var allMessages = _unitOfWork.ConversationMessageRepository.Get(
-                                                cm => cm.ConversationId == conversation.Id,
-                                                orderBy: cm => cm.OrderByDescending(m => m.CreateTime)
-                                                ).ToList();
+                cm => cm.ConversationId == conversation.Id,
+                orderBy: cm => cm.OrderByDescending(m => m.CreateTime))
+                .ToList();
 
             // Tổng số tin nhắn
             var totalMessages = allMessages.Count;
@@ -312,11 +306,13 @@ namespace FluffyPaw_Application.ServiceImplements
             var paginatedMessages = allMessages
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Reverse()
                 .ToList();
 
+            // Đánh dấu các tin nhắn là đã xem nếu SenderId khác userId
             foreach (var message in paginatedMessages)
             {
-                if (message.SenderId != account.Id)
+                if (message.SenderId != userId)
                 {
                     message.IsSeen = true;
                 }
@@ -324,19 +320,21 @@ namespace FluffyPaw_Application.ServiceImplements
 
             await _unitOfWork.SaveAsync();
 
+            // Map các tin nhắn sang ConversationMessageResponse
             var conversationMessageResponses = _mapper.Map<List<ConversationMessageResponse>>(paginatedMessages);
 
+            // Lấy và map file liên quan đến từng tin nhắn
             foreach (var messageResponse in conversationMessageResponses)
             {
-                var messageFiles = _unitOfWork.MessageFileRepository.Get(mf => mf.MessageId == messageResponse.Id,
-                    includeProperties: "Files");
-
+                var messageFiles = _unitOfWork.MessageFileRepository.Get(mf => mf.MessageId == messageResponse.Id, includeProperties: "Files");
                 var fileResponses = _mapper.Map<List<FileResponse>>(messageFiles.Select(mf => mf.Files));
                 messageResponse.Files = fileResponses;
             }
 
-            return new PaginatedList<ConversationMessageResponse>(conversationMessageResponses, totalMessages, pageNumber, pageSize);
+            // Tạo đối tượng PaginatedList với các thông tin cần thiết
+            return new PaginatedList<ConversationMessageResponse>(conversationMessageResponses.AsReadOnly(), totalMessages, pageNumber, pageSize);
         }
+
 
         public async Task<ConversationMessageResponse> SendMessage(ConversationMessageRequest conversationMessageRequest)
         {
