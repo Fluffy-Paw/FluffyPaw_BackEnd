@@ -24,7 +24,9 @@ namespace FluffyPaw_Application.DTO.Response.ConversationResponse
 
         public string StoreAvatar { get; set; }
 
-        public string LastMessege { get; set; }
+        public string LastMessage { get; set; }
+
+        public TimeSpan TimeSinceLastMessage { get; set; }
 
         public bool IsOpen { get; set; }
     }

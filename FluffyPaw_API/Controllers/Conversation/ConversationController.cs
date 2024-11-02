@@ -62,9 +62,9 @@ namespace FluffyPaw_API.Controllers.Conversation
 
         [HttpGet("GetAllConversationMessageByConversationId/{id}")]
         [Authorize(Roles = "Staff,PetOwner")]
-        public async Task<IActionResult> GetAllConversationMessageByConversationId(long id)
+        public async Task<IActionResult> GetAllConversationMessageByConversationId(long id, int pageNumber, int pageSize)
         {
-            var conversationMessages = await _conversationService.GetAllConversationMessageByConversationId(id);
+            var conversationMessages = await _conversationService.GetAllConversationMessageByConversationId(id, pageNumber, pageSize);
             return CustomResult("Lấy dữ liệu thành công", conversationMessages);
         }
 

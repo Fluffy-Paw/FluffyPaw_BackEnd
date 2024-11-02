@@ -18,7 +18,7 @@ namespace FluffyPaw_Domain.Entities
 
         public long StaffAccountId { get; set; }
 
-        public string? LastMessege { get; set; }
+        public string? LastMessage { get; set; }
 
         public bool IsOpen { get; set; }
 
