@@ -40,6 +40,10 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public DateTimeOffset CheckinTime { get; set; }
 
+        public bool Checkout { get; set; }
+
+        public DateTimeOffset CheckOutTime { get; set; }
+
         public string Status { get; set; }
 
         public void Mapping(Profile profile)
