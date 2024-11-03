@@ -254,9 +254,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     StartTime = existingStoreService.StartTime,
                     EndTime = existingStoreService.StartTime + existingStoreService.Service.Duration,
                     Checkin = false,
-                    CheckinTime = existingStoreService.StartTime,
                     CheckOut = false,
-                    CheckOutTime = existingStoreService.StartTime + existingStoreService.Service.Duration,
                     Status = BookingStatus.Pending.ToString()
                 };
 
