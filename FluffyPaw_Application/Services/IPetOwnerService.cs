@@ -12,6 +12,7 @@ namespace FluffyPaw_Application.Services
         Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest);
         Task<PetOwnerResponse> GetPetOwnerDetail();
         Task<List<StoreResponse>> GetAllStore();
+        Task<List<StoreResponse>> GetAllStoreByServiceTypeId(long id);
         Task<List<StoreResponse>> GetStoreById(long id);
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id);
         Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus);
