@@ -82,7 +82,9 @@ namespace FluffyPaw_Infrastructure.Data
                 new Wallet { Id = 2, AccountId = 2, Balance = 0 },
                 new Wallet { Id = 3, AccountId = 3, Balance = 0 },
                 new Wallet { Id = 4, AccountId = 6, Balance = 100 },
-                new Wallet { Id = 5, AccountId = 7, Balance = 100 }
+                new Wallet { Id = 5, AccountId = 7, Balance = 100 },
+                new Wallet { Id = 6, AccountId = 8, Balance = 100 },
+                new Wallet { Id = 7, AccountId = 9, Balance = 100 }
                 );
 
             modelBuilder.Entity<BehaviorCategory>().HasData(

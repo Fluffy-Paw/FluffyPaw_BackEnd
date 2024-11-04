@@ -28,7 +28,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<string> CreatePayment(CreatePaymentRequest createPaymentRequest)
         {
-            if (createPaymentRequest.Amount < 2000) throw new CustomException.InvalidDataException("Bạn phải nạp tối thiểu 50000 VND.");
+            if (createPaymentRequest.Amount < 50000) throw new CustomException.InvalidDataException("Bạn phải nạp tối thiểu 50000 VND.");
             int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
             ItemData item = new ItemData($"Nạp {createPaymentRequest.Amount}VND vào ví FluffyPay", 1, (int)createPaymentRequest.Amount);
             List<ItemData> items = new List<ItemData> { item };

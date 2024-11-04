@@ -19,10 +19,17 @@ namespace FluffyPaw_API.Controllers.SendMessage
             _sendMailService = sendMailService;
         }
 
-        [HttpPost("SendMailOtp")]
-        public async Task<IActionResult> SendEmail([FromBody] SendMailRequest sendMailRequest)
+        [HttpPost("SendOtpRegister")]
+        public async Task<IActionResult> SendOtpRegister([FromBody] SendMailRequest sendMailRequest)
         {
-            var otp = await _sendMailService.SendMailOtp(sendMailRequest);
+            var otp = await _sendMailService.SendOtpRegister(sendMailRequest);
+            return CustomResult("Gửi mail thành công, otp: ", otp);
+        }
+
+        [HttpPost("SendOtpForgotPassword")]
+        public async Task<IActionResult> SendOtpForgotPassword([FromBody] SendMailPasswordRequest sendMailRequest)
+        {
+            var otp = await _sendMailService.SendOtpForgotPassword(sendMailRequest);
             return CustomResult("Gửi mail thành công, otp: ", otp);
         }
 
