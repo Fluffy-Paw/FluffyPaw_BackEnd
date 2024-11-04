@@ -256,7 +256,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
 
                 if (createBookingRequest.PaymentMethod != BookingPaymentMethod.COD.ToString()
-                    && createBookingRequest.PaymentMethod != BookingPaymentMethod.PayOS.ToString())
+                    && createBookingRequest.PaymentMethod != BookingPaymentMethod.FluffyPay.ToString())
                 {
                     throw new CustomException.InvalidDataException("Phương thức thanh toán không hợp lệ.");
                 }
@@ -304,12 +304,23 @@ namespace FluffyPaw_Application.ServiceImplements
                     CheckOut = false,
                     Status = BookingStatus.Pending.ToString()
                 };
+                
+                if (createBookingRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
+                {
+                    var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
+                    if (wallet == null || wallet.Balance < newBooking.Cost)
+                    {
+                        throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                    }
+                    wallet.Balance -= newBooking.Cost;
+                }
 
                 _unitOfWork.BookingRepository.Insert(newBooking);
                 bookings.Add(newBooking);
                 existingStoreService.CurrentPetOwner++;
                 _unitOfWork.Save();
 
+                await _jobScheduler.ScheduleOverTimeRefund(newBooking);
                 await _jobScheduler.ScheduleBookingNotification(newBooking);
 
                 var storeAccountId = existingStoreService.Store.Account.Id;
@@ -322,10 +333,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 };
                 await _notificationService.CreateNotification(notificationRequest);
             }
-
-            //Handle xử lý thanh toán
-
-            //
 
             var bookingResponses = _mapper.Map<List<BookingResponse>>(bookings);
             return bookingResponses;
@@ -348,7 +355,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             if (timeSelectionRequest.PaymentMethod != BookingPaymentMethod.COD.ToString()
-                    && timeSelectionRequest.PaymentMethod != BookingPaymentMethod.PayOS.ToString())
+                    && timeSelectionRequest.PaymentMethod != BookingPaymentMethod.FluffyPay.ToString())
             {
                 throw new CustomException.InvalidDataException("Phương thức thanh toán không hợp lệ.");
             }
@@ -431,9 +438,21 @@ namespace FluffyPaw_Application.ServiceImplements
                 CheckOutTime = endDate,
                 Status = BookingStatus.Pending.ToString()
             };
+
+            if (timeSelectionRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
+            {
+                var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
+                if (wallet == null || wallet.Balance < newBooking.Cost)
+                {
+                    throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                }
+                wallet.Balance -= newBooking.Cost;
+            }
+
             _unitOfWork.BookingRepository.Insert(newBooking);
             await _unitOfWork.SaveAsync();
 
+            await _jobScheduler.ScheduleOverTimeRefund(newBooking);
             await _jobScheduler.ScheduleBookingNotification(newBooking);
 
             var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
@@ -469,11 +488,13 @@ namespace FluffyPaw_Application.ServiceImplements
             var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId).FirstOrDefault();
             storeService.CurrentPetOwner -= 1;
 
-            _unitOfWork.Save();
 
-            //Handle xử lý thanh toán
+            //Đợi thêm bussiness rule cho vde Cancel
+            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
+            wallet.Balance += pendingBooking.Cost;
+            _unitOfWork.WalletRepository.Update(wallet);
 
-            //
+            await _unitOfWork.SaveAsync();
 
             var storeAccountId = storeService.Store.Account.Id;
             var notificationRequest = new NotificationRequest

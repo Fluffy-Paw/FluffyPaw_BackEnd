@@ -15,7 +15,7 @@ namespace FluffyPaw_Application.DTO.Request.ServiceRequest
 
         public string Name { get; set; }
 
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
 
         public TimeSpan Duration { get; set; }
 

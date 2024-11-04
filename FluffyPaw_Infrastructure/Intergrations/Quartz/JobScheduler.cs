@@ -1,5 +1,6 @@
 ﻿using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Interfaces;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,29 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
             await _scheduler.ScheduleJob(job, new HashSet<ITrigger> { triggerOneDay, triggerOneHour }, true);
         }
 
+        public async Task ScheduleOverTimeRefund(Booking booking)
+        {
+            var jobKey = new JobKey($"OverTimeRefundNotificationJob-{booking.Id}");
+            var triggerKeyOneHour = new TriggerKey($"OverTimeRefundNotificationOneHour-{booking.Id}");
+
+            if (await _scheduler.CheckExists(jobKey))
+            {
+                await _scheduler.DeleteJob(jobKey);
+            }
+
+            var job = JobBuilder.Create<OverTimeRefundNotificationJob>()
+                .WithIdentity(jobKey)
+                .UsingJobData("BookingId", booking.Id)
+                .Build();
+
+            var triggerOneHour = TriggerBuilder.Create()
+                .WithIdentity(triggerKeyOneHour)
+                .StartAt(booking.CreateDate.AddHours(1))
+            .Build();
+
+            await _scheduler.ScheduleJob(job, triggerOneHour);
+        }
+
         public async Task ScheduleStoreServiceClose(StoreService storeService)
         {
             var threeMinutesBeforeClose = storeService.StartTime.AddHours(-7.5);
@@ -72,5 +96,6 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             await _scheduler.ScheduleJob(job, trigger);
         }
+        
     }
 }

@@ -179,6 +179,21 @@ namespace FluffyPaw_Application.ServiceImplements
             return serviceResponse;
         }
 
+        public async Task<bool> DeActiveService(long id)
+        {
+            var service = _unitOfWork.ServiceRepository.GetByID(id);
+            if (service == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ.");
+            }
+
+            service.Status = false;
+
+            _unitOfWork.Save();
+
+            return true;
+        }
+
         public async Task<bool> DeleteService(long id)
         {
             var service = _unitOfWork.ServiceRepository.GetByID(id);
