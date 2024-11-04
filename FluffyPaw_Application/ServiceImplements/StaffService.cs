@@ -488,11 +488,12 @@ namespace FluffyPaw_Application.ServiceImplements
 
             _unitOfWork.Save();
 
-            //Handle xử lý thanh toán
-
-            //
-
             var poAccountId = pendingBooking.Pet.PetOwner.Account.Id;
+            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == poAccountId).FirstOrDefault();
+            wallet.Balance += pendingBooking.Cost;
+            _unitOfWork.WalletRepository.Update(wallet);
+            await _unitOfWork.SaveAsync();
+
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = poAccountId,

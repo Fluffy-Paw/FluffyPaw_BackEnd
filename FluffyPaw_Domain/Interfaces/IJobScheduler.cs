@@ -10,6 +10,7 @@ namespace FluffyPaw_Domain.Interfaces
     public interface IJobScheduler
     {
         Task ScheduleBookingNotification(Booking booking);
+        Task ScheduleOverTimeRefund(Booking booking);
         Task ScheduleStoreServiceClose(StoreService storeService);
     }
 }

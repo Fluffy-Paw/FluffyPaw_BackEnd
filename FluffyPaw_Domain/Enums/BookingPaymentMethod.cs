@@ -9,6 +9,6 @@ namespace FluffyPaw_Domain.Enums
     public enum BookingPaymentMethod
     {
         COD,
-        PayOS
+        FluffyPay
     }
 }
