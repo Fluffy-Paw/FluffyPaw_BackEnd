@@ -59,6 +59,14 @@ namespace FluffyPaw_API.Controllers.Service
             return CustomResult("Cập nhật dịch vụ thành công. Vui lòng chờ hệ thống xác thực", service);
         }
 
+        [HttpDelete("DeActiveService/{id}")]
+        [Authorize(Roles = "Admin,StoreManager")]
+        public async Task<IActionResult> DeActiveService(long id)
+        {
+            var service = await _serService.DeActiveService(id);
+            return CustomResult("Ẩn dịch vụ thành công.", service);
+        }
+
         [HttpDelete("DeleteService/{id}")]
         [Authorize(Roles = "Admin,StoreManager")]
         public async Task<IActionResult> DeleteService(long id)
