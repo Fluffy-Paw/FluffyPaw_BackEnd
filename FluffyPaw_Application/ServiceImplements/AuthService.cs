@@ -173,15 +173,5 @@ namespace FluffyPaw_Application.ServiceImplements
             string token = _authentication.GenerateJWTToken(account);
             return token;
         }
-
-        public async Task<bool> SendOtp(SendMailRequest sendMailRequest)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> CheckOtp(string Mail, string Otp)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

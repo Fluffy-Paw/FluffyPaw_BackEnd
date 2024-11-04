@@ -17,7 +17,5 @@ namespace FluffyPaw_Application.Services
 
         Task<string> Login(LoginRequest loginRequest);
         Task<string> AdminLogin(LoginRequest loginRequest);
-        Task<bool> SendOtp(SendMailRequest sendMailRequest);
-        Task<bool> CheckOtp(string Mail, string Otp);
     }
 }
