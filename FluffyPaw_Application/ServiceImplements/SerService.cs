@@ -48,14 +48,14 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(services.First().ServiceTypeId);
-
-            var serviceResponses = _mapper.Map<List<SerResponse>>(services);
-            foreach (SerResponse serviceResponse in serviceResponses)
+            var serviceResponses = new List<SerResponse>();
+            foreach (var service in services)
             {
+                var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(service.ServiceTypeId);
+                var serviceResponse = _mapper.Map<SerResponse>(service);
                 serviceResponse.ServiceTypeName = serviceType.Name;
+                serviceResponses.Add(serviceResponse);
             }
-
             return serviceResponses;
         }
 
