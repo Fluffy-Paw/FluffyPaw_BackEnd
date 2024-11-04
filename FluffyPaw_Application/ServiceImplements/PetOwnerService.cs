@@ -101,6 +101,53 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponses;
         }
 
+        public async Task<List<StoreResponse>> GetAllStoreByServiceTypeId(long id)
+        {
+            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(id);
+            if (serviceType == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tồn tại loại hình dịch vụ này.");
+            }
+            var serviceIds  = _unitOfWork.ServiceRepository.Get(s => s.ServiceTypeId == id 
+                                                && s.Status == true,
+                                                includeProperties: "ServiceType")
+                                                .Select(s => s.Id)
+                                                .ToList();
+            if (!serviceIds.Any())
+            {
+                throw new CustomException.DataNotFoundException($"Loại hình dịch vụ {serviceType.Name} hiện không có bất kì dịch vụ nào khả dụng.");
+            }
+
+            var storeResponses = new List<StoreResponse>();
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => serviceIds.Contains(ss.ServiceId),
+                                                includeProperties: "Store,Store.Account,Store.Brand")
+                                                .ToList();
+            if (!storeServices.Any())
+            {
+                throw new CustomException.DataNotFoundException($"Không tìm thấy cửa hàng nào có loại hình dịch vụ {serviceType.Name}");
+            }
+
+            var stores = storeServices
+                            .Select(ss => ss.Store)
+                            .Distinct();
+
+            foreach (var store in stores)
+            {
+                var storeResponse = _mapper.Map<StoreResponse>(store);
+
+                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id, includeProperties: "Files")
+                                .Select(sf => sf.Files)
+                                .ToList();
+
+                storeResponse.Files = _mapper.Map<List<FileResponse>>(storeFiles);
+
+                storeResponses.Add(storeResponse);
+            }
+
+            return storeResponses;
+        }
+
         public async Task<List<StoreResponse>> GetStoreById(long id)
         {
             var stores = _unitOfWork.StoreRepository.Get(s => s.Id == id, includeProperties: "Brand").ToList();
