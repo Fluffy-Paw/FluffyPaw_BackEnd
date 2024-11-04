@@ -10,6 +10,7 @@ namespace FluffyPaw_Application.Services
         Task<List<SerResponse>> GetAllServiceByStoreId(long id);
         Task<SerResponse> CreateService(SerRequest serviceRequest);
         Task<UpdateServiceResponse> UpdateService(long id, UpdateServiceRequest updateServiceRequest);
+        Task<bool> DeActiveService(long id);
         Task<bool> DeleteService(long id);
     }
 }
