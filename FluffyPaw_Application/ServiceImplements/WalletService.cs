@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.WalletRequest;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
@@ -20,14 +21,16 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
+        private readonly INotificationService _notificationService;
 
-        public WalletService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration)
+        public WalletService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authentication = authentication;
             _httpContextAccessor = httpContextAccessor;
             _firebaseConfiguration = firebaseConfiguration;
+            _notificationService = notificationService;
         }
 
         public async Task<double> DepositMoney(double amount)
@@ -102,15 +105,22 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (amount < 0) throw new CustomException.InvalidDataException("Bạn không thể nhập số âm.");
 
-            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
-            if (wallet == null)
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy ví.");
-            }
+            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId, includeProperties: "Account").FirstOrDefault();
+            if (wallet == null) throw new CustomException.DataNotFoundException("Không tìm thấy ví.");
+
+            if (wallet.BankName == null || wallet.Number == null) throw new CustomException.InvalidDataException("Vui lòng nhập tài khoản ngân hàng trước khi rút tiền.");
 
             if (wallet.Balance < amount) throw new CustomException.InvalidDataException("Số dư của bạn không đủ.");
             wallet.Balance -= amount;
             await _unitOfWork.SaveAsync();
+
+            await _notificationService.CreateNotification(new NotificationRequest
+            {
+                Name = "Rút tiền",
+                Type = "Deposit Request",
+                ReceiverId = 1,
+                Description = $"Tài khoản {wallet.Account.Username} muốn rút {amount} về số tài khoản {wallet.Number} của ngân hàng {wallet.BankName}."
+            });
 
             return wallet.Balance;
         }

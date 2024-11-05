@@ -41,6 +41,7 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<VaccineHistory> _vaccineHistoryRepository;
         private IGenericRepository<Voucher> _voucherRepository;
         private IGenericRepository<Wallet> _walletRepository;
+        private IGenericRepository<Transaction> _transactionRepository;
 
         public UnitOfWork()
         {
@@ -408,6 +409,19 @@ namespace FluffyPaw_Infrastructure.Repository
                     _walletRepository = new GenericRepository<Wallet>(_context);
                 }
                 return _walletRepository;
+            }
+        }
+
+        public IGenericRepository<Transaction> TransactionRepository
+        {
+            get
+            {
+
+                if (_transactionRepository == null)
+                {
+                    _transactionRepository = new GenericRepository<Transaction>(_context);
+                }
+                return _transactionRepository;
             }
         }
 

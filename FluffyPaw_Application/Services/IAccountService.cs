@@ -1,4 +1,5 @@
-﻿using FluffyPaw_Application.DTO.Response;
+﻿using FluffyPaw_Application.DTO.Request.AuthRequest;
+using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,6 @@ namespace FluffyPaw_Application.Services
         Task<IEnumerable<AccountResponse>> GetStoresByBrandId(long id);
         //Task<IEnumerable<Account>> GetAllAccounts();
         Task<bool> ChangePassword(string oldPassword, string newPassword);
+        Task<bool> ForgotPassword(LoginRequest loginRequest);
     }
 }

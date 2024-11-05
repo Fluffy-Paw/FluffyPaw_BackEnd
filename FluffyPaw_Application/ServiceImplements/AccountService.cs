@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
@@ -45,11 +46,11 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.InvalidDataException("Mật khẩu mới trùng với mật khẩu cũ.");
             }
-            
-            //if (newPassword.Length < 8)
-            //{
-            //    throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
-            //}
+
+            if (newPassword.Length < 8)
+            {
+                throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
+            }
 
             user.Password = _hashing.SHA512Hash(newPassword);
             _unitOfWork.Save();
@@ -138,6 +139,26 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             return result;
+        }
+
+        public async Task<bool> ForgotPassword(LoginRequest loginRequest)
+        {
+            var user = _unitOfWork.AccountRepository.Get(u => u.Username.Equals(loginRequest.Username)).FirstOrDefault();
+
+            if (user == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy user.");
+            }
+
+            if (loginRequest.Password.Length < 8)
+            {
+                throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
+            }
+
+            user.Password = _hashing.SHA512Hash(loginRequest.Password);
+            _unitOfWork.Save();
+
+            return true;    
         }
     }
 }

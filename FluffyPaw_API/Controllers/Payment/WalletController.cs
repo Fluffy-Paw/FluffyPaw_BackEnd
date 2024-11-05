@@ -47,7 +47,7 @@ namespace FluffyPaw_API.Controllers.Payment
         public async Task<IActionResult> WithdrawMoney(double amount)
         {
             var result = await _walletService.WithdrawMoney(amount);
-            return CustomResult("Rút tiền thành công, số dư mới: ", result);
+            return CustomResult("Rút tiền thành công, tiền sẽ chuyển vào ngân hàng của bạn trong vòng 1 ngày. Số dư mới: ", result);
         }
 
         [HttpPatch("DepositMoney")]

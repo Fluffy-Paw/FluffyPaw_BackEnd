@@ -1,4 +1,5 @@
 ﻿using FluffyPaw_Application.DTO.Request.EmailRequest;
+using FluffyPaw_Application.DTO.Response.AuthResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Interfaces;
@@ -68,10 +69,10 @@ namespace FluffyPaw_Application.ServiceImplements
             }
         }
 
-        public async Task<string> SendOtpForgotPassword(SendMailPasswordRequest sendMailRequest)
+        public async Task<ForgetPasswordResponse> SendOtpForgotPassword(SendMailPasswordRequest sendMailRequest)
         {
-            var email = _unitOfWork.AccountRepository.Get(a => a.Username == sendMailRequest.Username).FirstOrDefault().Email;
-            if(email == null) throw new CustomException.DataNotFoundException("Không tìm thấy account này. Hãy kiểm tra lại username");
+            var user = _unitOfWork.AccountRepository.Get(a => a.Username == sendMailRequest.Username).FirstOrDefault();
+            if (user == null) throw new CustomException.DataNotFoundException("Không tìm thấy account này. Hãy kiểm tra lại username");
 
             try
             {
@@ -84,7 +85,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 using (MailMessage mail = new MailMessage())
                 {
                     mail.From = new MailAddress("Fluffy Paw <fluffypaw4u@gmail.com>");
-                    mail.To.Add(email);
+                    mail.To.Add(user.Email);
                     mail.Subject = "Fluffy Paw Account Verification";
                     mail.Body = "<body style=\"font-family: Arial, sans-serif; background-color: #f8e5f6; margin: 0; padding: 0;\">" +
                                     "<div style=\" max-width: 600px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); \">" +
@@ -114,7 +115,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     }
                 }
 
-                return otp;
+                return new ForgetPasswordResponse {Email = user.Email, OTP = otp };
             }
             catch
             {

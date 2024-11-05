@@ -1,4 +1,5 @@
 ﻿using FluffyPaw_Application.DTO.Request.EmailRequest;
+using FluffyPaw_Application.DTO.Response.AuthResponse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace FluffyPaw_Application.Services
     public interface ISendMailService
     {
         Task<string> SendOtpRegister(SendMailRequest sendMailRequest);
-        Task<string> SendOtpForgotPassword(SendMailPasswordRequest sendMailRequest);
+        Task<ForgetPasswordResponse> SendOtpForgotPassword(SendMailPasswordRequest sendMailRequest);
         Task<bool> SendReceipt(SendMailRequest sendMailRequest);
     }
 }
