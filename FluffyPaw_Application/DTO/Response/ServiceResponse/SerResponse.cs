@@ -10,13 +10,15 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 {
-    public class SerResponse : IMapFrom<Service>
+    public class SerResponse : IMapFrom<Service>, IMapFrom<Brand>
     {
         public long Id { get; set; }
 
         public long ServiceTypeId { get; set; }
 
         public long BrandId { get; set; }
+
+        public string BrandName { get; set; }
 
         public string Name { get; set; }
 
@@ -42,6 +44,8 @@ namespace FluffyPaw_Application.DTO.Response.ServiceResponse
         {
             profile.CreateMap<Service, SerResponse>()
                 .ForMember(dest => dest.ServiceTypeName, opt => opt.MapFrom(src => src.ServiceType.Name));
+            profile.CreateMap<Service, SerResponse>()
+                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name));
         }
 
     }

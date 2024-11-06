@@ -20,6 +20,8 @@ namespace FluffyPaw_Domain.Entities
 
         public double Ammount { get; set; }
 
+        public long OrderCode { get; set; }
+
         public DateTimeOffset CreateTime { get; set; }
 
         [ForeignKey("WalletId")]

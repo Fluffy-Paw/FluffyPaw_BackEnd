@@ -21,7 +21,23 @@ namespace FluffyPaw_API.Controllers.Payment
         [Authorize]
         public async Task<IActionResult> CreateDepositLink([FromBody] CreatePaymentRequest createPaymentRequest)
         {
-            var result = await _paymentService.CreatePayment(createPaymentRequest);
+            var result = await _paymentService.CreateDepositRequest(createPaymentRequest);
+            return CustomResult(result);
+        }
+
+        [HttpPost("CancelPayment/{orderId}")]
+        [Authorize]
+        public async Task<IActionResult> CancelPayment([FromRoute] long orderId)
+        {
+            var result = await _paymentService.CancelPayment(orderId);
+            return CustomResult(result);
+        }
+
+        [HttpPost("CheckDepositResult/{orderId}")]
+        [Authorize]
+        public async Task<IActionResult> CheckDepositResult([FromRoute] long orderId)
+        {
+            var result = await _paymentService.CheckDepositResult(orderId);
             return CustomResult(result);
         }
     }

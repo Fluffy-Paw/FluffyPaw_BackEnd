@@ -38,6 +38,7 @@ namespace FluffyPaw_Domain.Interfaces
         public IGenericRepository<VaccineHistory> VaccineHistoryRepository { get; }
         public IGenericRepository<Voucher> VoucherRepository { get; }
         public IGenericRepository<Wallet> WalletRepository { get; }
+        public IGenericRepository<Transaction> TransactionRepository { get; }
         void Save();
         Task SaveAsync();
         void Dispose();
