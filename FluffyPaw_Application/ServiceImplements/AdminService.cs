@@ -92,7 +92,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<SerResponse>> GetAllServiceFalse()
         {
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType").ToList();
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
 
             if (services == null)
             {
