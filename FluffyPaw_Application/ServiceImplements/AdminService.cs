@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
+using FluffyPaw_Application.DTO.Response.NotificationResponse;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -208,6 +209,25 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.Save();
 
             return user.Reputation;
+        }
+
+        public async Task<IEnumerable<NotificationResponse>> GetWithdrawRequest()
+        {
+            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("WithDraw Request"));
+            if (!list.Any()) throw new CustomException.DataNotFoundException("Không có yêu cầu rút tiền nào");
+
+            return _mapper.Map<IEnumerable<NotificationResponse>>(list);
+        }
+
+        public async Task<bool> CheckoutWithdrawRequest(long id)
+        {
+            var request = _unitOfWork.NotificationRepository.GetByID(id);
+            if (request == null) throw new CustomException.DataNotFoundException("Không tìm thấy yêu cầu.");
+
+            request.Status = "Complete";
+            await _unitOfWork.SaveAsync();
+
+            return true;
         }
     }
 }

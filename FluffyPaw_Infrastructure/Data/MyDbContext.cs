@@ -48,6 +48,8 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
 
+        public DbSet<Transaction> Transactions { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

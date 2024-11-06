@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.NotificationRequest;
+using FluffyPaw_Application.DTO.Request.TransactionRequest;
 using FluffyPaw_Application.DTO.Request.WalletRequest;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
@@ -21,16 +22,14 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
-        private readonly INotificationService _notificationService;
 
-        public WalletService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration, INotificationService notificationService)
+        public WalletService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IHttpContextAccessor httpContextAccessor, IFirebaseConfiguration firebaseConfiguration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authentication = authentication;
             _httpContextAccessor = httpContextAccessor;
             _firebaseConfiguration = firebaseConfiguration;
-            _notificationService = notificationService;
         }
 
         public async Task<double> DepositMoney(double amount)
@@ -113,14 +112,6 @@ namespace FluffyPaw_Application.ServiceImplements
             if (wallet.Balance < amount) throw new CustomException.InvalidDataException("Số dư của bạn không đủ.");
             wallet.Balance -= amount;
             await _unitOfWork.SaveAsync();
-
-            await _notificationService.CreateNotification(new NotificationRequest
-            {
-                Name = "Rút tiền",
-                Type = "Deposit Request",
-                ReceiverId = 1,
-                Description = $"Tài khoản {wallet.Account.Username} muốn rút {amount} về số tài khoản {wallet.Number} của ngân hàng {wallet.BankName}."
-            });
 
             return wallet.Balance;
         }
