@@ -127,5 +127,21 @@ namespace FluffyPaw_API.Controllers.Authentication
             if (po == "Ban") return CustomResult("Tài khoản đã bị khóa.");
             return CustomResult($"Uy tín hiện tại của account id {id} là {po}");
         }
+
+        [HttpGet("GetWithdrawRequest")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetWithdrawRequest()
+        {
+            var requests = await _adminService.GetWithdrawRequest();
+            return CustomResult("Tải dữ liệu thành công.", requests);
+        }
+
+        [HttpPatch("CheckoutWithdrawRequest/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CheckoutWithdrawRequest(long id)
+        {
+            var result = await _adminService.CheckoutWithdrawRequest(id);
+            return CustomResult(result);
+        }
     }
 }

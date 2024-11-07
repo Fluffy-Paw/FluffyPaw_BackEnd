@@ -10,15 +10,21 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.NotificationResponse
 {
-    public class NotificationResponse : IMapFrom<Notification>
+    public class WithdrawNotificationResponse : IMapFrom<Notification>
     {
         public long Id { get; set; }
 
-        public string Description { get; set; }
+        public string SenderName { get; set; }
+
+        public double amount { get; set; }
 
         public DateTimeOffset CreateDate { get; set; }
 
-        public bool IsSeen { get; set; }
+        public string bankName { get; set; }
+
+        public string number { get; set; }
+
+        public string? qr {  get; set; }
 
         public string Status { get; set; }
 

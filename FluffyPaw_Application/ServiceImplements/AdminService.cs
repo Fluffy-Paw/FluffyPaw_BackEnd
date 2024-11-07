@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
+using FluffyPaw_Application.DTO.Response.NotificationResponse;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -208,6 +209,40 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.Save();
 
             return user.Reputation;
+        }
+
+        public async Task<List<WithdrawNotificationResponse>> GetWithdrawRequest()
+        {
+            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("WithDraw Request")).ToList();
+            if (!list.Any()) throw new CustomException.DataNotFoundException("Không có yêu cầu rút tiền nào");
+
+            List<WithdrawNotificationResponse> result = new List<WithdrawNotificationResponse>();
+            foreach (var item in list)
+            {
+                var wallet = _unitOfWork.WalletRepository.GetByID(long.Parse(item.Name));
+                var request = _mapper.Map<WithdrawNotificationResponse>(item);
+                string[] part = item.Description.Split('/');
+                request.SenderName = part[0];
+                request.amount = double.Parse(part[1]);
+                request.number = wallet.Number;
+                request.bankName = wallet.BankName;
+                request.qr = wallet.QR;
+
+                result.Add(request);
+            }
+
+            return result;
+        }
+
+        public async Task<bool> CheckoutWithdrawRequest(long id)
+        {
+            var request = _unitOfWork.NotificationRepository.GetByID(id);
+            if (request == null) throw new CustomException.DataNotFoundException("Không tìm thấy yêu cầu.");
+
+            request.Status = "Complete";
+            await _unitOfWork.SaveAsync();
+
+            return true;
         }
     }
 }

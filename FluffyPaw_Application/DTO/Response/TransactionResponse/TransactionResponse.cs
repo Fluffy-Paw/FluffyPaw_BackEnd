@@ -12,7 +12,7 @@ namespace FluffyPaw_Application.DTO.Response.TransactionResponse
     {
         public string Type { get; set; }
 
-        public double Ammount { get; set; }
+        public double Amount { get; set; }
 
         public long OrderCode { get; set; }
 

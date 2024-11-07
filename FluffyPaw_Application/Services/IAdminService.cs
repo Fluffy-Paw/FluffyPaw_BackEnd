@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
+using FluffyPaw_Application.DTO.Response.NotificationResponse;
 
 namespace FluffyPaw_Application.Services
 {
@@ -26,6 +27,8 @@ namespace FluffyPaw_Application.Services
         Task<bool> AcceptStore(long id);
         Task<bool> ActiveInactiveAccount(long userId);
         Task<string> DowngradeReputation(long userId);
+        Task<List<WithdrawNotificationResponse>> GetWithdrawRequest();
+        Task<bool> CheckoutWithdrawRequest(long id);
     }
 }
     

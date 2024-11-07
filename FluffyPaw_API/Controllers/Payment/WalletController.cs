@@ -1,7 +1,10 @@
 ﻿using CoreApiResponse;
+using FluffyPaw_Application.DTO.Request.NotificationRequest;
+using FluffyPaw_Application.DTO.Request.TransactionRequest;
 using FluffyPaw_Application.DTO.Request.WalletRequest;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
+using FluffyPaw_Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +15,14 @@ namespace FluffyPaw_API.Controllers.Payment
     public class WalletController : BaseController
     {
         private readonly IWalletService _walletService;
+        private readonly ITransactionService _transactionService;
+        private readonly INotificationService _notificationService;
 
-        public WalletController(IWalletService paymentService)
+        public WalletController(IWalletService paymentService, ITransactionService transactionService, INotificationService notificationService)
         {
             _walletService = paymentService;
+            _transactionService = transactionService;
+            _notificationService = notificationService;
         }
 
         [HttpGet("ViewWallet")]
@@ -44,9 +51,27 @@ namespace FluffyPaw_API.Controllers.Payment
 
         [HttpPatch("WithdrawMoney")]
         [Authorize]
-        public async Task<IActionResult> WithdrawMoney(double amount)
+        public async Task<IActionResult> WithdrawMoney([FromBody]double amount)
         {
+            var wallet = await _walletService.ViewWallet();
             var result = await _walletService.WithdrawMoney(amount);
+
+            await _transactionService.AddTransactions(new TransactionRequest
+            {
+                OrderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff")),
+                Amount = amount,
+                Type = "Rút Tiền",
+                WalletId = wallet.Id
+            });
+
+            await _notificationService.CreateNotification(new NotificationRequest
+            {
+                Name = wallet.Id.ToString(),
+                Type = "WithDraw Request",
+                ReceiverId = 1,
+                Description = $"{wallet.Account.Username}/{amount}"
+            });
+
             return CustomResult("Rút tiền thành công, tiền sẽ chuyển vào ngân hàng của bạn trong vòng 1 ngày. Số dư mới: ", result);
         }
 
