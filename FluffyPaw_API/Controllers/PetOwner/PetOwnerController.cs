@@ -52,6 +52,30 @@ namespace FluffyPaw_API.Controllers.PetOwner
             return CustomResult("Tải dữ liệu thành công.", stores);
         }
 
+        [HttpGet("GetStoreServiceById/{id}")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetStoreServiceById(long id)
+        {
+            var storeSerResponse = await _petOwnerService.GetStoreServiceById(id);
+            return CustomResult("Tải dữ liệu thành công.", storeSerResponse);
+        }
+
+        [HttpGet("SuggestionSameTimeAndBrand/{id}")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> SuggestionSameTimeAndBrand(long id)
+        {
+            var storeSerResponses = await _petOwnerService.SuggestionSameTimeAndBrand(id);
+            return CustomResult("Tải dữ liệu thành công.", storeSerResponses);
+        }
+
+        [HttpGet("SuggestionSameTime/{id}")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> SuggestionSameTime(long id)
+        {
+            var storeSerResponses = await _petOwnerService.SuggestionSameTime(id);
+            return CustomResult("Tải dữ liệu thành công.", storeSerResponses);
+        }
+
         [HttpGet("GetStoreById/{id}")]
         [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetStoreById(long id)
