@@ -27,7 +27,7 @@ namespace FluffyPaw_Application.Services
         Task<bool> AcceptStore(long id);
         Task<bool> ActiveInactiveAccount(long userId);
         Task<string> DowngradeReputation(long userId);
-        Task<IEnumerable<NotificationResponse>> GetWithdrawRequest();
+        Task<List<WithdrawNotificationResponse>> GetWithdrawRequest();
         Task<bool> CheckoutWithdrawRequest(long id);
     }
 }

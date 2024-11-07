@@ -51,7 +51,7 @@ namespace FluffyPaw_API.Controllers.Payment
 
         [HttpPatch("WithdrawMoney")]
         [Authorize]
-        public async Task<IActionResult> WithdrawMoney(double amount)
+        public async Task<IActionResult> WithdrawMoney([FromBody]double amount)
         {
             var wallet = await _walletService.ViewWallet();
             var result = await _walletService.WithdrawMoney(amount);
@@ -66,10 +66,10 @@ namespace FluffyPaw_API.Controllers.Payment
 
             await _notificationService.CreateNotification(new NotificationRequest
             {
-                Name = "Rút tiền",
+                Name = wallet.Id.ToString(),
                 Type = "WithDraw Request",
                 ReceiverId = 1,
-                Description = $"Tài khoản {wallet.Account.Username} muốn rút {amount} về số tài khoản {wallet.Number} của ngân hàng {wallet.BankName}."
+                Description = $"{wallet.Account.Username}/{amount}"
             });
 
             return CustomResult("Rút tiền thành công, tiền sẽ chuyển vào ngân hàng của bạn trong vòng 1 ngày. Số dư mới: ", result);

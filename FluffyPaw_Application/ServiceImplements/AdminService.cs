@@ -211,12 +211,27 @@ namespace FluffyPaw_Application.ServiceImplements
             return user.Reputation;
         }
 
-        public async Task<IEnumerable<NotificationResponse>> GetWithdrawRequest()
+        public async Task<List<WithdrawNotificationResponse>> GetWithdrawRequest()
         {
-            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("WithDraw Request"));
+            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("WithDraw Request")).ToList();
             if (!list.Any()) throw new CustomException.DataNotFoundException("Không có yêu cầu rút tiền nào");
 
-            return _mapper.Map<IEnumerable<NotificationResponse>>(list);
+            List<WithdrawNotificationResponse> result = new List<WithdrawNotificationResponse>();
+            foreach (var item in list)
+            {
+                var wallet = _unitOfWork.WalletRepository.GetByID(long.Parse(item.Name));
+                var request = _mapper.Map<WithdrawNotificationResponse>(item);
+                string[] part = item.Description.Split('/');
+                request.SenderName = part[0];
+                request.amount = double.Parse(part[1]);
+                request.number = wallet.Number;
+                request.bankName = wallet.BankName;
+                request.qr = wallet.QR;
+
+                result.Add(request);
+            }
+
+            return result;
         }
 
         public async Task<bool> CheckoutWithdrawRequest(long id)
