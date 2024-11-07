@@ -148,6 +148,48 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponses;
         }
 
+        public async Task<StoreSerResponse> GetStoreServiceById(long id)
+        {
+            var storeService = _unitOfWork.StoreServiceRepository.GetByID(id);
+            if (storeService == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy khung giờ này");
+            }
+
+            var storeServiceResponse = _mapper.Map<StoreSerResponse>(storeService);
+            return storeServiceResponse;
+        }
+
+        public async Task<List<StoreSerResponse>> SuggestionSameTimeAndBrand(long id)
+        {
+            var storeServiceFull = _unitOfWork.StoreServiceRepository.Get(bst => bst.Id == id,
+                                                        includeProperties: "Store,Service,Service.ServiceType").FirstOrDefault();
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime == storeServiceFull.StartTime
+                                                    && ss.Service.ServiceType.Name == storeServiceFull.Service.ServiceType.Name
+                                                    && ss.Store.BrandId == storeServiceFull.Store.BrandId
+                                                    && ss.Status == StoreServiceStatus.Available.ToString()).ToList();
+            storeServices.Remove(storeServiceFull);
+
+            var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
+            return storeSerResponses;
+        }
+
+        public async Task<List<StoreSerResponse>> SuggestionSameTime(long id)
+        {
+            var storeServiceFull = _unitOfWork.StoreServiceRepository.Get(bst => bst.Id == id,
+                                                        includeProperties: "Store,Service,Service.ServiceType").FirstOrDefault();
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime == storeServiceFull.StartTime
+                                                    && ss.Service.ServiceType.Name == storeServiceFull.Service.ServiceType.Name
+                                                    && ss.Store.BrandId != storeServiceFull.Store.BrandId
+                                                    && ss.Status == StoreServiceStatus.Available.ToString()).ToList();
+            storeServices.Remove(storeServiceFull);
+
+            var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
+            return storeSerResponses;
+        }
+
         public async Task<List<StoreResponse>> GetStoreById(long id)
         {
             var stores = _unitOfWork.StoreRepository.Get(s => s.Id == id, includeProperties: "Brand").ToList();
