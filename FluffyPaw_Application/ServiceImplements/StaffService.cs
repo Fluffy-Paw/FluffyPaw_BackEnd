@@ -438,9 +438,6 @@ namespace FluffyPaw_Application.ServiceImplements
             pendingBooking.Status = BookingStatus.Accepted.ToString();
             _unitOfWork.Save();
 
-            //Handle xử lý thanh toán
-
-            //
             var pet = _unitOfWork.PetRepository.GetByID(pendingBooking.PetId);
 
             var poAccountId = pet.PetOwner.AccountId;
