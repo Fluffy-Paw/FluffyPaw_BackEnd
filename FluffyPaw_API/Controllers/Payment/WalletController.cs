@@ -49,9 +49,9 @@ namespace FluffyPaw_API.Controllers.Payment
             return CustomResult("Cập nhật thông tin ngân hàng thành công.", result);
         }
 
-        [HttpPatch("WithdrawMoney")]
+        [HttpPatch("WithdrawMoney/{amount}")]
         [Authorize]
-        public async Task<IActionResult> WithdrawMoney([FromBody]double amount)
+        public async Task<IActionResult> WithdrawMoney(double amount)
         {
             var wallet = await _walletService.ViewWallet();
             var result = await _walletService.WithdrawMoney(amount);
@@ -75,7 +75,7 @@ namespace FluffyPaw_API.Controllers.Payment
             return CustomResult("Rút tiền thành công, tiền sẽ chuyển vào ngân hàng của bạn trong vòng 1 ngày. Số dư mới: ", result);
         }
 
-        [HttpPatch("DepositMoney")]
+        [HttpPatch("DepositMoney/{amount}")]
         [Authorize]
         public async Task<IActionResult> DepositMoney(double amount)
         {
