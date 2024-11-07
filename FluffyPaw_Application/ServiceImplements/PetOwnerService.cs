@@ -163,7 +163,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<List<StoreSerResponse>> SuggestionSameTimeAndBrand(long id)
         {
             var storeServiceFull = _unitOfWork.StoreServiceRepository.Get(bst => bst.Id == id,
-                                                        includeProperties: "Store,Service,Service.ServiceTye").FirstOrDefault();
+                                                        includeProperties: "Store,Service,Service.ServiceType").FirstOrDefault();
 
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime == storeServiceFull.StartTime
                                                     && ss.Service.ServiceType.Name == storeServiceFull.Service.ServiceType.Name
@@ -178,7 +178,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<List<StoreSerResponse>> SuggestionSameTime(long id)
         {
             var storeServiceFull = _unitOfWork.StoreServiceRepository.Get(bst => bst.Id == id,
-                                                        includeProperties: "Store").FirstOrDefault();
+                                                        includeProperties: "Store,Service,Service.ServiceType").FirstOrDefault();
 
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime == storeServiceFull.StartTime
                                                     && ss.Service.ServiceType.Name == storeServiceFull.Service.ServiceType.Name
