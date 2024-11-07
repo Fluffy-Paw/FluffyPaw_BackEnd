@@ -182,6 +182,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime == storeServiceFull.StartTime
                                                     && ss.Service.ServiceType.Name == storeServiceFull.Service.ServiceType.Name
+                                                    && ss.Store.BrandId != storeServiceFull.Store.BrandId
                                                     && ss.Status == StoreServiceStatus.Available.ToString()).ToList();
             storeServices.Remove(storeServiceFull);
 
