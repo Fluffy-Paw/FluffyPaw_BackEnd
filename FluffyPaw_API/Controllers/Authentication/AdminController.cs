@@ -1,6 +1,7 @@
 ﻿using CoreApiResponse;
 using FluffyPaw_Application.DTO.Request.AdminRequest;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
+using FluffyPaw_Application.DTO.Request.WalletRequest;
 using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
@@ -141,6 +142,14 @@ namespace FluffyPaw_API.Controllers.Authentication
         public async Task<IActionResult> CheckoutWithdrawRequest(long id)
         {
             var result = await _adminService.CheckoutWithdrawRequest(id);
+            return CustomResult(result);
+        }
+
+        [HttpPost("DenyWithdrawRequest")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DenyWithdrawRequest([FromBody]DenyWithdrawRequest denyWithdrawRequest)
+        {
+            var result = await _adminService.DenyWithdrawRequest(denyWithdrawRequest);
             return CustomResult(result);
         }
     }
