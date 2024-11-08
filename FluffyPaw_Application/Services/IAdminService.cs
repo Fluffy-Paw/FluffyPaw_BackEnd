@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.NotificationResponse;
+using FluffyPaw_Application.DTO.Request.WalletRequest;
 
 namespace FluffyPaw_Application.Services
 {
@@ -29,6 +30,7 @@ namespace FluffyPaw_Application.Services
         Task<string> DowngradeReputation(long userId);
         Task<List<WithdrawNotificationResponse>> GetWithdrawRequest();
         Task<bool> CheckoutWithdrawRequest(long id);
+        Task<bool> DenyWithdrawRequest(DenyWithdrawRequest denyWithdrawRequest);
     }
 }
     
