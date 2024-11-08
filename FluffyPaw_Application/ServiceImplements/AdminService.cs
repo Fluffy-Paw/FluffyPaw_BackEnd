@@ -16,6 +16,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.NotificationResponse;
+using FluffyPaw_Application.DTO.Request.NotificationRequest;
+using FluffyPaw_Application.DTO.Request.WalletRequest;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -24,12 +26,15 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHashing _hashing;
+        private readonly INotificationService _notificationService;
+        private readonly IWalletService _walletService;
 
-        public AdminService(IUnitOfWork unitOfWork, IMapper mapper, IHashing hashing)
+        public AdminService(IUnitOfWork unitOfWork, IMapper mapper, IHashing hashing, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _hashing = hashing;
+            _notificationService = notificationService;
         }
 
         public async Task<bool> CreateAdmin(AdminRequest adminRequest)
@@ -213,7 +218,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<WithdrawNotificationResponse>> GetWithdrawRequest()
         {
-            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("WithDraw Request")).ToList();
+            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("WithDraw Request") && n.ReceiverId == 1).ToList();
             if (!list.Any()) throw new CustomException.DataNotFoundException("Không có yêu cầu rút tiền nào");
 
             List<WithdrawNotificationResponse> result = new List<WithdrawNotificationResponse>();
@@ -239,7 +244,35 @@ namespace FluffyPaw_Application.ServiceImplements
             var request = _unitOfWork.NotificationRepository.GetByID(id);
             if (request == null) throw new CustomException.DataNotFoundException("Không tìm thấy yêu cầu.");
 
-            request.Status = "Complete";
+            request.Status = "Completed";
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
+        public async Task<bool> DenyWithdrawRequest(DenyWithdrawRequest denyWithdrawRequest)
+        {
+            var request = _unitOfWork.NotificationRepository.GetByID(denyWithdrawRequest.Id);
+            if (request == null) throw new CustomException.DataNotFoundException("Không tìm thấy yêu cầu.");
+
+            string[] part = request.Description.Split('/');
+
+            var user = _unitOfWork.AccountRepository.Get(u => u.Username.Equals(part[0])).FirstOrDefault();
+            if (user == null) throw new CustomException.DataNotFoundException($"Không tìm thấy tài khoản.");
+
+            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId.Equals(user.Id)).FirstOrDefault();
+
+            await _notificationService.CreateNotification(new NotificationRequest
+            {
+                Name = user.Username,
+                ReceiverId = user.Id,
+                Type = "Withdraw Request",
+                Description = denyWithdrawRequest.Description
+            });
+
+            request.Status = "Denied";
+            
+            wallet.Balance += double.Parse(part[1]);
+
             await _unitOfWork.SaveAsync();
 
             return true;
