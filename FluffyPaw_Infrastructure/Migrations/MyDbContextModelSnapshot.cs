@@ -64,7 +64,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 1L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8747), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7367), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176",
                             RoleName = "Admin",
@@ -75,7 +75,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 2L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8759), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7393), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "StoreManager",
@@ -86,7 +86,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 3L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8762), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7399), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "StoreManager",
@@ -97,7 +97,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 4L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8765), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7404), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "Staff",
@@ -108,7 +108,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 5L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8768), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7412), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "Staff",
@@ -119,7 +119,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 6L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8770), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7417), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "PetOwner",
@@ -130,7 +130,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 7L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8773), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7422), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "PetOwner",
@@ -141,7 +141,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 8L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8776), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7427), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "Staff",
@@ -152,7 +152,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 9L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(8780), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(7432), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
                             RoleName = "Staff",
@@ -273,14 +273,14 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Id = 1L,
                             CheckOut = false,
                             Checkin = false,
-                            CheckinTime = new DateTimeOffset(new DateTime(2024, 11, 9, 17, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9702), new TimeSpan(0, 7, 0, 0, 0)),
+                            CheckinTime = new DateTimeOffset(new DateTime(2024, 11, 9, 19, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9632), new TimeSpan(0, 7, 0, 0, 0)),
                             Cost = 100000.0,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9704), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9644), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "test",
-                            EndTime = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9706), new TimeSpan(0, 7, 0, 0, 0)),
+                            EndTime = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9650), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethod = "PayOS",
                             PetId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9705), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9648), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Accepted",
                             StoreServiceId = 1L
                         });
@@ -482,14 +482,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                             File = "test",
                             Name = "Certificate of Excellence in Pet Hotel",
                             ServiceId = 3L
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Certificate of Excellence in Pet Training",
-                            ServiceId = 4L
                         });
                 });
 
@@ -853,8 +845,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 1L,
                             AccountId = 6L,
-                            Address = "test",
-                            Dob = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9089), new TimeSpan(0, 7, 0, 0, 0)),
+                            Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam",
+                            Dob = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(8102), new TimeSpan(0, 7, 0, 0, 0)),
                             FullName = "Test",
                             Gender = "Male",
                             Phone = "1234567890",
@@ -864,8 +856,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 2L,
                             AccountId = 7L,
-                            Address = "test",
-                            Dob = new DateTimeOffset(new DateTime(2024, 11, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9092), new TimeSpan(0, 7, 0, 0, 0)),
+                            Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam",
+                            Dob = new DateTimeOffset(new DateTime(2024, 11, 10, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(8111), new TimeSpan(0, 7, 0, 0, 0)),
                             FullName = "Test",
                             Gender = "Male",
                             Phone = "0123456789",
@@ -1193,7 +1185,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 9, 17, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9061), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 11, 9, 19, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(8042), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "None",
                             ReportCategoryId = 9L,
                             SenderId = 7L,
@@ -1386,24 +1378,10 @@ namespace FluffyPaw_Infrastructure.Migrations
                             BrandId = 2L,
                             Cost = 100000.0,
                             Description = "test",
-                            Duration = new TimeSpan(0, 23, 59, 0, 0),
+                            Duration = new TimeSpan(0, 23, 0, 0, 0),
                             Image = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687",
                             Name = "Hotel for your Boss",
                             ServiceTypeId = 3L,
-                            Status = true,
-                            TotalRating = 0f
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            BookingCount = 0,
-                            BrandId = 2L,
-                            Cost = 500000.0,
-                            Description = "test",
-                            Duration = new TimeSpan(0, 1, 30, 0, 0),
-                            Image = "https://vcdn1-english.vnecdn.net/2021/11/05/z2893300584650-ad86419a6f7874b-6822-8198-1636082644.jpg?w=680&h=0&q=100&dpr=2&fit=crop&s=6F3t0DSkxIaWZRW5zGXZ5g",
-                            Name = "Training",
-                            ServiceTypeId = 4L,
                             Status = true,
                             TotalRating = 0f
                         });
@@ -1440,11 +1418,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 3L,
                             Name = "Hotel"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Name = "Training"
                         });
                 });
 
@@ -1493,45 +1466,45 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 1L,
                             AccountId = 4L,
-                            Address = "số AAA đường AA, Thành phố A",
+                            Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam",
                             BrandId = 1L,
                             Name = "Chi nhánh A",
                             Phone = "0123456789",
                             Status = true,
-                            TotalRating = 0f
+                            TotalRating = 5f
                         },
                         new
                         {
                             Id = 2L,
                             AccountId = 5L,
-                            Address = "số BBB đường BB, Thành phố B",
+                            Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam",
                             BrandId = 1L,
                             Name = "Chi nhánh B",
                             Phone = "0123456789",
                             Status = true,
-                            TotalRating = 0f
+                            TotalRating = 4f
                         },
                         new
                         {
                             Id = 3L,
                             AccountId = 8L,
-                            Address = "số CCC đường CC, Thành phố C",
+                            Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam",
                             BrandId = 2L,
                             Name = "Chi nhánh C",
                             Phone = "0123456789",
                             Status = true,
-                            TotalRating = 0f
+                            TotalRating = 3f
                         },
                         new
                         {
                             Id = 4L,
                             AccountId = 9L,
-                            Address = "số DDD đường DD, Thành phố d",
+                            Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam",
                             BrandId = 2L,
                             Name = "Chi nhánh D",
                             Phone = "0123456789",
                             Status = true,
-                            TotalRating = 0f
+                            TotalRating = 3f
                         });
                 });
 
@@ -1600,7 +1573,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9562), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9357), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 1L
                         },
@@ -1610,7 +1583,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 3, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9568), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 5, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9373), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 1L
                         },
@@ -1620,7 +1593,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 7, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9572), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 9, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9379), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 1L
                         },
@@ -1628,9 +1601,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 4L,
                             CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
+                            LimitPetOwner = 50,
                             ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 11, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9575), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9385), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 2L
                         },
@@ -1638,9 +1611,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 5L,
                             CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
+                            LimitPetOwner = 50,
                             ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 11, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9578), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9391), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 2L
                         },
@@ -1648,9 +1621,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 6L,
                             CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
+                            LimitPetOwner = 50,
                             ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 12, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9582), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9398), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 2L
                         },
@@ -1658,9 +1631,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 7L,
                             CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
+                            LimitPetOwner = 50,
                             ServiceId = 2L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9585), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9403), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1668,9 +1641,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 8L,
                             CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
+                            LimitPetOwner = 50,
                             ServiceId = 2L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9588), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9410), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1678,9 +1651,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 9L,
                             CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
+                            LimitPetOwner = 50,
                             ServiceId = 2L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9592), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 20, 2, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9416), new TimeSpan(0, 7, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1688,9 +1661,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 10L,
                             CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
+                            LimitPetOwner = 0,
                             ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9595), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 25, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1700,7 +1673,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9598), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 26, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1710,7 +1683,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 11, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9601), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 27, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1720,7 +1693,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 12, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9604), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 28, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1730,7 +1703,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 13, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9607), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 29, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1740,7 +1713,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9611), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 30, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1750,7 +1723,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
                             ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 15, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9614), new TimeSpan(0, 7, 0, 0, 0)),
+                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 1, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 3L
                         },
@@ -1759,8 +1732,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Id = 17L,
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
-                            ServiceId = 4L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 10, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9617), new TimeSpan(0, 7, 0, 0, 0)),
+                            ServiceId = 3L,
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 25, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 4L
                         },
@@ -1769,8 +1742,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Id = 18L,
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
-                            ServiceId = 4L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 11, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9620), new TimeSpan(0, 7, 0, 0, 0)),
+                            ServiceId = 3L,
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 26, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 4L
                         },
@@ -1779,8 +1752,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Id = 19L,
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
-                            ServiceId = 4L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 12, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9662), new TimeSpan(0, 7, 0, 0, 0)),
+                            ServiceId = 3L,
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 27, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 4L
                         },
@@ -1789,8 +1762,8 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Id = 20L,
                             CurrentPetOwner = 0,
                             LimitPetOwner = 100,
-                            ServiceId = 4L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 13, 0, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9665), new TimeSpan(0, 7, 0, 0, 0)),
+                            ServiceId = 3L,
+                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 28, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Status = "Available",
                             StoreId = 4L
                         });
@@ -1829,7 +1802,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             BookingId = 1L,
                             Description = "test",
                             Status = true,
-                            UploadDate = new DateTimeOffset(new DateTime(2024, 11, 9, 17, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9743), new TimeSpan(0, 7, 0, 0, 0))
+                            UploadDate = new DateTimeOffset(new DateTime(2024, 11, 9, 19, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(9755), new TimeSpan(0, 7, 0, 0, 0))
                         });
                 });
 
@@ -1952,7 +1925,7 @@ namespace FluffyPaw_Infrastructure.Migrations
                             Description = "Vaccine test",
                             Image = "none",
                             Name = "Vaccine 2",
-                            NextVaccineDate = new DateTimeOffset(new DateTime(2024, 11, 9, 17, 51, 19, 43, DateTimeKind.Unspecified).AddTicks(9401), new TimeSpan(0, 7, 0, 0, 0)),
+                            NextVaccineDate = new DateTimeOffset(new DateTime(2024, 11, 9, 19, 9, 8, 657, DateTimeKind.Unspecified).AddTicks(8977), new TimeSpan(0, 7, 0, 0, 0)),
                             PetCurrentWeight = 4f,
                             PetId = 2L,
                             Status = "Complete",
@@ -2036,25 +2009,13 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 4L,
                             AccountId = 6L,
-                            Balance = 100.0
+                            Balance = 100000000000.0
                         },
                         new
                         {
                             Id = 5L,
                             AccountId = 7L,
-                            Balance = 100.0
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            AccountId = 8L,
-                            Balance = 100.0
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            AccountId = 9L,
-                            Balance = 100.0
+                            Balance = 100000000000.0
                         });
                 });
 
