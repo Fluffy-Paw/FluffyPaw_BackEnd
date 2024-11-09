@@ -59,7 +59,7 @@ namespace FluffyPaw_Application.ServiceImplements
                         OrderCode = orderCode,
                         Type = "Nạp tiền",
                         Amount = paymentLinkInformation.amount,
-                        WalletId = wallet.Id,
+                        WalletId = wallet.Id
                     };
                     await _transactionService.AddTransactions(newTransaction);
                     await _walletService.DepositMoney(paymentLinkInformation.amount);

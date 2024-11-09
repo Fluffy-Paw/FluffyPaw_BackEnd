@@ -48,7 +48,8 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<IEnumerable<TransactionResponse>> GetTransactions()
         {
             var wallet = await _walletService.ViewWallet();
-            var list = _unitOfWork.TransactionRepository.Get(w => w.WalletId.Equals(wallet.Id));
+            var list = _unitOfWork.TransactionRepository.Get(w => w.WalletId.Equals(wallet.Id),
+                                                             orderBy: ob => ob.OrderByDescending(o => o.CreateTime));
             if (!list.Any()) throw new CustomException.DataNotFoundException("Không có lịch sử giao dịch.");
 
             return _mapper.Map<IEnumerable<TransactionResponse>>(list);
