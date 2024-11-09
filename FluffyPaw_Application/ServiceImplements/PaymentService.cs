@@ -12,6 +12,7 @@ using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Application.DTO.Request.TransactionRequest;
+using FluffyPaw_Application.DTO.Response.PaymentResponse;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -74,7 +75,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
         }
 
-        public async Task<string> CreateDepositRequest(CreatePaymentRequest createPaymentRequest)
+        public async Task<CreateDepositResponse> CreateDepositRequest(CreatePaymentRequest createPaymentRequest)
         {
             if (createPaymentRequest.Amount < 2000) throw new CustomException.InvalidDataException("Bạn phải nạp tối thiểu 2000 VND.");
             int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
@@ -98,7 +99,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
-            return createPayment.checkoutUrl;
+
+            return new CreateDepositResponse{ checkoutUrl = createPayment.checkoutUrl, orderCode = orderCode };
         }
 
         public async Task<bool> PayBooking(string serviceName, double amount)
