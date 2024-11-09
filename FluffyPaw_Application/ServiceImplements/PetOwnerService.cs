@@ -235,6 +235,40 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeSerResponses;
         }
 
+        public async Task<List<BookingResponse>> GetAllBooking()
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id);
+            if (!pets.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
+            }
+
+            var bookingResponses = new List<BookingResponse>();
+            foreach (var pet in pets)
+            {
+                
+                if (pet.PetOwnerId != po.Id)
+                {
+                    throw new CustomException.InvalidDataException("Thú cưng không thuộc quyền quản lý của bạn.");
+                }
+
+                var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id,
+                                                includeProperties: "StoreService,StoreService.Store,StoreService.Service");
+                if (!bookings.Any())
+                {
+                    throw new CustomException.DataNotFoundException("Thú cưng này hiện chưa có lịch nào");
+                }
+
+                var mappedBookings = _mapper.Map<List<BookingResponse>>(bookings);
+                bookingResponses.AddRange(mappedBookings);
+            }
+
+            return bookingResponses;
+        }
+
         public async Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);

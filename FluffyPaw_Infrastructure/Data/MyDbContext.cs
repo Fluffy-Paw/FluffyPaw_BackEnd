@@ -189,7 +189,7 @@ namespace FluffyPaw_Infrastructure.Data
             modelBuilder.Entity<Store>().HasData(
                 new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Chi nhánh A", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 5f, Status = true},
                 new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Chi nhánh B", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 4f, Status = true},
-                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true}
+                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true},
                 new Store { Id = 4, BrandId = 2, AccountId = 9, Name = "Chi nhánh D", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true}
                 );
 
@@ -210,15 +210,15 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<StoreService>().HasData(
-                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 2, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(10), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 3, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(14), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 4, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(31).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 5, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(31).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 6, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(32).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 7, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 8, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 9, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(30).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 2, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(10), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 3, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(14), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 4, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 5, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 6, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 7, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 8, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 9, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 10, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 25, 12, 0, 0, TimeSpan.Zero), CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 11, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 26, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 12, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 27, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
