@@ -61,7 +61,9 @@ namespace FluffyPaw_API.Controllers.Payment
                 OrderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff")),
                 Amount = amount,
                 Type = "Rút Tiền",
-                WalletId = wallet.Id
+                WalletId = wallet.Id,
+                BankName = wallet.BankName,
+                BankNumber = wallet.Number
             });
 
             await _notificationService.CreateNotification(new NotificationRequest
