@@ -12,6 +12,10 @@ namespace FluffyPaw_Application.DTO.Response.TransactionResponse
     {
         public string Type { get; set; }
 
+        public string? BankName { get; set; }
+
+        public string? BankNumber { get; set; }
+
         public double Amount { get; set; }
 
         public long OrderCode { get; set; }
