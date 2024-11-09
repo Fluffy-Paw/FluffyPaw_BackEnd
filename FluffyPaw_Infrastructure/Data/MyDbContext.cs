@@ -83,10 +83,8 @@ namespace FluffyPaw_Infrastructure.Data
                 new Wallet { Id = 1, AccountId = 1, Balance = 1000000 },
                 new Wallet { Id = 2, AccountId = 2, Balance = 0 },
                 new Wallet { Id = 3, AccountId = 3, Balance = 0 },
-                new Wallet { Id = 4, AccountId = 6, Balance = 100 },
-                new Wallet { Id = 5, AccountId = 7, Balance = 100 },
-                new Wallet { Id = 6, AccountId = 8, Balance = 100 },
-                new Wallet { Id = 7, AccountId = 9, Balance = 100 }
+                new Wallet { Id = 4, AccountId = 6, Balance = 100000000000 },
+                new Wallet { Id = 5, AccountId = 7, Balance = 100000000000 }
                 );
 
             modelBuilder.Entity<BehaviorCategory>().HasData(
@@ -119,8 +117,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(
-                new PetOwner { Id = 1, AccountId = 6, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow.AddHours(7), Phone = "1234567890", Address = "test", Reputation = "Good" },
-                new PetOwner { Id = 2, AccountId = 7, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow.AddHours(7), Phone = "0123456789", Address = "test", Reputation = "Good" }
+                new PetOwner { Id = 1, AccountId = 6, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow.AddHours(7), Phone = "1234567890", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
+                new PetOwner { Id = 2, AccountId = 7, FullName = "Test", Gender = "Male", Dob = CoreHelper.SystemTimeNow.AddHours(7), Phone = "0123456789", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" }
                 );
 
             modelBuilder.Entity<PetCategory>().HasData(
@@ -190,10 +188,10 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Store>().HasData(
-                new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Chi nhánh A", Address = "số AAA đường AA, Thành phố A", Phone = "0123456789", TotalRating = 0f, Status = true},
-                new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Chi nhánh B", Address = "số BBB đường BB, Thành phố B", Phone = "0123456789", TotalRating = 0f, Status = true},
-                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", Address = "số CCC đường CC, Thành phố C", Phone = "0123456789", TotalRating = 0f, Status = true},
-                new Store { Id = 4, BrandId = 2, AccountId = 9, Name = "Chi nhánh D", Address = "số DDD đường DD, Thành phố d", Phone = "0123456789", TotalRating = 0f, Status = true}
+                new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Chi nhánh A", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 5f, Status = true},
+                new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Chi nhánh B", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 4f, Status = true},
+                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true},
+                new Store { Id = 4, BrandId = 2, AccountId = 9, Name = "Chi nhánh D", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 2f, Status = true}
                 );
 
             modelBuilder.Entity<Service>().HasData(
