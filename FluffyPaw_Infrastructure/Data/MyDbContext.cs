@@ -205,8 +205,7 @@ namespace FluffyPaw_Infrastructure.Data
                 new Certificate { Id = 3, ServiceId = 2, Name = "Certificate of Excellence in Pet Vaccine", File = "test", Description = "none" },
                 new Certificate { Id = 4, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" },
                 new Certificate { Id = 5, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" },
-                new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" },
-                new Certificate { Id = 7, ServiceId = 4, Name = "Certificate of Excellence in Pet Training", File = "test", Description = "none" }
+                new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" }
                 );
 
             modelBuilder.Entity<StoreService>().HasData(
