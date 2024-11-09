@@ -16,6 +16,10 @@ namespace FluffyPaw_Domain.Entities
 
         public long WalletId { get; set; }
 
+        public string? BankName { get; set; }
+
+        public string? BankNumber { get; set; }
+
         public string Type { get; set; }
 
         public double Amount { get; set; }
