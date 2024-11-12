@@ -6,6 +6,7 @@ using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -170,6 +171,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException($"Không tìm thấy dịch vụ.");
             }
 
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == id
+                                                        && ss.Status == StoreServiceStatus.Available.ToString()).ToList();
+            if (storeServices.Any())
+            {
+                throw new CustomException.DataExistException($"Dịch vụ {existingService.Name} vẫn còn lịch trình khả dụng từ các cửa hàng.");
+            }
+
             _mapper.Map(updateServiceRequest, existingService);
             existingService.Image = await _firebaseConfiguration.UploadImage(updateServiceRequest.Image);
             existingService.Status = false;
@@ -187,6 +195,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ.");
             }
 
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == id
+                                                        && ss.Status == StoreServiceStatus.Available.ToString()).ToList();
+            if (storeServices.Any())
+            {
+                throw new CustomException.DataExistException($"Dịch vụ {service.Name} vẫn còn lịch trình khả dụng từ các cửa hàng.");
+            }
+
             service.Status = false;
 
             _unitOfWork.Save();
@@ -200,6 +215,13 @@ namespace FluffyPaw_Application.ServiceImplements
             if (service == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ.");
+            }
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == id
+                                                        && ss.Status == StoreServiceStatus.Available.ToString()).ToList();
+            if (storeServices.Any())
+            {
+                throw new CustomException.DataExistException($"Dịch vụ {service.Name} vẫn còn lịch trình khả dụng từ các cửa hàng.");
             }
 
             _unitOfWork.ServiceRepository.Delete(service);

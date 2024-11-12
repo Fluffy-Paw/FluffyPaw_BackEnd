@@ -129,7 +129,7 @@ namespace FluffyPaw_API.Controllers.PetOwner
         public async Task<IActionResult> CancelBooking(long id)
         {
             var booking = await _petOwnerService.CancelBooking(id);
-            return CustomResult("Cập nhật đặt lịch thành công.", booking);
+            return CustomResult("Hủy đặt lịch thành công.", booking);
         }
     }
 }

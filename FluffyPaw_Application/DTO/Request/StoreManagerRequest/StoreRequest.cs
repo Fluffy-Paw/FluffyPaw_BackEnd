@@ -28,6 +28,8 @@ namespace FluffyPaw_Application.DTO.Request.StoreManagerRequest
 
         public string Phone { get; set; }
 
+        public IFormFile OperatingLicense { get; set; }
+
         public List<IFormFile> File { get; set; }
     }
 }

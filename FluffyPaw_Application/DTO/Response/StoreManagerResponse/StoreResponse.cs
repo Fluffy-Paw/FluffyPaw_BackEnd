@@ -27,6 +27,8 @@ namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
 
         public string Name { get; set; }
 
+        public string OperatingLicense { get; set; }
+
         public string Address { get; set; }
 
         public string Phone { get; set; }

@@ -79,6 +79,14 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Xác thực hoàn tất.", brandService);
         }
 
+        [HttpPatch("DeniedBrandService/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeniedBrandService(long id, string description)
+        {
+            var brandService = await _adminService.DeniedBrandService(id, description);
+            return CustomResult("Từ chối hoàn tất.", brandService);
+        }
+
         [HttpGet("GetAllStoreFalse")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllStoreFalse()
@@ -101,6 +109,14 @@ namespace FluffyPaw_API.Controllers.Authentication
         {
             var store = await _adminService.AcceptStore(id);
             return CustomResult("Xác thực hoàn tất.", store);
+        }
+
+        [HttpDelete("DeniedStore/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeniedStore(long id, string description)
+        {
+            var store = await _adminService.DeniedStore(id, description);
+            return CustomResult("Từ chối hoàn tất.", store);
         }
 
         /*[HttpGet("GetAllAccount")]
