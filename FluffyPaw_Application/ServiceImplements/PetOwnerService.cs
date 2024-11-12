@@ -308,7 +308,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng hoặc thú cưng không thuộc quyền sở hữu của bạn.");
             }
 
-            var bookings = new List<Booking>();
+            var bookingResponses = new List<BookingResponse>();
 
             foreach (var petId in createBookingRequest.PetId)
             {
@@ -373,11 +373,13 @@ namespace FluffyPaw_Application.ServiceImplements
                     PaymentMethod = createBookingRequest.PaymentMethod,
                     Cost = existingStoreService.Service.Cost,
                     Description = createBookingRequest.Description,
-                    CreateDate = CoreHelper.SystemTimeNow,
+                    CreateDate = CoreHelper.SystemTimeNow.AddHours(7),
                     StartTime = existingStoreService.StartTime,
                     EndTime = existingStoreService.StartTime + existingStoreService.Service.Duration,
                     Checkin = false,
+                    CheckinTime = null,
                     CheckOut = false,
+                    CheckOutTime = null,
                     Status = BookingStatus.Pending.ToString()
                 };
                 
@@ -392,9 +394,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
 
                 _unitOfWork.BookingRepository.Insert(newBooking);
-                bookings.Add(newBooking);
                 existingStoreService.CurrentPetOwner++;
                 _unitOfWork.Save();
+
+
+                var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
+                bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
+                bookingResponses.Add(bookingResponse);
 
                 await _jobScheduler.ScheduleOverTimeRefund(newBooking);
                 await _jobScheduler.ScheduleBookingNotification(newBooking);
@@ -410,7 +416,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 await _notificationService.CreateNotification(notificationRequest);
             }
 
-            var bookingResponses = _mapper.Map<List<BookingResponse>>(bookings);
             return bookingResponses;
         }
 
@@ -511,7 +516,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 Checkin = false,
                 CheckinTime = startDate,
                 CheckOut = false,
-                CheckOutTime = endDate,
+                CheckOutTime = endDate.AddHours(-1),
                 Status = BookingStatus.Pending.ToString()
             };
 
@@ -561,7 +566,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             pendingBooking.Status = BookingStatus.Canceled.ToString();
 
-            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId).FirstOrDefault();
+            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId,
+                                                    includeProperties: "Store,Service").FirstOrDefault();
             storeService.CurrentPetOwner -= 1;
 
 
@@ -572,7 +578,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             await _unitOfWork.SaveAsync();
 
-            var storeAccountId = storeService.Store.Account.Id;
+            var storeAccountId = storeService.Store.AccountId;
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = storeAccountId,

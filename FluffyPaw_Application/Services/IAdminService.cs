@@ -23,9 +23,11 @@ namespace FluffyPaw_Application.Services
         Task<List<SerResponse>> GetAllServiceFalse();
         Task<List<SerResponse>> GetAllServiceFalseByBrandId(long id);
         Task<bool> AcceptBrandService(long id);
+        Task<bool> DeniedBrandService(long id, string description);
         Task<List<StoreResponse>> GetAllStoreFalse();
         Task<List<StoreResponse>> GetAllStoreFalseByBrandId(long id);
         Task<bool> AcceptStore(long id);
+        Task<bool> DeniedStore(long id, string description);
         Task<bool> ActiveInactiveAccount(long userId);
         Task<string> DowngradeReputation(long userId);
         Task<List<WithdrawNotificationResponse>> GetWithdrawRequest();

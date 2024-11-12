@@ -187,10 +187,10 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Store>().HasData(
-                new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Chi nhánh A", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 5f, Status = true},
-                new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Chi nhánh B", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 4f, Status = true},
-                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true},
-                new Store { Id = 4, BrandId = 2, AccountId = 9, Name = "Chi nhánh D", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true}
+                new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Chi nhánh A", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 5f, Status = true},
+                new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Chi nhánh B", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 4f, Status = true},
+                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true},
+                new Store { Id = 4, BrandId = 2, AccountId = 9, Name = "Chi nhánh D", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true}
                 );
 
             modelBuilder.Entity<Service>().HasData(
