@@ -91,16 +91,22 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> DeleteServiceType(long id)
         {
-                var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(id);
-                if (serviceType == null)
-                {
-                    throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ.");
-                }
+            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(id);
+            if (serviceType == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ.");
+            }
 
-                _unitOfWork.ServiceTypeRepository.Delete(serviceType);
-                _unitOfWork.Save();
+            var services = _unitOfWork.ServiceRepository.Get(s => s.ServiceTypeId == serviceType.Id && s.Status == true);
+            if (services.Any())
+            {
+                throw new CustomException.DataExistException($"Loại hình dịch vụ {serviceType.Name} đang được sử dụng bởi các thương hiệu.");
+            }
 
-                return true;
+            _unitOfWork.ServiceTypeRepository.Delete(serviceType);
+            _unitOfWork.Save();
+
+            return true;
         }
     }
 }
