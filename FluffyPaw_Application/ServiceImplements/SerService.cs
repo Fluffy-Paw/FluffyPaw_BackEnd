@@ -8,6 +8,7 @@ using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -196,10 +197,23 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == id
-                                                        && ss.Status == StoreServiceStatus.Available.ToString()).ToList();
+                                                        && ss.Status == StoreServiceStatus.Available.ToString(),
+                                                        includeProperties: "Store,Service").ToList();
             if (storeServices.Any())
             {
                 throw new CustomException.DataExistException($"Dịch vụ {service.Name} vẫn còn lịch trình khả dụng từ các cửa hàng.");
+            }
+
+            foreach ( var storeService in storeServices ) 
+            {
+                var bookings = _unitOfWork.BookingRepository.Get(b => b.StoreServiceId == storeService.Id
+                                                && b.Status == BookingStatus.Pending.ToString()
+                                                && b.Status == BookingStatus.Accepted.ToString()).ToList();
+                if (bookings.Any())
+                {
+                    throw new CustomException.DataExistException($"Cửa hàng {storeService.Store.Name} đang còn lịch đặt từ khách hàng" +
+                                            $" vào khung giờ {storeService.StartTime} của dịch vụ {storeService.Service.Name}.");
+                }
             }
 
             service.Status = false;
