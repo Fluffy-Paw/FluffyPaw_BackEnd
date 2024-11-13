@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Domain.Interfaces
 {
-    public interface ISignalRConfiguration
+    public interface INotificationHub
     {
-        public Task SendNotification(string message, long accountId);
+        Task SendNotification(string noti, long accountId);
     }
 }
