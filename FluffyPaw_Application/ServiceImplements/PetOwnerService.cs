@@ -572,9 +572,15 @@ namespace FluffyPaw_Application.ServiceImplements
 
 
             //Đợi thêm bussiness rule cho vde Cancel
-            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
-            wallet.Balance += pendingBooking.Cost;
-            _unitOfWork.WalletRepository.Update(wallet);
+            var currentTime = CoreHelper.SystemTimeNow;
+            var timeDifference = pendingBooking.StartTime - currentTime;
+
+            if (timeDifference > TimeSpan.FromHours(1))
+            {
+                var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
+                wallet.Balance += pendingBooking.Cost;
+                _unitOfWork.WalletRepository.Update(wallet);
+            }
 
             await _unitOfWork.SaveAsync();
 
