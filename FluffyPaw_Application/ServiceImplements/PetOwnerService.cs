@@ -575,7 +575,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var currentTime = CoreHelper.SystemTimeNow;
             var timeDifference = pendingBooking.StartTime - currentTime;
 
-            if (timeDifference > TimeSpan.FromHours(1))
+            if (timeDifference > TimeSpan.FromDays(1))
             {
                 var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
                 wallet.Balance += pendingBooking.Cost;
