@@ -77,7 +77,7 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Xóa chi nhánh thành công.");
         }
 
-        [HttpPatch("UpdateStaff")]
+        [HttpPatch("UpdateStaff/{id}")]
         [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> UpdateStaff(long id, [FromForm] UpdateStaffRequest updateStaffRequest)
         {
