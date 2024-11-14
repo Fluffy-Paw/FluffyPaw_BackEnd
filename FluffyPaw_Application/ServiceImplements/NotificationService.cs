@@ -24,11 +24,11 @@ namespace FluffyPaw_Application.ServiceImplements
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ISignalRConfiguration _notiHub;
+        private readonly INotificationHub _notiHub;
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, ISignalRConfiguration notiHub, IAuthentication authentication, IHttpContextAccessor httpContextAccessor)
+        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, INotificationHub notiHub, IAuthentication authentication, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

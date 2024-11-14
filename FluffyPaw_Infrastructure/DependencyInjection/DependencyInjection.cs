@@ -150,7 +150,7 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
         public static void AddExternalServices(this IServiceCollection services)
         {
             services.AddScoped<IFirebaseConfiguration, FirebaseConfiguration>();
-            services.AddScoped<ISignalRConfiguration, SignalRConfiguration>();
+            services.AddScoped<INotificationHub, NotificationHub>();
         }
 
         public static void AddPayOS(this IServiceCollection services, IConfiguration configuration)

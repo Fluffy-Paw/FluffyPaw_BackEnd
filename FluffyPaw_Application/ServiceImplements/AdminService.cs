@@ -130,6 +130,23 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
+        public async Task<bool> DeniedBrandService(long id, string description)
+        {
+            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == id,
+                                                includeProperties: "Brand").FirstOrDefault();
+
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = service.Brand.AccountId,
+                Name = "Đăng kí dịch vụ đã bị từ chối",
+                Type = "Service",
+                Description = description
+            };
+            await _notificationService.CreateNotification(notificationRequest);
+
+            return true;
+        }
+
         public async Task<List<StoreResponse>> GetAllStoreFalse()
         {
             var stores = _unitOfWork.StoreRepository.Get(ss => ss.Status == false, includeProperties: "Account").ToList();
@@ -161,6 +178,31 @@ namespace FluffyPaw_Application.ServiceImplements
             var store = _unitOfWork.StoreRepository.GetByID(id);
             store.Status = true;
             _unitOfWork.Save();
+            return true;
+        }
+
+        public async Task<bool> DeniedStore(long id, string description)
+        {
+            var store = _unitOfWork.StoreRepository.Get(s => s.Id == id,
+                                                includeProperties: "Brand").FirstOrDefault();
+            if (store == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng.");
+            }
+
+            var account = _unitOfWork.AccountRepository.GetByID(store.AccountId);
+            _unitOfWork.AccountRepository.Delete(account);
+            await _unitOfWork.SaveAsync();
+
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = store.Brand.AccountId,
+                Name = "Đăng kí chi nhánh bị từ chối",
+                Type = "Store",
+                Description = description
+            };
+            await _notificationService.CreateNotification(notificationRequest);
+
             return true;
         }
 

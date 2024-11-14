@@ -105,13 +105,15 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
             }
 
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true).FirstOrDefault();
+            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true,
+                                            includeProperties: "Brand,Brand.Account").FirstOrDefault();
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng.");
             }
 
             var bookingResponses = new List<BookingResponse>();
+            double totalAmountToAdd = 0;
 
             foreach (var id in checkRequest.Id)
             {
@@ -147,11 +149,16 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
 
                 _unitOfWork.BookingRepository.Update(booking);
+                totalAmountToAdd += booking.Cost;
 
                 var bookingResponse = _mapper.Map<BookingResponse>(booking);
                 bookingResponse.CheckOutTime = CoreHelper.SystemTimeNow;
                 bookingResponses.Add(bookingResponse);
             }
+
+            var brandWallet = _unitOfWork.WalletRepository.Get(bw => bw.AccountId == store.Brand.AccountId).FirstOrDefault();
+            brandWallet.Balance += totalAmountToAdd;
+            _unitOfWork.WalletRepository.Update(brandWallet);
 
             await _unitOfWork.SaveAsync();
 

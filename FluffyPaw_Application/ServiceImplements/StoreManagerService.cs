@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -218,6 +219,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var newStore = _mapper.Map<Store>(storeRequest);
             newStore.AccountId = newStaff.Id;
             newStore.BrandId = brand.Id;
+            newStore.OperatingLicense = await _firebaseConfiguration.UploadImage(storeRequest.OperatingLicense);
             newStore.TotalRating = 0f;
             newStore.Status = false;
             _unitOfWork.StoreRepository.Insert(newStore);
@@ -261,7 +263,22 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy chi nhánh.");
             }
 
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == id).ToList();
+
+            foreach (var storeService in storeServices)
+            {
+                var bookings = _unitOfWork.BookingRepository.Get(b => b.StoreServiceId == storeService.Id
+                                        && b.Status == BookingStatus.Pending.ToString()
+                                        || b.Status == BookingStatus.Accepted.ToString()).ToList();
+                if (bookings.Any())
+                {
+                    throw new CustomException.DataExistException($"Chi nhánh {existingstore.Name} vẫn còn dịch vụ đang được book.");
+                }
+            }
+
             _mapper.Map(updateStoreRequest, existingstore);
+            existingstore.OperatingLicense = await _firebaseConfiguration.UploadImage(updateStoreRequest.OperatingLicense);
+            existingstore.Status = false;
             _unitOfWork.Save();
 
             var storeFiles = _unitOfWork.StoreFileRepository
