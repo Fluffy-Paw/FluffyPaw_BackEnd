@@ -67,7 +67,6 @@ namespace FluffyPaw_API.Controllers.Account
         }
 
         [HttpPatch("ForgotPassword")]
-        [Authorize]
         public async Task<IActionResult> ForgotPassword([FromBody] LoginRequest ForgotPasswordRequest)
         {
             await _accountService.ForgotPassword(ForgotPasswordRequest);
