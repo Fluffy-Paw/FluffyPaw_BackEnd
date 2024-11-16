@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace FluffyPaw_Infrastructure.Intergrations.SignalR
 {
-    public class NotificationHub : Hub, INotificationHub
+    public class NotificationHub : Hub
     {
         public async Task SendNotification(string noti, long accountId)
         {
