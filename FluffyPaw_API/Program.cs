@@ -15,11 +15,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", builder =>
     {
         builder
-            //.WithOrigins("https://localhost:7287")
-            .AllowAnyOrigin()
+            .WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader()
-            /*.AllowCredentials()*/;
+            .AllowCredentials();
     });
 });
 
@@ -57,6 +56,7 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddHttpContextAccessor();
 // Add custom services and dependencies
 builder.Services.InfrastructureService(builder.Configuration);
+
 
 var app = builder.Build();
 

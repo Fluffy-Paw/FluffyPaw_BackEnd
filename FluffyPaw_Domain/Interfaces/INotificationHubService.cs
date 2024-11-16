@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Domain.Interfaces
 {
-    public interface INotificationHub
+    public interface INotificationHubService
     {
         Task SendNotification(string noti, long accountId);
     }

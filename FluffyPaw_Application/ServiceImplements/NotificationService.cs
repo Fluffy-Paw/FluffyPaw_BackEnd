@@ -24,11 +24,11 @@ namespace FluffyPaw_Application.ServiceImplements
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly INotificationHub _notiHub;
+        private readonly INotificationHubService _notiHub;
         private readonly IAuthentication _authentication;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, INotificationHub notiHub, IAuthentication authentication, IHttpContextAccessor httpContextAccessor)
+        public NotificationService(IUnitOfWork unitOfWork, IMapper mapper, INotificationHubService notiHub, IAuthentication authentication, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -57,22 +57,29 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<NotificationResponse> CreateNotification(NotificationRequest notificationRequest)
         {
-            var existingUser = _unitOfWork.AccountRepository.Get(n => n.Id == notificationRequest.ReceiverId).FirstOrDefault();
-            if (existingUser == null)
-            {
-                throw new CustomException.DataNotFoundException("Người dùng không tồn tại.");
+            try {
+                var existingUser = _unitOfWork.AccountRepository.Get(n => n.Id == notificationRequest.ReceiverId).FirstOrDefault();
+                if (existingUser == null)
+                {
+                    throw new CustomException.DataNotFoundException("Người dùng không tồn tại.");
+                }
+
+                var notification = _mapper.Map<Notification>(notificationRequest);
+                notification.CreateDate = CoreHelper.SystemTimeNow;
+                notification.IsSeen = false;
+                notification.Status = NotificationStatus.Unread.ToString();
+                _unitOfWork.NotificationRepository.Insert(notification);
+                _unitOfWork.Save();
+
+                await _notiHub.SendNotification(notification.Description, existingUser.Id);
+                Console.WriteLine($"Sent notification to user {existingUser.Id}: {notification.Description}");
+
+                return _mapper.Map<NotificationResponse>(notification);
             }
-
-            var notification = _mapper.Map<Notification>(notificationRequest);
-            notification.CreateDate = CoreHelper.SystemTimeNow;
-            notification.IsSeen = false;
-            notification.Status = NotificationStatus.Unread.ToString();
-            _unitOfWork.NotificationRepository.Insert(notification);
-            _unitOfWork.Save();
-
-            await _notiHub.SendNotification(notification.Description, existingUser.Id);
-
-            return _mapper.Map<NotificationResponse>(notification);
+            catch (Exception ex) {
+                Console.WriteLine($"Error sending notification: {ex.Message}");
+                throw;
+            }
         }
 
         public async Task<NotificationResponse> ScheduleCreateNotification(long accountId, string name,
