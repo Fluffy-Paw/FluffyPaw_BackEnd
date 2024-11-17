@@ -2,6 +2,7 @@
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
+using FluffyPaw_Application.DTO.Response.StaffResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 
@@ -23,6 +24,10 @@ namespace FluffyPaw_Application.Services
         Task<List<BookingResponse>> CreateBooking(CreateBookingRequest createBookingRequest);
         Task<BookingResponse> CreateBookingTimeSelection(TimeSelectionRequest timeSelectionRequest);
         Task<bool> CancelBooking(long id);
+
+        Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id);
+
+        Task<TrackingResponse> GetTrackingById(long id);
 
     }
 }
