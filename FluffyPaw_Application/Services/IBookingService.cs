@@ -13,5 +13,9 @@ namespace FluffyPaw_Application.Services
         Task<BookingResponse> GetBookingById(long id);
         Task<List<BookingResponse>> Checkin(CheckRequest checkRequest);
         Task<List<BookingResponse>> Checkout(CheckRequest checkRequest);
+        Task<BookingRatingResponse> GetBookingRatingById(long id);
+        Task<BookingRatingResponse> CreateBookingRatingByBookingId(long bookingId, BookingRatingRequest bookingRatingRequest);
+        Task<BookingRatingResponse> UpdateBookingRatingById(long id, BookingRatingRequest bookingRatingRequest);
+        Task<bool> DeleteBookingRating(long id);
     }
 }

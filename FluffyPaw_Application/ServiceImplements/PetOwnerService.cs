@@ -101,6 +101,24 @@ namespace FluffyPaw_Application.ServiceImplements
             var storeResponses = _mapper.Map<List<StoreResponse>>(stores);
             return storeResponses;
         }
+        
+        public async Task<List<StoreResponse>> GetAllStoreByBrandId(long id)
+        {
+            var brand = _unitOfWork.BrandRepository.GetByID(id);
+            if (brand == null || brand.Status == false)
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu này không tồn tại trong hệ thống.");
+            }
+
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == true, includeProperties: "Brand");
+            if (!stores.Any())
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu chưa đăng kí các chi nhánh cửa hàng.");
+            }
+
+            var storeResponses = _mapper.Map<List<StoreResponse>>(stores);
+            return storeResponses;
+        }
 
         public async Task<List<StoreResponse>> GetAllStoreByServiceTypeId(long id)
         {

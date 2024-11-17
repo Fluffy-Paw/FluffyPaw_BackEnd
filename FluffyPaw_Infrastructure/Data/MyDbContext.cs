@@ -236,7 +236,7 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<BookingRating>().HasData(
-                new BookingRating { Id = 1, BookingId = 1, PetOwnerId = 1, Vote = 5, Description = "test", Status = true }
+                new BookingRating { Id = 1, BookingId = 1, PetOwnerId = 1, Vote = 5, Description = "test"}
                 );
 
             modelBuilder.Entity<Tracking>().HasData(
