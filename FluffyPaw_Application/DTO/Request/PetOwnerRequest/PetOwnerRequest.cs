@@ -16,9 +16,6 @@ namespace FluffyPaw_Application.DTO.Request.PetOwnerRequest
 
         public string? Gender { get; set; }
 
-        [RegularExpression("^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$", ErrorMessage = "Số điện thoại này không tồn tại!")]
-        public string? Phone { get; set; }
-
         public string? Address { get; set; }
 
         public string? Email { get; set; }

@@ -69,14 +69,6 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (petOwnerRequest.Dob > DateTimeOffset.UtcNow) throw new CustomException.InvalidDataException("Ngày sinh không hợp lệ.");
 
-            if (petOwnerRequest.Phone != exitstingPo.Phone)
-            {
-                if (_unitOfWork.PetOwnerRepository.Get(po => po.Phone == petOwnerRequest.Phone).Any())
-                {
-                    throw new CustomException.DataExistException("Số điện thoại này đã tồn tại trong hệ thống");
-                }
-            }
-
             exitstingPo.Account.Email = petOwnerRequest.Email;
             if (petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
             var po = _mapper.Map(petOwnerRequest, exitstingPo);

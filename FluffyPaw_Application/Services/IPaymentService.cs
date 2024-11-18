@@ -13,6 +13,6 @@ namespace FluffyPaw_Application.Services
         Task<CreateDepositResponse> CreateDepositRequest(CreatePaymentRequest createPaymentRequest);
         Task<bool> CancelPayment(long orderCode);
         Task<bool> CheckDepositResult(long orderCode);
-        Task<bool> PayBooking(string serviceName, double amount);
+        //Task<bool> PayBooking(string serviceName, double amount);
     }
 }
