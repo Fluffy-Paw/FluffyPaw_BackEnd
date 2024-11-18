@@ -22,8 +22,6 @@ namespace FluffyPaw_Domain.Entities
 
         public string? Description { get; set; }
 
-        public bool Status { get; set; }
-
         [ForeignKey("BookingId")]
         public virtual Booking Booking { get; set; }
 

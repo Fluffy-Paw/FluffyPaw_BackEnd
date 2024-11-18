@@ -5,6 +5,7 @@ using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
+using FluffyPaw_Application.DTO.Response.StaffResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
@@ -84,6 +85,24 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<List<StoreResponse>> GetAllStore()
         {
             var stores = _unitOfWork.StoreRepository.Get(s => s.Status == true, includeProperties: "Brand");
+            if (!stores.Any())
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu chưa đăng kí các chi nhánh cửa hàng.");
+            }
+
+            var storeResponses = _mapper.Map<List<StoreResponse>>(stores);
+            return storeResponses;
+        }
+        
+        public async Task<List<StoreResponse>> GetAllStoreByBrandId(long id)
+        {
+            var brand = _unitOfWork.BrandRepository.GetByID(id);
+            if (brand == null || brand.Status == false)
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu này không tồn tại trong hệ thống.");
+            }
+
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id && s.Status == true, includeProperties: "Brand");
             if (!stores.Any())
             {
                 throw new CustomException.DataNotFoundException("Thương hiệu chưa đăng kí các chi nhánh cửa hàng.");
@@ -587,6 +606,68 @@ namespace FluffyPaw_Application.ServiceImplements
             await _notificationService.CreateNotification(notificationRequest);
 
             return true;
+        }
+
+        public async Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id)
+        {
+            var user = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(user);
+            var po = _unitOfWork.PetOwnerRepository.Get(s => s.AccountId == account.Id)
+                                            .FirstOrDefault();
+
+            var duringBooking = _unitOfWork.BookingRepository.Get(db => db.Id == id
+                                            //&& db.StoreService.Store.Id == store.Id
+                                            && db.Status == BookingStatus.Accepted.ToString(),
+                                            includeProperties: "StoreService,StoreService.Store").FirstOrDefault();
+            if (duringBooking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
+            }
+
+            var trackings = _unitOfWork.TrackingRepository.Get(t => t.BookingId == duringBooking.Id);
+            if (!trackings.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy theo dõi nào.");
+            }
+
+            var trackingResponses = new List<TrackingResponse>();
+
+            foreach (var tracking in trackings)
+            {
+                var trackingResponse = _mapper.Map<TrackingResponse>(tracking);
+
+                var trackingFile = _unitOfWork.TrackingFileRepository.Get(tf => tf.TrackingId == tracking.Id,
+                                                    includeProperties: "Tracking,Files")
+                                                    .Select(tf => tf.Files)
+                                                    .ToList();
+
+                trackingResponse.Files = _mapper.Map<List<FileResponse>>(trackingFile);
+
+                trackingResponses.Add(trackingResponse);
+            }
+
+            return trackingResponses;
+        }
+
+        public async Task<TrackingResponse> GetTrackingById(long id)
+        {
+            var tracking = _unitOfWork.TrackingRepository.GetByID(id);
+            if (tracking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy theo dõi.");
+            }
+
+            var trackingResponse = _mapper.Map<TrackingResponse>(tracking);
+
+            var trackingFiles = _unitOfWork.TrackingFileRepository.Get(tf => tf.TrackingId == tracking.Id,
+                                                    includeProperties: "Files")
+                                                    .Select(s => s.Files)
+                                                    .ToList();
+
+
+            trackingResponse.Files = _mapper.Map<List<FileResponse>>(trackingFiles);
+
+            return trackingResponse;
         }
     }
 }

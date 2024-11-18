@@ -164,5 +164,175 @@ namespace FluffyPaw_Application.ServiceImplements
 
             return bookingResponses;
         }
+
+        public async Task<BookingRatingResponse> GetBookingRatingById(long id)
+        {
+            var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(id);
+            if (bookingRating == null)
+            {
+                throw new CustomException.DataNotFoundException("Khoong tìm thấy đánh giá này.");
+            }
+
+            var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(bookingRating);
+            return bookingRatingResponse;
+        }
+
+        public async Task<BookingRatingResponse> CreateBookingRatingByBookingId(long bookingId, BookingRatingRequest createBookingRatingRequest)
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
+            }
+
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
+            if (po == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy chủ thú cưng liên kết với tài khoản này.");
+            }
+
+            var existingBooking = _unitOfWork.BookingRepository.Get(eb => eb.Id == bookingId && eb.CheckOut == true).FirstOrDefault();
+            if (existingBooking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ hoặc dịch vụ này chưa được checkout.");
+            }
+
+            var existingBookingRating = _unitOfWork.BookingRatingRepository.Get(ebr => ebr.BookingId == bookingId && ebr.PetOwnerId == po.Id).FirstOrDefault();
+            if (existingBookingRating != null)
+            {
+                throw new CustomException.DataExistException("Bạn đã đánh giá dịch vụ này rồi, vui lòng chọn nút chỉnh sửa để thay đổi đánh giá của bạn.");
+            }
+
+            var newBookingRating = new BookingRating
+            {
+                BookingId = bookingId,
+                PetOwnerId = po.Id,
+                Vote = createBookingRatingRequest.Vote,
+                Description = createBookingRatingRequest.Description
+            };
+
+            _unitOfWork.BookingRatingRepository.Insert(newBookingRating);
+            await _unitOfWork.SaveAsync();
+
+            UpdateTotalRatingByBookingRatingId(newBookingRating.Id);
+
+            var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(newBookingRating);
+            return bookingRatingResponse;
+        }
+
+
+        public async Task<BookingRatingResponse> UpdateBookingRatingById(long id, BookingRatingRequest bookingRatingRequest)
+        {
+            // Validate the user
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
+            }
+
+            // Validate the pet owner
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
+            if (po == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy chủ thú cưng liên kết với tài khoản.");
+            }
+
+            // Validate the existing booking rating
+            var existingBookingRating = _unitOfWork.BookingRatingRepository
+                .Get(ebr => ebr.Id == id && ebr.PetOwnerId == po.Id)
+                .FirstOrDefault();
+
+            if (existingBookingRating == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá.");
+            }
+
+            // Map the updated values
+            _mapper.Map(bookingRatingRequest, existingBookingRating);
+
+            // Save changes
+            await _unitOfWork.SaveAsync();
+
+            // Recalculate the total rating
+            UpdateTotalRatingByBookingRatingId(existingBookingRating.Id);
+
+            // Create the response object
+            var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(existingBookingRating);
+
+            return bookingRatingResponse;
+        }
+
+
+        public async Task<bool> DeleteBookingRating(long id)
+        {
+            var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(id);
+            if (bookingRating == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá này.");
+            }
+
+            var booking = _unitOfWork.BookingRepository.GetByID(bookingRating.BookingId);
+            if (booking == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch liên kết với đánh giá này.");
+            }
+
+            var storeService = _unitOfWork.StoreServiceRepository.GetByID(booking.StoreServiceId);
+            if (storeService == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ liên kết với đặt lịch này.");
+            }
+
+            var service = _unitOfWork.ServiceRepository.GetByID(storeService.ServiceId);
+            if (service == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ liên kết với đánh giá này.");
+            }
+
+            _unitOfWork.BookingRatingRepository.Delete(bookingRating);
+            await _unitOfWork.SaveAsync();
+
+            var ratings = _unitOfWork.BookingRatingRepository.Get(br => br.BookingId != booking.Id)
+                .Select(br => br.Vote)
+                .ToList();
+
+            service.TotalRating = ratings.Any() ? (float)ratings.Average() : 0;
+            _unitOfWork.ServiceRepository.Update(service);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
+
+        public void UpdateTotalRatingByBookingRatingId(long bookingRatingId)
+        {
+            var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(bookingRatingId);
+            var booking = _unitOfWork.BookingRepository.GetByID(bookingRating.BookingId);
+            var storeService = _unitOfWork.StoreServiceRepository.GetByID(booking.StoreServiceId);
+            var service = _unitOfWork.ServiceRepository.GetByID(storeService.ServiceId);
+
+            var allStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == service.Id).ToList();
+            var allStoreServiceIds = allStoreServices.Select(ss => ss.Id).ToList();
+
+            // Get all Bookings related to those StoreServices
+            var allBookings = _unitOfWork.BookingRepository.Get(b => allStoreServiceIds.Contains(b.StoreServiceId)).ToList();
+            var allBookingIds = allBookings.Select(b => b.Id).ToList();
+
+            // Get all BookingRatings for those Bookings
+            var allBookingRatings = _unitOfWork.BookingRatingRepository.Get(br => allBookingIds.Contains(br.BookingId)).ToList();
+
+            // Calculate total votes and total count
+            var totalVotes = allBookingRatings.Sum(br => br.Vote);
+            var totalCount = allBookingRatings.Count;
+
+            // Update TotalRating of the Service
+            service.TotalRating = totalCount > 0 ? (float)totalVotes / totalCount : 0f;
+
+            // Save changes to the database
+            _unitOfWork.ServiceRepository.Update(service);
+            _unitOfWork.Save();
+        }
     }
 }

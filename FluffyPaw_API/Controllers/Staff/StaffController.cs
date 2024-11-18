@@ -123,8 +123,8 @@ namespace FluffyPaw_API.Controllers.Staff
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetTrackingById(long id)
         {
-            var trackings = await _staffService.GetTrackingById(id);
-            return CustomResult("Tải dữ liệu thành công.", trackings);
+            var tracking = await _staffService.GetTrackingById(id);
+            return CustomResult("Tải dữ liệu thành công.", tracking);
         }
 
         [HttpPost("CreateTracking")]
