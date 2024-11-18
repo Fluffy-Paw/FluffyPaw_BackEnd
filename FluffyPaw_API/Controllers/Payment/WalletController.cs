@@ -60,7 +60,7 @@ namespace FluffyPaw_API.Controllers.Payment
             {
                 OrderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff")),
                 Amount = amount,
-                Type = "Rút Tiền",
+                Type = "Rút tiền",
                 WalletId = wallet.Id,
                 BankName = wallet.BankName,
                 BankNumber = wallet.Number

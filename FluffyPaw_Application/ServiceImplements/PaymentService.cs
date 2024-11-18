@@ -103,23 +103,23 @@ namespace FluffyPaw_Application.ServiceImplements
             return new CreateDepositResponse{ checkoutUrl = createPayment.checkoutUrl, orderCode = orderCode };
         }
 
-        public async Task<bool> PayBooking(string serviceName, double amount)
-        {
-            var wallet = await _walletService.ViewWallet();
+        //public async Task<bool> PayBooking(string serviceName, double amount)
+        //{
+        //    var wallet = await _walletService.ViewWallet();
 
-            int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
-            var newTransaction = new TransactionRequest
-            {
-                OrderCode = orderCode,
-                Type = $"Thanh toán dịch vụ {serviceName}",
-                Amount = amount,
-                WalletId = wallet.Id,
-            };
+        //    int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+        //    var newTransaction = new TransactionRequest
+        //    {
+        //        OrderCode = orderCode,
+        //        Type = $"Thanh toán dịch vụ {serviceName}",
+        //        Amount = amount,
+        //        WalletId = wallet.Id,
+        //    };
 
-            await _walletService.WithdrawMoney(amount);
-            await _transactionService.AddTransactions(newTransaction);
+        //    await _walletService.WithdrawMoney(amount);
+        //    await _transactionService.AddTransactions(newTransaction);
             
-            return true;
-        }
+        //    return true;
+        //}
     }
 }
