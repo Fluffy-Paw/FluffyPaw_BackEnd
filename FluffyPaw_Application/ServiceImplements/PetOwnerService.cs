@@ -267,7 +267,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
 
                 var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id,
-                                                includeProperties: "StoreService,StoreService.Store,StoreService.Service");
+                                                includeProperties: "StoreService,StoreService.Store,StoreService.Service,Pet");
                 if (!bookings.Any())
                 {
                     throw new CustomException.DataNotFoundException("Thú cưng này hiện chưa có lịch nào");
@@ -298,7 +298,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id
                                             && (string.IsNullOrEmpty(bookingStatus) || b.Status == bookingStatus),
-                                            includeProperties: "StoreService,StoreService.Store,StoreService.Service");
+                                            includeProperties: "StoreService,StoreService.Store,StoreService.Service,Pet");
             if (!bookings.Any())
             {
                 throw new CustomException.DataNotFoundException("Thú cưng này hiện chưa có lịch nào");
