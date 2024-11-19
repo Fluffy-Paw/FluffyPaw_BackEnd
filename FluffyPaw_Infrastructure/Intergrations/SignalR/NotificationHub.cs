@@ -5,14 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using FluffyPaw_Domain.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 namespace FluffyPaw_Infrastructure.Intergrations.SignalR
 {
     public class NotificationHub : Hub
     {
-        public async Task SendNotification(string noti, long accountId)
-        {
-            await Clients.All.SendAsync("ReceiveNoti", accountId.ToString(), noti);
-        }
+
     }
 }
