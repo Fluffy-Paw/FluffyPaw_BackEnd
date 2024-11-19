@@ -12,7 +12,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.SignalR
     {
         public async Task SendNotification(string noti, long accountId)
         {
-            await Clients.User(accountId.ToString()).SendAsync("ReceiveNoti", noti);
+            await Clients.All.SendAsync("ReceiveNoti", accountId.ToString(), noti);
         }
     }
 }

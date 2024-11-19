@@ -117,7 +117,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             foreach (var id in checkRequest.Id)
             {
-                var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id, includeProperties: "StoreService,StoreService.Service").FirstOrDefault();
+                var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id, includeProperties: "StoreService,StoreService.Service,Pet").FirstOrDefault();
                 if (booking == null)
                 {
                     throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
