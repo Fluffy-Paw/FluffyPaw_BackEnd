@@ -429,8 +429,9 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     ReceiverId = storeAccountId,
                     Name = "Đặt lịch mới",
-                    Type = "Booking",
-                    Description = $"Đặt lịch mới cho dịch vụ {existingStoreService.Service.Name} cho thú cưng {pet.Name}."
+                    Type = NotificationType.Booking.ToString(),
+                    Description = $"Đặt lịch mới cho dịch vụ {existingStoreService.Service.Name} cho thú cưng {pet.Name}.",
+                    ReferenceId = newBooking.Id
                 };
                 await _notificationService.CreateNotification(notificationRequest);
             }
@@ -476,6 +477,9 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình hoặc lịch trình không khả dụng.");
             }
+
+            var store = _unitOfWork.StoreRepository.Get(s => s.Id == firstStoreService.StoreId, includeProperties: "Account").FirstOrDefault();
+            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == firstStoreService.ServiceId, includeProperties: "ServiceType").FirstOrDefault();
 
             var startDate = firstStoreService.StartTime;
             var newEndTime = firstStoreService.StartTime + firstStoreService.Service.Duration;
@@ -552,6 +556,16 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.BookingRepository.Insert(newBooking);
             await _unitOfWork.SaveAsync();
 
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = store.AccountId,
+                Name = "Đặt lịch mới",
+                Type = NotificationType.Booking.ToString(),
+                Description = $"Đặt lịch mới cho dịch vụ {service.Name} cho thú cưng {pet.Name}.",
+                ReferenceId = newBooking.Id
+            };
+            await _notificationService.CreateNotification(notificationRequest);
+
             await _jobScheduler.ScheduleOverTimeRefund(newBooking);
             await _jobScheduler.ScheduleBookingNotification(newBooking);
 
@@ -608,8 +622,9 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 ReceiverId = storeAccountId,
                 Name = "Huỷ đặt lịch",
-                Type = "Cancel Booking",
-                Description = $"Hủy đặt lịch cho dịch vụ {storeService.Service.Name} cho thú cưng {pendingBooking.Pet.Name}."
+                Type = NotificationType.Booking.ToString(),
+                Description = $"Hủy đặt lịch cho dịch vụ {storeService.Service.Name} cho thú cưng {pendingBooking.Pet.Name}.",
+                ReferenceId = pendingBooking.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
 
