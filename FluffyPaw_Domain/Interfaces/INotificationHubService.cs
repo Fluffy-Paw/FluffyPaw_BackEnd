@@ -8,6 +8,6 @@ namespace FluffyPaw_Domain.Interfaces
 {
     public interface INotificationHubService
     {
-        Task SendNotification(string noti, long accountId);
+        Task SendNotification(string noti, long accountId, string notiType, long referenceId);
     }
 }

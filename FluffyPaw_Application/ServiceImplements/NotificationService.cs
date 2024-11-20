@@ -57,33 +57,22 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<NotificationResponse> CreateNotification(NotificationRequest notificationRequest)
         {
-            try {
-                var existingUser = _unitOfWork.AccountRepository.Get(n => n.Id == notificationRequest.ReceiverId).FirstOrDefault();
-                if (existingUser == null)
-                {
-                    throw new CustomException.DataNotFoundException("Người dùng không tồn tại.");
-                }
+            var notification = _mapper.Map<Notification>(notificationRequest);
+            notification.CreateDate = CoreHelper.SystemTimeNow;
+            notification.IsSeen = false;
+            notification.Status = NotificationStatus.Unread.ToString();
+            _unitOfWork.NotificationRepository.Insert(notification);
+            _unitOfWork.Save();
 
-                var notification = _mapper.Map<Notification>(notificationRequest);
-                notification.CreateDate = CoreHelper.SystemTimeNow;
-                notification.IsSeen = false;
-                notification.Status = NotificationStatus.Unread.ToString();
-                _unitOfWork.NotificationRepository.Insert(notification);
-                _unitOfWork.Save();
+            await _notiHub.SendNotification(notification.Description, notificationRequest.ReceiverId,
+                                            notificationRequest.Type, notificationRequest.ReferenceId);
 
-                await _notiHub.SendNotification(notification.Description, existingUser.Id);
-                Console.WriteLine($"Sent notification to user {existingUser.Id}: {notification.Description}");
-
-                return _mapper.Map<NotificationResponse>(notification);
-            }
-            catch (Exception ex) {
-                Console.WriteLine($"Error sending notification: {ex.Message}");
-                throw;
-            }
+            var notificationResponse = _mapper.Map<NotificationResponse>(notification);
+            return notificationResponse;
         }
 
         public async Task<NotificationResponse> ScheduleCreateNotification(long accountId, string name,
-                                                                string type, string description)
+                                                                string type, string description, long referenceId)
         {
             var notification = new Notification
             {
@@ -100,7 +89,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.NotificationRepository.Insert(notification);
             _unitOfWork.Save();
 
-            await _notiHub.SendNotification("ReceiveNoti", notification.ReceiverId);
+            await _notiHub.SendNotification("ReceiveNoti", notification.ReceiverId, type, referenceId);
 
             return _mapper.Map<NotificationResponse>(notification);
         }

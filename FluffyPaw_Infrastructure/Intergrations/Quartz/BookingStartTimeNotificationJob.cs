@@ -34,7 +34,8 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                 booking.Pet.PetOwner.Account.Id,
                 booking.StoreService.Service.Name,
                 booking.StoreService.Service.ServiceType.Name,
-                description
+                description,
+                booking.Id
             );
         }
     }
