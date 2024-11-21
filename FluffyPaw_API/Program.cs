@@ -93,9 +93,9 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
 
-app.MapControllers();
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapControllers();
     endpoints.MapHub<NotificationHub>("/NotificationHub").RequireCors("CorsPolicy");
 });
 
