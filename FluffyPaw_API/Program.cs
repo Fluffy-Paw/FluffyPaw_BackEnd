@@ -82,10 +82,12 @@ else
 
 
 app.UseHttpsRedirection();
-app.UseCors("CorsPolicy");
+
 
 //Middleware
 app.UseRouting();
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 
