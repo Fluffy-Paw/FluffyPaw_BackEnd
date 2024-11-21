@@ -94,7 +94,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<NotificationHub>("/NotificationHub");
+    endpoints.MapHub<NotificationHub>("/NotificationHub").RequireCors("CorsPolicy");
 });
 
 
