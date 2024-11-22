@@ -83,7 +83,6 @@ else
 
 app.UseHttpsRedirection();
 
-
 //Middleware
 app.UseRouting();
 

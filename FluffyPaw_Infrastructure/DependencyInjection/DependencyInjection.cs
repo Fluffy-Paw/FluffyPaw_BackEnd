@@ -15,6 +15,7 @@ using FluffyPaw_Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +44,8 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
             services.AddQuartzAndSchedule();
 
             services.AddService();
+
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
             services.AddSignalR();
 
@@ -98,6 +101,22 @@ namespace FluffyPaw_Infrastructure.DependencyInjection
                     ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey
                     (Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"]; // Lấy token từ query string
+
+                        // Nếu request là cho SignalR thì sử dụng token từ query
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            context.HttpContext.Request.Path.StartsWithSegments("/NotificationHub"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
