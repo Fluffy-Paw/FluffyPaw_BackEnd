@@ -21,5 +21,6 @@ namespace FluffyPaw_Application.Services
         Task<StoreResponse> UpdateStore(long id, UpdateStoreRequest updateStoreRequest);
         Task<bool> DeleteStore(long id);
         Task<StaffResponse> UpdateStaff(long id, UpdateStaffRequest updateStaffRequest);
+        //Task<>
     }
 }
