@@ -21,6 +21,38 @@ namespace FluffyPaw_API.Controllers.Authentication
             _storeManagerService = storeManagerService;
         }
 
+        [HttpGet("GetTotalBooking")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> GetTotalBooking()
+        {
+            var totalBooking = await _storeManagerService.GetTotalBooking();
+            return CustomResult("Tải dữ liệu thành công.", totalBooking);
+        }
+
+        [HttpGet("GetTotalService")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> GetTotalService()
+        {
+            var totalService = await _storeManagerService.GetTotalService();
+            return CustomResult("Tải dữ liệu thành công.", totalService);
+        }
+
+        [HttpGet("GetTotalStore")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> GetTotalStore()
+        {
+            var totalStore = await _storeManagerService.GetTotalStore();
+            return CustomResult("Tải dữ liệu thành công.", totalStore);
+        }
+
+        [HttpGet("GetRevenue")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> GetRevenue([FromQuery] RevenueRequest revenueRequest)
+        {
+            var revenue = await _storeManagerService.GetRevenue(revenueRequest);
+            return CustomResult("Tải dữ liệu thành công.", revenue);
+        }
+
         [HttpGet("GetAllStaffBySM")]
         [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> GetAllStaffBySM()

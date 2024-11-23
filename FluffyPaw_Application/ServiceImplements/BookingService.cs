@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.BookingRequest;
+using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
@@ -14,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -70,7 +73,7 @@ namespace FluffyPaw_Application.ServiceImplements
             foreach (var id in checkRequest.Id)
             {
                 var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id && b.Status == BookingStatus.Accepted.ToString(),
-                                                includeProperties: "StoreService,StoreService.Service").FirstOrDefault();
+                                                includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
                 if (booking == null)
                 {
                     throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -85,6 +88,17 @@ namespace FluffyPaw_Application.ServiceImplements
                 booking.Checkin = true;
                 booking.CheckinTime = CoreHelper.SystemTimeNow.AddHours(7);
                 _unitOfWork.BookingRepository.Update(booking);
+
+                var notificationRequest = new NotificationRequest
+                {
+                    ReceiverId = booking.Pet.PetOwner.AccountId,
+                    Name = "Check in booking",
+                    Type = NotificationType.Checkin.ToString(),
+                    Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check in thành công.",
+                    ReferenceId = booking.Id
+                };
+
+                await _notificationService.CreateNotification(notificationRequest);
 
                 var bookingResponse = _mapper.Map<BookingResponse>(booking);
                 bookingResponse.CheckinTime = CoreHelper.SystemTimeNow;
@@ -149,6 +163,18 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
 
                 _unitOfWork.BookingRepository.Update(booking);
+
+                var notificationRequest = new NotificationRequest
+                {
+                    ReceiverId = booking.Pet.PetOwner.AccountId,
+                    Name = "Check in booking",
+                    Type = NotificationType.Checkout.ToString(),
+                    Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check out thành công.",
+                    ReferenceId = booking.Id
+                };
+
+                await _notificationService.CreateNotification(notificationRequest);
+
                 totalAmountToAdd += booking.Cost;
 
                 var bookingResponse = _mapper.Map<BookingResponse>(booking);

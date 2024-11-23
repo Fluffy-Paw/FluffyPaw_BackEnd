@@ -108,7 +108,21 @@ namespace FluffyPaw_API.Controllers.Staff
         public async Task<IActionResult> DeniedBooking(long id)
         {
             var booking = await _staffService.DeniedBooking(id);
-            return CustomResult("Cập nhật đặt lịch thành công.", booking);
+            return CustomResult("Từ chối đặt lịch thành công.", booking);
+        }
+
+        [HttpPatch("CancelBooking/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> CancelBooking(long id)
+        {
+            var (isSuccess, notice) = await _staffService.CancelBooking(id);
+            var responseData = new
+            {
+                IsSuccess = isSuccess,
+                Notice = notice
+            };
+
+            return CustomResult("Hủy đặt lịch thành công.", responseData);
         }
 
         [HttpGet("GetAllTrackingByBookingId/{id}")]

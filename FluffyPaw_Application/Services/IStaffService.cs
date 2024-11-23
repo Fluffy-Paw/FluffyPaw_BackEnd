@@ -28,6 +28,7 @@ namespace FluffyPaw_Application.Services
         Task<List<BookingResponse>> GetAllBookingByStoreServiceId(long id);
         Task<bool> AcceptBooking(long id);
         Task<bool> DeniedBooking(long id);
+        Task<(bool isSuccess, string notice)> CancelBooking(long id);
         Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id);
         Task<TrackingResponse> GetTrackingById(long id);
         Task<TrackingResponse> CreateTracking(TrackingRequest trackingRequest);

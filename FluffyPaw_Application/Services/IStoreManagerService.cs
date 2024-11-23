@@ -13,6 +13,10 @@ namespace FluffyPaw_Application.Services
 {
     public interface IStoreManagerService
     {
+        Task<int> GetTotalBooking();
+        Task<int> GetTotalService();
+        Task<int> GetTotalStore();
+        Task<double> GetRevenue(RevenueRequest revenueRequest);
         Task<List<StaffResponse>> GetAllStaffBySM();
         Task<List<StoreResponse>> GetAllStoreBySM();
         Task<List<StoreResponse>> GetAllStoreFalseBySM();

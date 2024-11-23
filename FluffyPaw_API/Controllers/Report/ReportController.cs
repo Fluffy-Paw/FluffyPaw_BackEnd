@@ -29,7 +29,7 @@ namespace FluffyPaw_API.Controllers.Report
         }
 
         [HttpGet("GetAllReportByStoreId/{id}")]
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "Admin,Staff,StoreManager")]
         public async Task<IActionResult> GetAllReportByStoreId(long id)
         {
             var reports = await _reportService.GetAllReportByStoreId(id);
@@ -41,6 +41,14 @@ namespace FluffyPaw_API.Controllers.Report
         public async Task<IActionResult> GetAllReportByPOId(long id)
         {
             var reports = await _reportService.GetAllReportByPOId(id);
+            return CustomResult("Lấy thông tin thành công.", reports);
+        }
+
+        [HttpGet("GetAllTargetReportBySelf")]
+        [Authorize(Roles = "PetOwner,Staff")]
+        public async Task<IActionResult> GetAllTargetReportBySelf()
+        {
+            var reports = await _reportService.GetAllTargetReportBySelf();
             return CustomResult("Lấy thông tin thành công.", reports);
         }
 
