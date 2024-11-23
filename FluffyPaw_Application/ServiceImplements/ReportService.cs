@@ -133,6 +133,69 @@ namespace FluffyPaw_Application.ServiceImplements
             return reportResponses;
         }
 
+        public async Task<List<ReportResponse>> GetAllTargetReportBySelf()
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
+            }
+
+            var reports = _unitOfWork.ReportRepository.Get(rps => rps.TargetId == account.Id,
+                                                orderBy: ob => ob.OrderByDescending(o => o.CreateDate),
+                                                includeProperties: "TargetAccount,SenderAccount,ReportCategory");
+
+            if (!reports.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy báo cáo này.");
+            }
+
+            var reportResponses = new List<ReportResponse>();
+
+            if (account.RoleName == RoleName.Staff.ToString())
+            {
+                foreach (var report in reports)
+                {
+                    var reportResponse = _mapper.Map<ReportResponse>(report);
+                    var po = _unitOfWork.PetOwnerRepository.Get(s => s.AccountId == report.SenderId).FirstOrDefault();
+                    if (po != null)
+                    {
+                        reportResponse.SenderName = po.FullName;
+                    }
+
+                    var store = _unitOfWork.StoreRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
+                    if (store != null)
+                    {
+                        reportResponse.TargetName = store.Name;
+                    }
+                    reportResponses.Add(reportResponse);
+                }
+            }
+            else if (account.RoleName == RoleName.PetOwner.ToString())
+            {
+                foreach (var report in reports)
+                {
+                    var reportResponse = _mapper.Map<ReportResponse>(report);
+                    var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == report.SenderId).FirstOrDefault();
+                    if (store != null)
+                    {
+                        reportResponse.SenderName = store.Name;
+                    }
+
+                    var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
+                    if (po != null)
+                    {
+                        reportResponse.TargetName = po.FullName;
+                    }
+
+                    reportResponses.Add(reportResponse);
+                }
+            }
+
+            return reportResponses;
+        }
+
         public async Task<List<ReportCategoryResponse>> GetAllReportCategoryName()
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
@@ -167,7 +230,7 @@ namespace FluffyPaw_Application.ServiceImplements
                              ? RoleName.PetOwner.ToString()
                              : RoleName.Staff.ToString();
 
-            var targetAccount = _unitOfWork.AccountRepository.Get(a => a.Id == createReportRequest.TargetId 
+            var targetAccount = _unitOfWork.AccountRepository.Get(a => a.Id == createReportRequest.TargetId
                                                 && a.RoleName == requiredTargetRole).FirstOrDefault();
             if (targetAccount == null)
             {

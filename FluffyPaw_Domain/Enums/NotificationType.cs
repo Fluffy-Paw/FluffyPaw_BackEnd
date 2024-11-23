@@ -12,6 +12,8 @@ namespace FluffyPaw_Domain.Enums
         Store,
         Booking,
         Vaccine,
+        Checkin,
+        Checkout,
         WithDraw,
         Message
     }
