@@ -251,7 +251,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
             var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
-            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id);
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status == PetStatus.Available.ToString());
             if (!pets.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
@@ -267,11 +267,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
 
                 var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id,
-                                                includeProperties: "StoreService,StoreService.Store,StoreService.Service,Pet");
-                if (!bookings.Any())
-                {
-                    throw new CustomException.DataNotFoundException("Thú cưng này hiện chưa có lịch nào");
-                }
+                                                includeProperties: "StoreService,StoreService.Store,StoreService.Service,Pet").ToList();
 
                 var mappedBookings = _mapper.Map<List<BookingResponse>>(bookings);
                 bookingResponses.AddRange(mappedBookings);
