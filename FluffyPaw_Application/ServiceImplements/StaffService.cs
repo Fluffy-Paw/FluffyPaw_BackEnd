@@ -446,7 +446,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReceiverId = poAccountId,
                 Name = "Xác thực yêu cầu đặt lịch",
                 Type = NotificationType.Booking.ToString(),
-                Description = $"Đặt lịch mới cho dịch vụ {storeService.Service.Name} cho thú cưng {pet.Name} thành công.",
+                Description = $"Đặt lịch cho {pet.Name} đã được {pendingBooking.StoreService.Store.Name} chấp nhận.",
                 ReferenceId = pendingBooking.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
@@ -497,7 +497,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReceiverId = poAccountId,
                 Name = "Từ chối yêu cầu đặt lịch",
                 Type = NotificationType.Booking.ToString(),
-                Description = $"Đặt lịch mới cho dịch vụ {storeService.Service.Name} cho thú cưng {pendingBooking.Pet.Name} không thành công.",
+                Description = $"Đặt lịch cho {pendingBooking.Pet.Name} đã bị {pendingBooking.StoreService.Store.Name} từ chối.",
                 ReferenceId = pendingBooking.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
