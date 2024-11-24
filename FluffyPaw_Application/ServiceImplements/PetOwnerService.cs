@@ -632,7 +632,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var duringBooking = _unitOfWork.BookingRepository.Get(db => db.Id == id
                                             //&& db.StoreService.Store.Id == store.Id
-                                            && db.Status == BookingStatus.Accepted.ToString(),
+                                            && db.Status != BookingStatus.Denied.ToString(),
                                             includeProperties: "StoreService,StoreService.Store").FirstOrDefault();
             if (duringBooking == null)
             {
