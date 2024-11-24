@@ -677,7 +677,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 var notificationRequest = new NotificationRequest
                 {
                     ReceiverId = existingBooking.Pet.PetOwner.AccountId,
-                    Name = "Check in booking",
+                    Name = "Check in Booking",
                     Type = NotificationType.Checkout.ToString(),
                     Description = $"Booking cho {existingBooking.Pet.Name} đã có cập nhật mới.",
                     ReferenceId = existingBooking.Id
