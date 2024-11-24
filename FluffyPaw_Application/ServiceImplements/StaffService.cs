@@ -115,7 +115,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponse;
         }
 
-        public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId (long id)
+        public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id)
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(staff);
@@ -180,7 +180,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 var overlappingService = _unitOfWork.StoreServiceRepository.Get(s =>
                                             s.StoreId == existingStoreService.StoreId &&
-                                            ((s.StartTime < newEndTime && (s.StartTime + s.Service.Duration) > newStartTime) || 
+                                            ((s.StartTime < newEndTime && (s.StartTime + s.Service.Duration) > newStartTime) ||
                                             s.StartTime == newStartTime)).FirstOrDefault(); // Kiểm tra chồng chéo thời gian
                 if (overlappingService != null)
                 {
@@ -518,7 +518,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id);
 
-            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id 
+            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id
                                             && b.Status == BookingStatus.Accepted.ToString(),
                                             includeProperties: "Pet,Pet.PetOwner,StoreService,StoreService.Service,StoreService.Store")
                                             .FirstOrDefault();
@@ -532,27 +532,27 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Đặt lịch này không thuộc quyền quản lý của bạn.");
             }
 
-            booking.Status = BookingStatus.Canceled.ToString();
-            string notice = "";
             if (CoreHelper.SystemTimeNow > booking.StartTime.AddDays(-3))
             {
-                var po = _unitOfWork.PetOwnerRepository.Get(po => po.Id == booking.Pet.PetOwnerId).FirstOrDefault();
-                var poWallet = _unitOfWork.WalletRepository.GetByID(po.AccountId);
-                poWallet.Balance += booking.StoreService.Service.Cost;
-                _unitOfWork.WalletRepository.Update(poWallet);
-                notice = $"Hủy đặt lịch của thú cưng {booking.Pet.Name} dưới 3 ngày trước khi lịch trình đóng. Hệ thống đang xử lý hoàn tiền vui lòng đợi...";
+                throw new CustomException.InvalidDataException("Không thể hủy đặt lịch vì đã qua thời hạn hủy trước 3 ngày.");
             }
-            else
-            {
-                notice = $"Hủy đặt lịch của thú cưng {booking.Pet.Name} thành công. Không có khoản hoàn tiền nào vì hủy đúng hạn.";
-            }
+
+            booking.Status = BookingStatus.Canceled.ToString();
+
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.Id == booking.Pet.PetOwnerId).FirstOrDefault();
+            var poWallet = _unitOfWork.WalletRepository.GetByID(po.AccountId);
+            poWallet.Balance += booking.StoreService.Service.Cost;
+            _unitOfWork.WalletRepository.Update(poWallet);
+
+            string notice = $"Hủy đặt lịch của thú cưng {booking.Pet.Name} thành công. " +
+                            $"Số tiền {booking.StoreService.Service.Cost} sẽ được hoàn vào ví của chủ thú cưng {booking.Pet.PetOwner.FullName}.";
 
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = booking.Pet.PetOwner.AccountId,
                 Name = "Cancel Booking",
                 Type = NotificationType.Booking.ToString(),
-                Description = $"Dịch vụ {booking.StoreService.Service.Name} đã bị hủy từ cửa hàng {booking.StoreService.Store.Name}.",
+                Description = $"Dịch vụ {booking.StoreService.Service.Name} đã bị hủy từ cửa hàng {booking.StoreService.Store.Name}. Vui lòng kiểm tra số dư...",
                 ReferenceId = booking.Id
             };
 
