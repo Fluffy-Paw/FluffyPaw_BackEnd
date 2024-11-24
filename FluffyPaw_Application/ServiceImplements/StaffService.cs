@@ -633,8 +633,9 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<TrackingResponse> CreateTracking(TrackingRequest trackingRequest)
         {
             var existingBooking = _unitOfWork.BookingRepository.Get(eb => eb.Id == trackingRequest.BookingId
-                                                    && eb.Status == BookingStatus.Accepted.ToString());
-            if (!existingBooking.Any())
+                                                    && eb.Status == BookingStatus.Accepted.ToString(),
+                                                    includeProperties: "Pet,Pet.PetOwner").FirstOrDefault();
+            if (existingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Đặt lịch không tìm thấy hoặc đã hết hạn.");
             }
@@ -672,6 +673,18 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.Save();
 
                 var fileResponse = _mapper.Map<FileResponse>(newFile);
+
+                var notificationRequest = new NotificationRequest
+                {
+                    ReceiverId = existingBooking.Pet.PetOwner.AccountId,
+                    Name = "Check in booking",
+                    Type = NotificationType.Checkout.ToString(),
+                    Description = $"Booking cho {existingBooking.Pet.Name} đã có cập nhật mới.",
+                    ReferenceId = existingBooking.Id
+                };
+
+                await _notificationService.CreateNotification(notificationRequest);
+
                 fileResponses.Add(fileResponse);
             }
 
