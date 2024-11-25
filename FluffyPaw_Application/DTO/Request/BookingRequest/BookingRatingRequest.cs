@@ -1,5 +1,7 @@
 ﻿using FluffyPaw_Application.Mapper;
 using FluffyPaw_Domain.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +15,7 @@ namespace FluffyPaw_Application.DTO.Request.BookingRequest
         public int Vote { get; set; }
 
         public string? Description { get; set; }
+
+        public IFormFile? Image { get; set; }
     }
 }

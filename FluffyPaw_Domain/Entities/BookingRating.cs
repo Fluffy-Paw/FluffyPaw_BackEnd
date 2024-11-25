@@ -22,6 +22,8 @@ namespace FluffyPaw_Domain.Entities
 
         public string? Description { get; set; }
 
+        public string? Image { get; set; }
+
         [ForeignKey("BookingId")]
         public virtual Booking Booking { get; set; }
 

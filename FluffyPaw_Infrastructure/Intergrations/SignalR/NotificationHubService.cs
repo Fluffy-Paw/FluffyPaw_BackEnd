@@ -22,5 +22,10 @@ namespace FluffyPaw_Infrastructure.Intergrations.SignalR
         {
             await _hubContext.Clients.User(accountId.ToString()).SendAsync("ReceiveNoti", accountId.ToString(), notification, type, referenceId.ToString());
         }
+
+        public async Task MessageNotification(string notification, long accountId, string type, long referenceId)
+        {
+            await _hubContext.Clients.User(accountId.ToString()).SendAsync("MessageNoti", accountId.ToString(), notification, type, referenceId.ToString());
+        }
     }
 }

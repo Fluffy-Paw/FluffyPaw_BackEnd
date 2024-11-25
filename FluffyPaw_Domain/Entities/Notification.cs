@@ -25,6 +25,8 @@ namespace FluffyPaw_Domain.Entities
 
         public DateTimeOffset CreateDate { get; set; }
 
+        public long? ReferenceId { get; set; }
+
         public bool IsSeen { get; set; }
 
         public string Status { get; set; }
