@@ -401,6 +401,10 @@ namespace FluffyPaw_Application.ServiceImplements
                     Status = BookingStatus.Pending.ToString()
                 };
 
+
+                _unitOfWork.BookingRepository.Insert(newBooking);
+                await _unitOfWork.SaveAsync();
+
                 if (createBookingRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
                 {
                     var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
@@ -422,8 +426,8 @@ namespace FluffyPaw_Application.ServiceImplements
                     _unitOfWork.BillingRecordRepository.Insert(billingRecord);
                 }
 
-                _unitOfWork.BookingRepository.Insert(newBooking);
                 existingStoreService.CurrentPetOwner++;
+                _unitOfWork.StoreServiceRepository.Update(existingStoreService);
                 _unitOfWork.Save();
 
 
@@ -553,6 +557,9 @@ namespace FluffyPaw_Application.ServiceImplements
                 Status = BookingStatus.Pending.ToString()
             };
 
+            _unitOfWork.BookingRepository.Insert(newBooking);
+            await _unitOfWork.SaveAsync();
+
             if (timeSelectionRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
             {
                 var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
@@ -575,7 +582,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.BillingRecordRepository.Insert(billingRecord);
             }
 
-            _unitOfWork.BookingRepository.Insert(newBooking);
             await _unitOfWork.SaveAsync();
 
             var notificationRequest = new NotificationRequest
