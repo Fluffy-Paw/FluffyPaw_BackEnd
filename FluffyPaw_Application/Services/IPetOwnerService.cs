@@ -25,9 +25,8 @@ namespace FluffyPaw_Application.Services
         Task<List<BookingResponse>> CreateBooking(CreateBookingRequest createBookingRequest);
         Task<BookingResponse> CreateBookingTimeSelection(TimeSelectionRequest timeSelectionRequest);
         Task<bool> CancelBooking(long id);
-
+        Task<List<BillingRecordResponse>> GetAllBillingRecord();
         Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id);
-
         Task<TrackingResponse> GetTrackingById(long id);
 
     }

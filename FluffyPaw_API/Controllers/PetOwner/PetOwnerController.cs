@@ -140,6 +140,14 @@ namespace FluffyPaw_API.Controllers.PetOwner
             return CustomResult("Hủy đặt lịch thành công.", booking);
         }
 
+        [HttpGet("GetAllBillingRecord")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetAllBillingRecord()
+        {
+            var billingRecords = await _petOwnerService.GetAllBillingRecord();
+            return CustomResult("Tải dữ liệu thành công.", billingRecords);
+        }
+
         [HttpGet("GetAllTrackingByBookingId/{id}")]
         [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllTrackingByBookingId(long id)
