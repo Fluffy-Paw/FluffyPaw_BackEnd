@@ -238,7 +238,18 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingRatingResponses;
         }
 
+        public async Task<BookingRatingResponse> GetBookingRatingByBookingId(long id)
+        {
+            var booking = _unitOfWork.BookingRepository.GetByID(id);
+            var bookingRating = _unitOfWork.BookingRatingRepository.Get(b => b.BookingId == booking.Id).FirstOrDefault();
+            if (bookingRating == null)
+            {
+                throw new CustomException.DataNotFoundException("Khoong tìm thấy đánh giá này.");
+            }
 
+            var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(bookingRating);
+            return bookingRatingResponse;
+        }
         public async Task<BookingRatingResponse> GetBookingRatingById(long id)
         {
             var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(id);

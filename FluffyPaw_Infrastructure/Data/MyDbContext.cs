@@ -21,6 +21,7 @@ namespace FluffyPaw_Infrastructure.Data
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<BehaviorCategory> BehaviorCategories { get; set; }
+        public DbSet<BillingRecord> billingRecords { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingRating> BookingRatings { get; set; }
         public DbSet<Certificate> Certificates { get; set; }

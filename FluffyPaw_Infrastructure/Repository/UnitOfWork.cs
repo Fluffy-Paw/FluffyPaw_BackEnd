@@ -15,6 +15,7 @@ namespace FluffyPaw_Infrastructure.Repository
         private MyDbContext _context = new MyDbContext();
         private IGenericRepository<Account> _accountRepository;
         private IGenericRepository<BehaviorCategory> _behaviorCategoryRepository;
+        private IGenericRepository<BillingRecord> _billingRecordRepository;
         private IGenericRepository<Booking> _bookingRepository;
         private IGenericRepository<BookingRating> _bookingRatingRepository;
         private IGenericRepository<Certificate> _certificateRepository;
@@ -71,6 +72,19 @@ namespace FluffyPaw_Infrastructure.Repository
                     _behaviorCategoryRepository = new GenericRepository<BehaviorCategory>(_context);
                 }
                 return _behaviorCategoryRepository;
+            }
+        }
+
+        public IGenericRepository<BillingRecord> BillingRecordRepository
+        {
+            get
+            {
+
+                if (_billingRecordRepository == null)
+                {
+                    _billingRecordRepository = new GenericRepository<BillingRecord>(_context);
+                }
+                return _billingRecordRepository;
             }
         }
 

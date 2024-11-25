@@ -474,7 +474,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId
                                                 && ss.StoreId == store.Id
-                                                && ss.Status == StoreServiceStatus.Available.ToString())
+                                                && ss.Status == StoreServiceStatus.Available.ToString(),
+                                                includeProperties: "Service")
                                                 .FirstOrDefault();
             if (storeService == null)
             {
@@ -489,6 +490,17 @@ namespace FluffyPaw_Application.ServiceImplements
             var poAccountId = pendingBooking.Pet.PetOwner.Account.Id;
             var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == poAccountId).FirstOrDefault();
             wallet.Balance += pendingBooking.Cost;
+
+            var billingRecord = new BillingRecord
+            {
+                WalletId = wallet.Id,
+                BookingId = pendingBooking.Id,
+                Amount = pendingBooking.Cost,
+                Description = $"Đặt lịch dịch vụ {storeService.Service.Name} bị từ chối.",
+                CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
+            };
+
+            _unitOfWork.BillingRecordRepository.Insert(billingRecord);
             _unitOfWork.WalletRepository.Update(wallet);
             await _unitOfWork.SaveAsync();
 
@@ -542,6 +554,18 @@ namespace FluffyPaw_Application.ServiceImplements
             var po = _unitOfWork.PetOwnerRepository.Get(po => po.Id == booking.Pet.PetOwnerId).FirstOrDefault();
             var poWallet = _unitOfWork.WalletRepository.GetByID(po.AccountId);
             poWallet.Balance += booking.StoreService.Service.Cost;
+
+            var billingRecord = new BillingRecord
+            {
+                WalletId = poWallet.Id,
+                BookingId = booking.Id,
+                Amount = booking.Cost,
+                Description = $"Đặt lịch dịch vụ {booking.StoreService.Service.Name} đã bị hủy bởi cửa hàng.",
+                CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
+            };
+
+            _unitOfWork.BillingRecordRepository.Insert(billingRecord);
+
             _unitOfWork.WalletRepository.Update(poWallet);
 
             string notice = $"Hủy đặt lịch của thú cưng {booking.Pet.Name} thành công. " +
