@@ -227,6 +227,23 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponses;
         }
 
+        public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId)
+        {
+            var service = _unitOfWork.ServiceRepository.GetByID(serviceId);
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == serviceId
+                                                    && ss.StoreId == storeId
+                                                    && ss.Status == StoreServiceStatus.Available.ToString(),
+                                                    includeProperties: "Service");
+            if (!storeServices.Any())
+            {
+                throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình của dịch vụ {service.Name}.");
+            }
+
+            var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
+            return storeSerResponses;
+        }
+
         public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id)
         {
             var existingService = _unitOfWork.ServiceRepository.GetByID(id);

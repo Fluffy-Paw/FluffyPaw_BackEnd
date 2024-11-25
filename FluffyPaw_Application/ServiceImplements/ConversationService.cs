@@ -370,7 +370,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 ConversationId = conversationMessageRequest.ConversationId,
                 SenderId = account.Id,
                 Content = conversationMessageRequest.Content,
-                CreateTime = CoreHelper.SystemTimeNow,
+                CreateTime = CoreHelper.SystemTimeNow.AddHours(7),
                 IsSeen = false,
                 ReplyMessageId = conversationMessageRequest.ReplyMessageId,
             };
@@ -410,6 +410,7 @@ namespace FluffyPaw_Application.ServiceImplements
             await NotifyMessage(conversation, account.RoleName, newMessage.Content, conversationMessageRequest.Files != null && conversationMessageRequest.Files.Any());
 
             var conversationMessageResponse = _mapper.Map<ConversationMessageResponse>(newMessage);
+            conversationMessageResponse.CreateTime = CoreHelper.SystemTimeNow;
             conversationMessageResponse.Files = fileResponses;
 
             return conversationMessageResponse;
@@ -442,8 +443,6 @@ namespace FluffyPaw_Application.ServiceImplements
                                     NotificationType.Message.ToString(), conversation.Id);
             }
         }
-
-
 
         private void PopulateAdditionalFields(ConversationResponse conversationResponse, Conversation conversation)
         {

@@ -151,7 +151,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 if (serviceTypeName == "Hotel")
                 {
                     booking.CheckOut = true;
-                    booking.CheckOutTime = CoreHelper.SystemTimeNow;
+                    booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
                 }
 
                 else
@@ -162,7 +162,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     }
 
                     booking.CheckOut = true;
-                    booking.CheckOutTime = CoreHelper.SystemTimeNow;
+                    booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
                 }
 
                 _unitOfWork.BookingRepository.Update(booking);
