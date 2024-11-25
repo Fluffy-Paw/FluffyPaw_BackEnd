@@ -303,7 +303,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
             var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
-            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status == PetStatus.Available.ToString()).ToList();
             if (!pets.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng hoặc thú cưng không thuộc quyền sở hữu của bạn.");
@@ -437,7 +437,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
             var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
-            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id).ToList();
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status == PetStatus.Available.ToString()).ToList();
             if (!pets.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng hoặc thú cưng không thuộc quyền sở hữu của bạn.");
