@@ -81,6 +81,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 Type = type,
                 Description = description,
                 CreateDate = CoreHelper.SystemTimeNow,
+                ReferenceId = referenceId,
                 IsSeen = false,
                 Status = NotificationStatus.Unread.ToString()
             };

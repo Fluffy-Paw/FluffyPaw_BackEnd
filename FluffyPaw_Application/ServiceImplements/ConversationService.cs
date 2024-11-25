@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.ConversationRequest;
+using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Response.ConversationResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Application.Utils.Pagination;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
@@ -29,11 +31,11 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IJobScheduler _jobScheduler;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
-        private readonly INotificationService _notificationService;
+        private readonly INotificationHubService _notiHub;
 
         public ConversationService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
                                 IHttpContextAccessor contextAccessor, IJobScheduler jobScheduler,
-                                IFirebaseConfiguration firebaseConfiguration, INotificationService notificationService)
+                                IFirebaseConfiguration firebaseConfiguration, INotificationHubService notificationHubService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -41,7 +43,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _contextAccessor = contextAccessor;
             _jobScheduler = jobScheduler;
             _firebaseConfiguration = firebaseConfiguration;
-            _notificationService = notificationService;
+            _notiHub = notificationHubService;
         }
 
         public async Task<List<ConversationResponse>> GetAllConversation()
@@ -59,7 +61,7 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 conversations = _unitOfWork.ConversationRepository.Get(c => c.StaffAccountId == account.Id,
                                                     includeProperties: "ConversationMessages");
-                
+
             }
             else if (account.RoleName == RoleName.PetOwner.ToString())
             {
@@ -140,7 +142,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (account.RoleName == RoleName.Staff.ToString())
             {
-                newConversation = new Conversation 
+                newConversation = new Conversation
                 {
                     PoAccountId = conversationRequest.PersonId,
                     StaffAccountId = account.Id,
@@ -405,11 +407,42 @@ namespace FluffyPaw_Application.ServiceImplements
             conversation.LastMessage = newMessage.Content;
             _unitOfWork.Save();
 
+            await NotifyMessage(conversation, account.RoleName, newMessage.Content, conversationMessageRequest.Files != null && conversationMessageRequest.Files.Any());
+
             var conversationMessageResponse = _mapper.Map<ConversationMessageResponse>(newMessage);
             conversationMessageResponse.Files = fileResponses;
 
             return conversationMessageResponse;
         }
+
+        private async Task NotifyMessage(Conversation conversation, string roleName, string content, bool hasFiles)
+        {
+            string notificationMessage;
+
+            if (roleName == RoleName.Staff.ToString())
+            {
+                var store = _unitOfWork.StoreRepository.Get(a => a.AccountId == conversation.StaffAccountId).FirstOrDefault();
+
+                notificationMessage = hasFiles
+                    ? $"Cửa hàng {store.Name} đã gửi ảnh."
+                    : $"Cửa hàng {store.Name} đã gửi tin nhắn";
+
+                await _notiHub.MessageNotification(notificationMessage, conversation.PoAccountId,
+                                    NotificationType.Message.ToString(), conversation.Id);
+            }
+            else if (roleName == RoleName.PetOwner.ToString())
+            {
+                var po = _unitOfWork.PetOwnerRepository.Get(a => a.AccountId == conversation.PoAccountId).FirstOrDefault();
+
+                notificationMessage = hasFiles
+                    ? $"Người chủ của thú cưng {po.FullName} đã gửi ảnh."
+                    : $"Người chủ của thú cưng {po.FullName} đã gửi tin nhắn";
+
+                await _notiHub.MessageNotification(notificationMessage, conversation.StaffAccountId,
+                                    NotificationType.Message.ToString(), conversation.Id);
+            }
+        }
+
 
 
         private void PopulateAdditionalFields(ConversationResponse conversationResponse, Conversation conversation)

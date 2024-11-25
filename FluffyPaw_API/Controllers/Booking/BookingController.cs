@@ -45,6 +45,14 @@ namespace FluffyPaw_API.Controllers.Booking
             return CustomResult("Checkout thành công.", booking);
         }
 
+        [HttpGet("GetAllBookingRatingByServiceId/{id}")]
+        [Authorize(Roles = "Staff,PetOwner")]
+        public async Task<IActionResult> GetAllBookingRatingByServiceId(long id)
+        {
+            var bookingRatings = await _bookingService.GetAllBookingRatingByServiceId(id);
+            return CustomResult("Tải dữ liệu thành công.", bookingRatings);
+        }
+
         [HttpGet("GetBookingRatingById/{id}")]
         [Authorize(Roles = "Staff,PetOwner")]
         public async Task<IActionResult> GetBookingRatingById(long id)

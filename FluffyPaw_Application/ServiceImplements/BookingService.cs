@@ -28,10 +28,11 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IJobScheduler _jobScheduler;
         private readonly INotificationService _notificationService;
+        private readonly IFirebaseConfiguration _firebaseConfiguration;
 
         public BookingService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
                             IHttpContextAccessor httpContextAccessor, IJobScheduler jobScheduler,
-                            INotificationService notificationService)
+                            INotificationService notificationService, IFirebaseConfiguration firebaseConfiguration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -39,6 +40,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _httpContextAccessor = httpContextAccessor;
             _jobScheduler = jobScheduler;
             _notificationService = notificationService;
+            _firebaseConfiguration = firebaseConfiguration;
         }
 
         public async Task<BookingResponse> GetBookingById(long id)
@@ -192,6 +194,51 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponses;
         }
 
+        public async Task<List<BookingRatingResponse>> GetAllBookingRatingByServiceId(long id)
+        {
+            var service = _unitOfWork.ServiceRepository.GetByID(id);
+            if (service == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ này.");
+            }
+
+            var storeServiceIds = _unitOfWork.StoreServiceRepository
+                .Get(ss => ss.ServiceId == service.Id)
+                .Select(ss => ss.Id)
+                .ToList();
+
+            if (!storeServiceIds.Any())
+            {
+                throw new CustomException.DataNotFoundException("Dịch vụ này không có lịch trình nào.");
+            }
+
+            var bookingIds = _unitOfWork.BookingRepository
+                .Get(b => storeServiceIds.Contains(b.StoreServiceId))
+                .Select(b => b.Id)
+                .ToList();
+
+            if (!bookingIds.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch nào liên quan đến dịch vụ này.");
+            }
+
+            var bookingRatings = _unitOfWork.BookingRatingRepository
+                .Get(br => bookingIds.Contains(br.BookingId))
+                .ToList();
+
+            if (!bookingRatings.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá nào cho dịch vụ này.");
+            }
+
+            var bookingRatingResponses = bookingRatings
+                .Select(br => _mapper.Map<BookingRatingResponse>(br))
+                .ToList();
+
+            return bookingRatingResponses;
+        }
+
+
         public async Task<BookingRatingResponse> GetBookingRatingById(long id)
         {
             var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(id);
@@ -231,12 +278,20 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataExistException("Bạn đã đánh giá dịch vụ này rồi, vui lòng chọn nút chỉnh sửa để thay đổi đánh giá của bạn.");
             }
 
+            string uploadedImageUrl = null;
+
+            if (createBookingRatingRequest.Image != null)
+            {
+                uploadedImageUrl = await _firebaseConfiguration.UploadImage(createBookingRatingRequest.Image);
+            }
+
             var newBookingRating = new BookingRating
             {
                 BookingId = bookingId,
                 PetOwnerId = po.Id,
                 Vote = createBookingRatingRequest.Vote,
-                Description = createBookingRatingRequest.Description
+                Description = createBookingRatingRequest.Description,
+                Image = uploadedImageUrl
             };
 
             _unitOfWork.BookingRatingRepository.Insert(newBookingRating);
