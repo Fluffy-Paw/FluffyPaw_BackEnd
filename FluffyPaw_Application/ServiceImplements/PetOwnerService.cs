@@ -2,7 +2,9 @@
 using FluffyPaw_Application.DTO.Request.BookingRequest;
 using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
+using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.DasboardResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
 using FluffyPaw_Application.DTO.Response.StaffResponse;
@@ -16,6 +18,8 @@ using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
+using System.Drawing;
+using System.Linq;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -405,6 +409,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.BookingRepository.Insert(newBooking);
                 await _unitOfWork.SaveAsync();
 
+
                 if (createBookingRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
                 {
                     var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
@@ -743,6 +748,110 @@ namespace FluffyPaw_Application.ServiceImplements
             trackingResponse.Files = _mapper.Map<List<FileResponse>>(trackingFiles);
 
             return trackingResponse;
+        }
+
+        public async Task<List<StoreSerResponse>> RecommendServiceGuest()
+        {
+            var result = new List<StoreSerResponse>();
+
+            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString(), includeProperties: "Store,Service").ToList();
+
+            Random rng = new Random();
+            int n = listStoreServices.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                StoreService temp = listStoreServices[k];
+                listStoreServices[k] = listStoreServices[n];
+                listStoreServices[n] = temp;
+            }
+
+            _mapper.Map(listStoreServices, result);
+
+            return result;
+        }
+
+        public async Task<List<StoreSerResponse>> RecommendServicePO()
+        {
+            var result = new List<StoreSerResponse>();
+
+            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString(), includeProperties: "Store,Service").ToList();
+
+            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId).FirstOrDefault();
+            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status == PetStatus.Available.ToString());
+            var petIds = pets.Select(p => p.Id).ToList();
+
+            if (!pets.Any())
+            {
+                Random rng = new Random();
+                int n = listStoreServices.Count;
+                while (n > 1)
+                {
+                    n--;
+                    int k = rng.Next(n + 1);
+                    StoreService temp = listStoreServices[k];
+                    listStoreServices[k] = listStoreServices[n];
+                    listStoreServices[n] = temp;
+                }
+                _mapper.Map(listStoreServices, result);
+            }
+            else
+            {
+                //var storeServiceDict = listStoreServices.ToDictionary(ss => ss.Id);
+                //var servicePointList = new List<ServicePoint>();
+                //var vaccines = _unitOfWork.VaccineHistoryRepository.Get(v => petIds.Contains(v.PetId)).ToList();
+
+                //foreach (var service in listStoreServices)
+                //{
+                //    var point = await CalculatePoint(service);
+                //    if (vaccines.Any() && service.Service.ServiceTypeId == 2) point += 10;
+                //    servicePointList.Add(new ServicePoint { ServiceId = service.Id, Point =  point});
+                //}
+                //var list = servicePointList.OrderByDescending(ob => ob.Point).ToList();
+                //foreach (var item in list)
+                //{
+                //    if (storeServiceDict.TryGetValue(item.ServiceId, out var storeService))
+                //    {
+                //        result.Add(_mapper.Map<StoreSerResponse>(storeService));
+                //    }
+                //}
+
+                var list = listStoreServices.OrderByDescending(s => s.Service.TotalRating).ThenByDescending(s => s.Store.TotalRating).ThenByDescending(s => s.Service.BookingCount).ToList();
+                _mapper.Map(list, result);
+            }
+
+            return result;
+        }
+        
+        public async Task<double> CalculatePoint(StoreService storeService)
+        {
+            var point = 0;
+
+            if (storeService.Service.TotalRating > 4) point += 20;
+            else if (storeService.Service.TotalRating > 3) point += 15;
+            else if (storeService.Service.TotalRating > 1) point += 10;
+            else point += 5;
+
+            if (storeService.Store.TotalRating > 4) point += 20;
+            else if (storeService.Store.TotalRating > 3) point += 15;
+            else if (storeService.Store.TotalRating > 1) point += 10;
+            else point += 5;
+
+            if (storeService.Service.Cost < 150000) point += 15;
+            else if (storeService.Service.Cost < 1000000) point += 12;
+            else if (storeService.Service.Cost < 10000000) point += 10;
+            else if (storeService.Service.Cost < 70000000) point += 5;
+
+            if (storeService.Service.BookingCount < 100) point += 0;
+            else if (storeService.Service.BookingCount < 1000) point += 10;
+            else point += 20;
+
+            var report = _unitOfWork.ReportRepository.Get(rp => rp.TargetId.Equals(storeService.Store.AccountId)).Count();
+            point -= report;
+
+            return point;
         }
     }
 }
