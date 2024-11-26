@@ -30,16 +30,16 @@ namespace FluffyPaw_API.Controllers.Booking
 
         [HttpPatch("Checkin")]
         [Authorize(Roles = "Staff")]
-        public async Task<IActionResult> Checkin(CheckRequest checkRequest)
+        public async Task<IActionResult> Checkin(CheckinRequest checkinRequest)
         {
-            var booking = await _bookingService.Checkin(checkRequest);
+            var booking = await _bookingService.Checkin(checkinRequest);
             return CustomResult("Checkin thành công.", booking);
         }
 
         [HttpPatch("Checkout")]
         [Authorize(Roles = "Staff,PetOwner")]
 
-        public async Task<IActionResult> Checkout(CheckRequest checkRequest)
+        public async Task<IActionResult> Checkout([FromForm] CheckOutRequest checkRequest)
         {
             var booking = await _bookingService.Checkout(checkRequest);
             return CustomResult("Checkout thành công.", booking);
