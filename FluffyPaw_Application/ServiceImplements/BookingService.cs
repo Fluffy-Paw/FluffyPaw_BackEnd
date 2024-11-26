@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -55,7 +56,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponse;
         }
 
-        public async Task<List<BookingResponse>> Checkin(CheckRequest checkRequest)
+        public async Task<List<BookingResponse>> Checkin(CheckinRequest checkinRequest)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -72,47 +73,44 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var bookingResponses = new List<BookingResponse>();
 
-            foreach (var id in checkRequest.Id)
+            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == checkinRequest.Id && b.Status == BookingStatus.Accepted.ToString(),
+                                            includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
+            if (booking == null)
             {
-                var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id && b.Status == BookingStatus.Accepted.ToString(),
-                                                includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
-                if (booking == null)
-                {
-                    throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
-                }
-
-                var storeService = _unitOfWork.StoreServiceRepository.GetByID(booking.StoreServiceId);
-                if (storeService == null || storeService.StoreId != store.Id)
-                {
-                    throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
-                }
-
-                booking.Checkin = true;
-                booking.CheckinTime = CoreHelper.SystemTimeNow.AddHours(7);
-                _unitOfWork.BookingRepository.Update(booking);
-
-                var notificationRequest = new NotificationRequest
-                {
-                    ReceiverId = booking.Pet.PetOwner.AccountId,
-                    Name = "Check in booking",
-                    Type = NotificationType.Checkin.ToString(),
-                    Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check in thành công.",
-                    ReferenceId = booking.Id
-                };
-
-                await _notificationService.CreateNotification(notificationRequest);
-
-                var bookingResponse = _mapper.Map<BookingResponse>(booking);
-                bookingResponse.CheckinTime = CoreHelper.SystemTimeNow;
-                bookingResponses.Add(bookingResponse);
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
             }
+
+            var storeService = _unitOfWork.StoreServiceRepository.GetByID(booking.StoreServiceId);
+            if (storeService == null || storeService.StoreId != store.Id)
+            {
+                throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
+            }
+
+            booking.Checkin = true;
+            booking.CheckinTime = CoreHelper.SystemTimeNow.AddHours(7);
+            _unitOfWork.BookingRepository.Update(booking);
+
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = booking.Pet.PetOwner.AccountId,
+                Name = "Check in booking",
+                Type = NotificationType.Checkin.ToString(),
+                Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check in thành công.",
+                ReferenceId = booking.Id
+            };
+
+            await _notificationService.CreateNotification(notificationRequest);
+
+            var bookingResponse = _mapper.Map<BookingResponse>(booking);
+            bookingResponse.CheckinTime = CoreHelper.SystemTimeNow;
+            bookingResponses.Add(bookingResponse);
 
             await _unitOfWork.SaveAsync();
 
             return bookingResponses;
         }
 
-        public async Task<List<BookingResponse>> Checkout(CheckRequest checkRequest)
+        public async Task<List<BookingResponse>> Checkout(CheckOutRequest checkRequest)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -131,59 +129,76 @@ namespace FluffyPaw_Application.ServiceImplements
             var bookingResponses = new List<BookingResponse>();
             double totalAmountToAdd = 0;
 
-            foreach (var id in checkRequest.Id)
+            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == checkRequest.Id,
+                                        includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
+            if (booking == null)
             {
-                var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id, 
-                                            includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
-                if (booking == null)
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
+            }
+
+            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == booking.StoreServiceId,
+                                                    includeProperties: "Service,Service.ServiceType").FirstOrDefault();
+            if (storeService == null || storeService.StoreId != store.Id)
+            {
+                throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
+            }
+
+            var serviceTypeName = storeService.Service.ServiceType.Name;
+            if (serviceTypeName == "Hotel")
+            {
+                booking.CheckOut = true;
+                booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
+            }
+
+            else
+            {
+                if (booking.Status != BookingStatus.Ended.ToString())
                 {
-                    throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
+                    throw new CustomException.InvalidDataException("Đặt lịch này cần phải kết thúc trước khi check out.");
                 }
 
-                var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == booking.StoreServiceId,
-                                                        includeProperties: "Service,Service.ServiceType").FirstOrDefault();
-                if (storeService == null || storeService.StoreId != store.Id)
+                booking.CheckOut = true;
+                booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
+            }
+
+            _unitOfWork.BookingRepository.Update(booking);
+            await _unitOfWork.SaveAsync();
+
+            if (serviceTypeName == "Vaccine")
+            {
+                var pet = _unitOfWork.PetRepository.Get(p => p.Id == booking.Id).FirstOrDefault();
+                var imageUrl = await _firebaseConfiguration.UploadImage(checkRequest.Image);
+                var vaccineHistory = new VaccineHistory
                 {
-                    throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
-                }
-
-                var serviceTypeName = storeService.Service.ServiceType.Name;
-                if (serviceTypeName == "Hotel")
-                {
-                    booking.CheckOut = true;
-                    booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
-                }
-
-                else
-                {
-                    if (booking.Status != BookingStatus.Ended.ToString())
-                    {
-                        throw new CustomException.InvalidDataException("Đặt lịch này cần phải kết thúc trước khi check out.");
-                    }
-
-                    booking.CheckOut = true;
-                    booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
-                }
-
-                _unitOfWork.BookingRepository.Update(booking);
-
-                var notificationRequest = new NotificationRequest
-                {
-                    ReceiverId = booking.Pet.PetOwner.AccountId,
-                    Name = "Check in booking",
-                    Type = NotificationType.Checkout.ToString(),
-                    Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check out thành công.",
-                    ReferenceId = booking.Id
+                    Image = imageUrl,
+                    Name = checkRequest.Name,
+                    PetCurrentWeight = checkRequest.PetCurrentWeight ?? pet.Weight,
+                    VaccineDate = (DateTimeOffset)booking.CheckOutTime,
+                    NextVaccineDate = checkRequest.NextVaccineDate,
+                    Description = checkRequest.Description,
+                    Status = VaccineStatus.Complete.ToString()
                 };
 
-                await _notificationService.CreateNotification(notificationRequest);
-
-                totalAmountToAdd += booking.Cost;
-
-                var bookingResponse = _mapper.Map<BookingResponse>(booking);
-                bookingResponse.CheckOutTime = CoreHelper.SystemTimeNow;
-                bookingResponses.Add(bookingResponse);
+                _unitOfWork.VaccineHistoryRepository.Insert(vaccineHistory);
+                await _unitOfWork.SaveAsync();
             }
+
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = booking.Pet.PetOwner.AccountId,
+                Name = "Check in booking",
+                Type = NotificationType.Checkout.ToString(),
+                Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check out thành công.",
+                ReferenceId = booking.Id
+            };
+
+            await _notificationService.CreateNotification(notificationRequest);
+
+            totalAmountToAdd += booking.Cost;
+
+            var bookingResponse = _mapper.Map<BookingResponse>(booking);
+            bookingResponse.CheckOutTime = CoreHelper.SystemTimeNow;
+            bookingResponses.Add(bookingResponse);
 
             var brandWallet = _unitOfWork.WalletRepository.Get(bw => bw.AccountId == store.Brand.AccountId).FirstOrDefault();
             brandWallet.Balance += totalAmountToAdd;

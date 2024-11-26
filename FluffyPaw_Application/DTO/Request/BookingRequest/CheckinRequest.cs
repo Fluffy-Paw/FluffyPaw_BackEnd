@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Request.BookingRequest
 {
-    public class CheckRequest
+    public class CheckinRequest
     {
-        public List<long> Id { get; set; }
+        public long Id { get; set; }
     }
 }
