@@ -41,5 +41,6 @@ namespace FluffyPaw_Domain.Entities
         public virtual Brand Brand { get; set; }
 
         public ICollection<Certificate> Certificate { get; set; }
+        public ICollection<StoreService> StoreServices { get; set; }
     }
 }
