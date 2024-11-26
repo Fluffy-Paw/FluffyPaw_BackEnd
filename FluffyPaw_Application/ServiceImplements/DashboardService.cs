@@ -52,12 +52,14 @@ namespace FluffyPaw_Application.ServiceImplements
             var storeIds = stores.Select(s => s.Id).ToList();
             var storeServices = _unitOfWork.StoreServiceRepository.Get(s => storeIds.Contains(s.StoreId), includeProperties: "Store,Service").ToList();
             var storeServiceIds = storeServices.Select(s => s.Id).ToList();
-            var bookings = _unitOfWork.BookingRepository.Get(s => storeServiceIds.Contains(s.StoreServiceId)).ToList();
+            var storeServiceServiceIds = storeServices.Select(s => s.ServiceId).ToList();
+            var services = _unitOfWork.ServiceRepository.Get(s => storeServiceServiceIds.Contains(s.Id)).ToList();
+            var bookings = _unitOfWork.BookingRepository.Get(b => storeServiceIds.Contains(b.StoreServiceId)).ToList();
             
             int numOfReports = 0;
-            foreach (var id in storeIds)
+            foreach (var store in stores)
             {
-                var report = _unitOfWork.ReportRepository.Get(rp => rp.TargetId.Equals(id)).ToList();
+                var report = _unitOfWork.ReportRepository.Get(rp => rp.TargetId.Equals(store.AccountId)).ToList();
                 numOfReports += report.Count();
             }
 
@@ -70,34 +72,32 @@ namespace FluffyPaw_Application.ServiceImplements
             }
             
             List<StoreServiceResponse> topServices = new List<StoreServiceResponse>();
-            var services = storeServices.OrderByDescending(s => s.Service.BookingCount).ToList();
-            foreach (var service in services)
-            {
-                var ss = new StoreServiceResponse
-                {
-                    StoreName = service.Store.Name,
-                    ServiceName = service.Service.Name,
-                    NumberOfBooking = service.Service.BookingCount
-                };
-                topServices.Add(ss);
-            }
-
-            //var storeServiceDict = storeServices.ToDictionary(ss => ss.Id);
-            //var countTopServices = bookings.GroupBy(b => b.StoreServiceId).Select(g => new { serviceId = g.Key, count = g.Count() }).OrderByDescending(ob => ob.count).Take(3).ToList();
-            //foreach (var item in countTopServices)
+            //var listService = services.OrderByDescending(s => s.BookingCount).Take(3).ToList();
+            //foreach (var service in listService)
             //{
-            //    //topServices.Add(storeServices.Find(ss => ss.Id == item.serviceId));
-            //    if (storeServiceDict.TryGetValue(item.serviceId, out var storeService))
+            //    var ss = new StoreServiceResponse
             //    {
-            //        var ss = new StoreServiceResponse
-            //        {
-            //            StoreName = storeService.Store.Name,
-            //            ServiceName = storeService.Service.Name,
-            //            NumberOfBooking = item.count
-            //        };
-            //        topServices.Add(ss);
-            //    }
+            //        ServiceName = service.Name,
+            //        NumberOfBooking = service.BookingCount
+            //    };
+            //    topServices.Add(ss);
             //}
+
+            var storeServiceDict = storeServices.ToDictionary(ss => ss.Id);
+            var countTopServices = bookings.GroupBy(b => b.StoreServiceId).Select(g => new { serviceId = g.Key, count = g.Count() }).OrderByDescending(ob => ob.count).Take(3).ToList();
+            foreach (var item in countTopServices)
+            {
+                if (storeServiceDict.TryGetValue(item.serviceId, out var storeService))
+                {
+                    var ss = new StoreServiceResponse
+                    {
+                        StoreName = storeService.Store.Name,
+                        ServiceName = storeService.Service.Name,
+                        NumberOfBooking = item.count
+                    };
+                    topServices.Add(ss);
+                }
+            }
 
             var response = new SMDashboardResponse
             {
