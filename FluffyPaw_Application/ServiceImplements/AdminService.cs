@@ -135,12 +135,16 @@ namespace FluffyPaw_Application.ServiceImplements
             var service = _unitOfWork.ServiceRepository.Get(s => s.Id == id,
                                                 includeProperties: "Brand").FirstOrDefault();
 
+            service.Status = false;
+            await _unitOfWork.SaveAsync();
+
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = service.Brand.AccountId,
                 Name = "Đăng kí dịch vụ đã bị từ chối",
-                Type = "Service",
-                Description = description
+                Type = NotificationType.Service.ToString(),
+                Description = description,
+                ReferenceId = service.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
 
@@ -198,8 +202,9 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 ReceiverId = store.Brand.AccountId,
                 Name = "Đăng kí chi nhánh bị từ chối",
-                Type = "Store",
-                Description = description
+                Type = NotificationType.Store.ToString(),
+                Description = description,
+                ReferenceId = 0
             };
             await _notificationService.CreateNotification(notificationRequest);
 
@@ -307,8 +312,9 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 Name = user.Username,
                 ReceiverId = user.Id,
-                Type = "Withdraw Request",
-                Description = denyWithdrawRequest.Description
+                Type = NotificationType.WithDraw.ToString(),
+                Description = denyWithdrawRequest.Description,
+                ReferenceId = wallet.Id
             });
 
             request.Status = "Denied";

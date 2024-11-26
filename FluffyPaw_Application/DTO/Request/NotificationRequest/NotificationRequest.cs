@@ -23,5 +23,6 @@ namespace FluffyPaw_Application.DTO.Request.NotificationRequest
         [Required(ErrorMessage = "Vui lòng nhập tin nhắn thông báo.")]
         public string Description { get; set; }
 
+        public long ReferenceId { get; set; }
     }
 }

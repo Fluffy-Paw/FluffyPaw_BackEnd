@@ -27,7 +27,7 @@ namespace FluffyPaw_Application.Services
         Task<List<StoreSerResponse>> SuggestionSameTime(long id);
 
         Task<List<StoreResponse>> GetStoreById(long id);
-
+        Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId);
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id);
 
         Task<List<BookingResponse>> GetAllBooking();
@@ -39,9 +39,8 @@ namespace FluffyPaw_Application.Services
         Task<BookingResponse> CreateBookingTimeSelection(TimeSelectionRequest timeSelectionRequest);
 
         Task<bool> CancelBooking(long id);
-
+        Task<List<BillingRecordResponse>> GetAllBillingRecord();
         Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id);
-
         Task<TrackingResponse> GetTrackingById(long id);
 
         Task<List<StoreSerResponse>> RecommendServicePO();

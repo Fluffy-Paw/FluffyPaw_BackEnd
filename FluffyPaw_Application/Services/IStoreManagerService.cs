@@ -13,6 +13,10 @@ namespace FluffyPaw_Application.Services
 {
     public interface IStoreManagerService
     {
+        Task<int> GetTotalBooking();
+        Task<int> GetTotalService();
+        Task<int> GetTotalStore();
+        Task<double> GetRevenue(RevenueRequest revenueRequest);
         Task<List<StaffResponse>> GetAllStaffBySM();
         Task<List<StoreResponse>> GetAllStoreBySM();
         Task<List<StoreResponse>> GetAllStoreFalseBySM();
@@ -21,5 +25,6 @@ namespace FluffyPaw_Application.Services
         Task<StoreResponse> UpdateStore(long id, UpdateStoreRequest updateStoreRequest);
         Task<bool> DeleteStore(long id);
         Task<StaffResponse> UpdateStaff(long id, UpdateStaffRequest updateStaffRequest);
+        //Task<>
     }
 }

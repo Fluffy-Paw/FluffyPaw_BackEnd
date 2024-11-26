@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.BookingRequest;
+using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
@@ -12,8 +14,10 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -25,10 +29,11 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IJobScheduler _jobScheduler;
         private readonly INotificationService _notificationService;
+        private readonly IFirebaseConfiguration _firebaseConfiguration;
 
         public BookingService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
                             IHttpContextAccessor httpContextAccessor, IJobScheduler jobScheduler,
-                            INotificationService notificationService)
+                            INotificationService notificationService, IFirebaseConfiguration firebaseConfiguration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -36,6 +41,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _httpContextAccessor = httpContextAccessor;
             _jobScheduler = jobScheduler;
             _notificationService = notificationService;
+            _firebaseConfiguration = firebaseConfiguration;
         }
 
         public async Task<BookingResponse> GetBookingById(long id)
@@ -50,7 +56,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponse;
         }
 
-        public async Task<List<BookingResponse>> Checkin(CheckRequest checkRequest)
+        public async Task<List<BookingResponse>> Checkin(CheckinRequest checkinRequest)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -67,36 +73,44 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var bookingResponses = new List<BookingResponse>();
 
-            foreach (var id in checkRequest.Id)
+            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == checkinRequest.Id && b.Status == BookingStatus.Accepted.ToString(),
+                                            includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
+            if (booking == null)
             {
-                var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id && b.Status == BookingStatus.Accepted.ToString(),
-                                                includeProperties: "StoreService,StoreService.Service").FirstOrDefault();
-                if (booking == null)
-                {
-                    throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
-                }
-
-                var storeService = _unitOfWork.StoreServiceRepository.GetByID(booking.StoreServiceId);
-                if (storeService == null || storeService.StoreId != store.Id)
-                {
-                    throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
-                }
-
-                booking.Checkin = true;
-                booking.CheckinTime = CoreHelper.SystemTimeNow.AddHours(7);
-                _unitOfWork.BookingRepository.Update(booking);
-
-                var bookingResponse = _mapper.Map<BookingResponse>(booking);
-                bookingResponse.CheckinTime = CoreHelper.SystemTimeNow;
-                bookingResponses.Add(bookingResponse);
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
             }
+
+            var storeService = _unitOfWork.StoreServiceRepository.GetByID(booking.StoreServiceId);
+            if (storeService == null || storeService.StoreId != store.Id)
+            {
+                throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
+            }
+
+            booking.Checkin = true;
+            booking.CheckinTime = CoreHelper.SystemTimeNow.AddHours(7);
+            _unitOfWork.BookingRepository.Update(booking);
+
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = booking.Pet.PetOwner.AccountId,
+                Name = "Check in booking",
+                Type = NotificationType.Checkin.ToString(),
+                Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check in thành công.",
+                ReferenceId = booking.Id
+            };
+
+            await _notificationService.CreateNotification(notificationRequest);
+
+            var bookingResponse = _mapper.Map<BookingResponse>(booking);
+            bookingResponse.CheckinTime = CoreHelper.SystemTimeNow;
+            bookingResponses.Add(bookingResponse);
 
             await _unitOfWork.SaveAsync();
 
             return bookingResponses;
         }
 
-        public async Task<List<BookingResponse>> Checkout(CheckRequest checkRequest)
+        public async Task<List<BookingResponse>> Checkout(CheckOutRequest checkRequest)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -115,46 +129,76 @@ namespace FluffyPaw_Application.ServiceImplements
             var bookingResponses = new List<BookingResponse>();
             double totalAmountToAdd = 0;
 
-            foreach (var id in checkRequest.Id)
+            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == checkRequest.Id,
+                                        includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
+            if (booking == null)
             {
-                var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id, includeProperties: "StoreService,StoreService.Service").FirstOrDefault();
-                if (booking == null)
-                {
-                    throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
-                }
-
-                var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == booking.StoreServiceId,
-                                                        includeProperties: "Service,Service.ServiceType").FirstOrDefault();
-                if (storeService == null || storeService.StoreId != store.Id)
-                {
-                    throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
-                }
-
-                var serviceTypeName = storeService.Service.ServiceType.Name;
-                if (serviceTypeName == "Hotel")
-                {
-                    booking.CheckOut = true;
-                    booking.CheckOutTime = CoreHelper.SystemTimeNow;
-                }
-
-                else
-                {
-                    if (booking.Status != BookingStatus.Ended.ToString())
-                    {
-                        throw new CustomException.InvalidDataException("Đặt lịch này cần phải kết thúc trước khi check out.");
-                    }
-
-                    booking.CheckOut = true;
-                    booking.CheckOutTime = CoreHelper.SystemTimeNow;
-                }
-
-                _unitOfWork.BookingRepository.Update(booking);
-                totalAmountToAdd += booking.Cost;
-
-                var bookingResponse = _mapper.Map<BookingResponse>(booking);
-                bookingResponse.CheckOutTime = CoreHelper.SystemTimeNow;
-                bookingResponses.Add(bookingResponse);
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
             }
+
+            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == booking.StoreServiceId,
+                                                    includeProperties: "Service,Service.ServiceType").FirstOrDefault();
+            if (storeService == null || storeService.StoreId != store.Id)
+            {
+                throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
+            }
+
+            var serviceTypeName = storeService.Service.ServiceType.Name;
+            if (serviceTypeName == "Hotel")
+            {
+                booking.CheckOut = true;
+                booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
+            }
+
+            else
+            {
+                if (booking.Status != BookingStatus.Ended.ToString())
+                {
+                    throw new CustomException.InvalidDataException("Đặt lịch này cần phải kết thúc trước khi check out.");
+                }
+
+                booking.CheckOut = true;
+                booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
+            }
+
+            _unitOfWork.BookingRepository.Update(booking);
+            await _unitOfWork.SaveAsync();
+
+            if (serviceTypeName == "Vaccine")
+            {
+                var pet = _unitOfWork.PetRepository.Get(p => p.Id == booking.Id).FirstOrDefault();
+                var imageUrl = await _firebaseConfiguration.UploadImage(checkRequest.Image);
+                var vaccineHistory = new VaccineHistory
+                {
+                    Image = imageUrl,
+                    Name = checkRequest.Name,
+                    PetCurrentWeight = checkRequest.PetCurrentWeight ?? pet.Weight,
+                    VaccineDate = (DateTimeOffset)booking.CheckOutTime,
+                    NextVaccineDate = checkRequest.NextVaccineDate,
+                    Description = checkRequest.Description,
+                    Status = VaccineStatus.Complete.ToString()
+                };
+
+                _unitOfWork.VaccineHistoryRepository.Insert(vaccineHistory);
+                await _unitOfWork.SaveAsync();
+            }
+
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = booking.Pet.PetOwner.AccountId,
+                Name = "Check in booking",
+                Type = NotificationType.Checkout.ToString(),
+                Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check out thành công.",
+                ReferenceId = booking.Id
+            };
+
+            await _notificationService.CreateNotification(notificationRequest);
+
+            totalAmountToAdd += booking.Cost;
+
+            var bookingResponse = _mapper.Map<BookingResponse>(booking);
+            bookingResponse.CheckOutTime = CoreHelper.SystemTimeNow;
+            bookingResponses.Add(bookingResponse);
 
             var brandWallet = _unitOfWork.WalletRepository.Get(bw => bw.AccountId == store.Brand.AccountId).FirstOrDefault();
             brandWallet.Balance += totalAmountToAdd;
@@ -165,6 +209,62 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponses;
         }
 
+        public async Task<List<BookingRatingResponse>> GetAllBookingRatingByServiceId(long id)
+        {
+            var service = _unitOfWork.ServiceRepository.GetByID(id);
+            if (service == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ này.");
+            }
+
+            var storeServiceIds = _unitOfWork.StoreServiceRepository
+                .Get(ss => ss.ServiceId == service.Id)
+                .Select(ss => ss.Id)
+                .ToList();
+
+            if (!storeServiceIds.Any())
+            {
+                throw new CustomException.DataNotFoundException("Dịch vụ này không có lịch trình nào.");
+            }
+
+            var bookingIds = _unitOfWork.BookingRepository
+                .Get(b => storeServiceIds.Contains(b.StoreServiceId))
+                .Select(b => b.Id)
+                .ToList();
+
+            if (!bookingIds.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch nào liên quan đến dịch vụ này.");
+            }
+
+            var bookingRatings = _unitOfWork.BookingRatingRepository
+                .Get(br => bookingIds.Contains(br.BookingId))
+                .ToList();
+
+            if (!bookingRatings.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá nào cho dịch vụ này.");
+            }
+
+            var bookingRatingResponses = bookingRatings
+                .Select(br => _mapper.Map<BookingRatingResponse>(br))
+                .ToList();
+
+            return bookingRatingResponses;
+        }
+
+        public async Task<BookingRatingResponse> GetBookingRatingByBookingId(long id)
+        {
+            var booking = _unitOfWork.BookingRepository.GetByID(id);
+            var bookingRating = _unitOfWork.BookingRatingRepository.Get(b => b.BookingId == booking.Id).FirstOrDefault();
+            if (bookingRating == null)
+            {
+                throw new CustomException.DataNotFoundException("Khoong tìm thấy đánh giá này.");
+            }
+
+            var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(bookingRating);
+            return bookingRatingResponse;
+        }
         public async Task<BookingRatingResponse> GetBookingRatingById(long id)
         {
             var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(id);
@@ -204,12 +304,20 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataExistException("Bạn đã đánh giá dịch vụ này rồi, vui lòng chọn nút chỉnh sửa để thay đổi đánh giá của bạn.");
             }
 
+            string uploadedImageUrl = null;
+
+            if (createBookingRatingRequest.Image != null)
+            {
+                uploadedImageUrl = await _firebaseConfiguration.UploadImage(createBookingRatingRequest.Image);
+            }
+
             var newBookingRating = new BookingRating
             {
                 BookingId = bookingId,
                 PetOwnerId = po.Id,
                 Vote = createBookingRatingRequest.Vote,
-                Description = createBookingRatingRequest.Description
+                Description = createBookingRatingRequest.Description,
+                Image = uploadedImageUrl
             };
 
             _unitOfWork.BookingRatingRepository.Insert(newBookingRating);

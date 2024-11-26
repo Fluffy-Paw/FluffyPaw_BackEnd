@@ -9,32 +9,29 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Domain.Entities
 {
-    public class Notification
+    public class BillingRecord
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        public long ReceiverId { get; set; }
+        public long WalletId { get; set; }
 
-        public string Name { get; set; }
+        public long BookingId { get; set; }
 
-        public string Type { get; set; }
+        public double Amount { get; set; }
 
         public string Description { get; set; }
 
         public DateTimeOffset CreateDate { get; set; }
 
-        public long? ReferenceId { get; set; }
+        [ForeignKey("WalletId")]
+        public virtual Wallet Wallet { get; set; }
 
-        public bool IsSeen { get; set; }
+        [ForeignKey("BookingId")]
+        public virtual Booking Booking { get; set; }
 
-        public string Status { get; set; }
-
-        [ForeignKey("ReceiverId")]
-        public virtual Account Account { get; set; }
-
-        public Notification()
+        public BillingRecord()
         {
             CreateDate = CoreHelper.SystemTimeNow;
         }

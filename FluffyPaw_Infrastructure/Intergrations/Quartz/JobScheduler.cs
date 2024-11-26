@@ -65,7 +65,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var triggerOneHour = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneHour)
-                .StartAt(booking.CreateDate.AddHours(1))
+                .StartAt(booking.CreateDate.AddHours(8))
             .Build();
 
             await _scheduler.ScheduleJob(job, triggerOneHour);

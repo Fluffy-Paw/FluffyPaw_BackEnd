@@ -32,12 +32,8 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                 var description = $"Thông báo dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} đã quá thời gian chờ." +
                                 $" Hệ thống tự động hoàn tiền...";
 
-                await _notificationService.ScheduleCreateNotification(
-                    booking.Pet.PetOwner.Account.Id,
-                    booking.StoreService.Service.Name,
-                    booking.StoreService.Service.ServiceType.Name,
-                    description
-                );
+                await _notificationService.ScheduleCreateNotification(booking.Pet.PetOwner.Account.Id, booking.StoreService.Service.Name,
+                    booking.StoreService.Service.ServiceType.Name, description, booking.Id);
 
                 booking.Status = BookingStatus.OverTime.ToString();
                 _unitOfWork.BookingRepository.Update(booking);

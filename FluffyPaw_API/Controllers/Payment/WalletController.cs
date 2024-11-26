@@ -5,6 +5,7 @@ using FluffyPaw_Application.DTO.Request.WalletRequest;
 using FluffyPaw_Application.ServiceImplements;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.Entities;
+using FluffyPaw_Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,9 +70,10 @@ namespace FluffyPaw_API.Controllers.Payment
             await _notificationService.CreateNotification(new NotificationRequest
             {
                 Name = wallet.Id.ToString(),
-                Type = "WithDraw Request",
+                Type = NotificationType.WithDraw.ToString(),
                 ReceiverId = 1,
-                Description = $"{wallet.Account.Username}/{amount}"
+                Description = $"{wallet.Account.Username}/{amount}",
+                ReferenceId = wallet.Id
             });
 
             return CustomResult("Rút tiền thành công, tiền sẽ chuyển vào ngân hàng của bạn trong vòng 1 ngày. Số dư mới: ", result);

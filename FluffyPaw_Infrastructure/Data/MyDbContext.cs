@@ -21,6 +21,7 @@ namespace FluffyPaw_Infrastructure.Data
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<BehaviorCategory> BehaviorCategories { get; set; }
+        public DbSet<BillingRecord> billingRecords { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingRating> BookingRatings { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
@@ -229,18 +230,6 @@ namespace FluffyPaw_Infrastructure.Data
                 new StoreService { Id = 18, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 26, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 19, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 27, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 20, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 28, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() }
-                );
-
-            modelBuilder.Entity<Booking>().HasData(
-                new Booking { Id = 1, PetId = 1, StoreServiceId = 1, PaymentMethod = "PayOS", Cost = 100000, Description = "test", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), StartTime = CoreHelper.SystemTimeNow.AddHours(7), EndTime = CoreHelper.SystemTimeNow.AddHours(7), Status = "Accepted" }
-                );
-
-            modelBuilder.Entity<BookingRating>().HasData(
-                new BookingRating { Id = 1, BookingId = 1, PetOwnerId = 1, Vote = 5, Description = "test"}
-                );
-
-            modelBuilder.Entity<Tracking>().HasData(
-                new Tracking { Id = 1, BookingId = 1, UploadDate = DateTimeOffset.Now, Description = "test", Status = true }
                 );
         }
     }

@@ -15,11 +15,15 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", builder =>
     {
         builder
-            //.WithOrigins("http://localhost:3000")
-            .AllowAnyOrigin()
+            .WithOrigins("http://localhost:3000", 
+            "http://192.168.2.3:3000",
+            "http://127.0.0.1:5500",
+            "capacitor://localhost")
+            //.AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader()
-            /*.AllowCredentials()*/;
+            .AllowCredentials()
+            .SetIsOriginAllowed(_ => true);
     });
 });
 
@@ -80,10 +84,11 @@ else
 
 
 app.UseHttpsRedirection();
-app.UseCors("CorsPolicy");
 
 //Middleware
 app.UseRouting();
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 
@@ -91,10 +96,10 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
 
-app.MapControllers();
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<NotificationHub>("/NotificationHub");
+    endpoints.MapControllers();
+    endpoints.MapHub<NotificationHub>("/NotificationHub").RequireCors("CorsPolicy");
 });
 
 

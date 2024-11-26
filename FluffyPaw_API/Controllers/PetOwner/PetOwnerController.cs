@@ -92,6 +92,14 @@ namespace FluffyPaw_API.Controllers.PetOwner
             return CustomResult("Tải dữ liệu thành công.", store);
         }
 
+        [HttpGet("GetAllStoreServiceByServiceIdStoreId")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId)
+        {
+            var storeServices = await _petOwnerService.GetAllStoreServiceByServiceIdStoreId(serviceId, storeId);
+            return CustomResult("Tải dữ liệu thành công.", storeServices);
+        }
+
         [HttpGet("GetAllStoreServiceByServiceId/{id}")]
         [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllStoreServiceByServiceId(long id)
@@ -138,6 +146,14 @@ namespace FluffyPaw_API.Controllers.PetOwner
         {
             var booking = await _petOwnerService.CancelBooking(id);
             return CustomResult("Hủy đặt lịch thành công.", booking);
+        }
+
+        [HttpGet("GetAllBillingRecord")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetAllBillingRecord()
+        {
+            var billingRecords = await _petOwnerService.GetAllBillingRecord();
+            return CustomResult("Tải dữ liệu thành công.", billingRecords);
         }
 
         [HttpGet("GetAllTrackingByBookingId/{id}")]

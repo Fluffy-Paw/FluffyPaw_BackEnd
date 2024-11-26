@@ -42,6 +42,141 @@ namespace FluffyPaw_Application.ServiceImplements
             _hashing = hashing;
         }
 
+        public async Task<int> GetTotalBooking()
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
+            }
+
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+
+            var storeIds = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id)
+                                            .Select(s => s.Id)
+                                            .ToList();
+            if (!storeIds.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng nào.");
+            }
+
+            var storeServiceIds = _unitOfWork.StoreServiceRepository.Get(ss => storeIds.Contains(ss.StoreId))
+                                            .Select(ss => ss.Id)
+                                            .ToList();
+            if (!storeServiceIds.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình nào.");
+            }
+
+            var bookings = _unitOfWork.BookingRepository.Get(b => storeServiceIds.Contains(b.StoreServiceId))
+                                            .DistinctBy(b => b.Id)
+                                            .ToList();
+
+            var totalBooking = bookings.Count;
+            return totalBooking;
+        }
+
+        public async Task<int> GetTotalService()
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
+            }
+
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+
+            var services = _unitOfWork.ServiceRepository.Get(s => s.BrandId == brand.Id).ToList();
+            if (!services.Any())
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu này không có dịch vụ nào.");
+            }
+            
+            var totalService = services.Count();
+
+            return totalService;
+        }
+
+        public async Task<int> GetTotalStore()
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
+            }
+
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+
+            var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id).ToList();
+            if (!stores.Any())
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu này chưa có chi nhánh nào.");
+            }
+
+            var totalStore = stores.Count();
+            return totalStore;
+        }
+
+        public async Task<double> GetRevenue(RevenueRequest revenueRequest)
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            if (account == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
+            }
+
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+            if (brand == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy thương hiệu (Brand).");
+            }
+
+            var storeIds = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id)
+                                            .Select(s => s.Id)
+                                            .ToList();
+            if (!storeIds.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng nào.");
+            }
+
+            var storeServiceIds = _unitOfWork.StoreServiceRepository.Get(ss => storeIds.Contains(ss.StoreId))
+                                                    .Select(ss => ss.Id)
+                                                    .ToList();
+            if (!storeServiceIds.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình nào.");
+            }
+
+            DateTime start;
+            DateTime end;
+
+            if (revenueRequest.startDate.HasValue && revenueRequest.endDate.HasValue)
+            {
+                start = revenueRequest.startDate.Value;
+                end = revenueRequest.endDate.Value;
+            }
+            else if (revenueRequest.month.HasValue && revenueRequest.year.HasValue)
+            {
+                start = new DateTime(revenueRequest.year.Value, revenueRequest.month.Value, 1);
+                end = start.AddMonths(1).AddDays(-1);
+            }
+            else
+            {
+                throw new CustomException.InvalidDataException("Vui lòng cung cấp thông tin thời gian hợp lệ (tuần hoặc tháng).");
+            }
+
+            var revenue = _unitOfWork.BookingRepository.Get(b => storeServiceIds.Contains(b.StoreServiceId) 
+                                            && b.Status == BookingStatus.Ended.ToString() 
+                                            && b.EndTime >= start && b.EndTime <= end)
+                                            .Sum(b => b.Cost);
+
+            return revenue;
+        }
+
         public async Task<List<StaffResponse>> GetAllStaffBySM()
         {
             var storemanagerId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
@@ -192,7 +327,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
             }
 
-            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id && b.Status == true).FirstOrDefault();
             if (brand == null)
             {
                 throw new CustomException.DataNotFoundException("Thương hiệu của bạn chưa được hệ thống xác thực. Vui lòng thử lại sau");

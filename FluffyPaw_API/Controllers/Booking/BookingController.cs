@@ -30,19 +30,35 @@ namespace FluffyPaw_API.Controllers.Booking
 
         [HttpPatch("Checkin")]
         [Authorize(Roles = "Staff")]
-        public async Task<IActionResult> Checkin(CheckRequest checkRequest)
+        public async Task<IActionResult> Checkin(CheckinRequest checkinRequest)
         {
-            var booking = await _bookingService.Checkin(checkRequest);
+            var booking = await _bookingService.Checkin(checkinRequest);
             return CustomResult("Checkin thành công.", booking);
         }
 
         [HttpPatch("Checkout")]
         [Authorize(Roles = "Staff,PetOwner")]
 
-        public async Task<IActionResult> Checkout(CheckRequest checkRequest)
+        public async Task<IActionResult> Checkout([FromForm] CheckOutRequest checkRequest)
         {
             var booking = await _bookingService.Checkout(checkRequest);
             return CustomResult("Checkout thành công.", booking);
+        }
+
+        [HttpGet("GetAllBookingRatingByServiceId/{id}")]
+        [Authorize(Roles = "Staff,PetOwner")]
+        public async Task<IActionResult> GetAllBookingRatingByServiceId(long id)
+        {
+            var bookingRatings = await _bookingService.GetAllBookingRatingByServiceId(id);
+            return CustomResult("Tải dữ liệu thành công.", bookingRatings);
+        }
+
+        [HttpGet("GetBookingRatingByBookingId/{id}")]
+        [Authorize(Roles = "Staff,PetOwner")]
+        public async Task<IActionResult> GetBookingRatingByBookingId(long id)
+        {
+            var bookingRating = await _bookingService.GetBookingRatingByBookingId(id);
+            return CustomResult("Tải dữ liệu thành công.", bookingRating);
         }
 
         [HttpGet("GetBookingRatingById/{id}")]

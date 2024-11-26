@@ -19,5 +19,7 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
         public int Vote { get; set; }
 
         public string? Description { get; set; }
+
+        public string? Image { get; set; }
     }
 }
