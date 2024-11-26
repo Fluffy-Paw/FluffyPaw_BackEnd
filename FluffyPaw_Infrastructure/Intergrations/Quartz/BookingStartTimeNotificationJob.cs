@@ -30,13 +30,9 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                                 "StoreService,StoreService.Service,StoreService.Service.ServiceType").FirstOrDefault();
 
             var description = $"Thông báo dịch vụ {booking.StoreService.Service.Name} sắp bắt đầu.";
-            await _notificationService.ScheduleCreateNotification(
-                booking.Pet.PetOwner.Account.Id,
-                booking.StoreService.Service.Name,
-                booking.StoreService.Service.ServiceType.Name,
-                description,
-                booking.Id
-            );
+            await _notificationService.ScheduleCreateNotification(booking.Pet.PetOwner.Account.Id,
+                                            booking.StoreService.Service.Name, booking.StoreService.Service.ServiceType.Name,
+                                            description, booking.Id);
         }
     }
 }
