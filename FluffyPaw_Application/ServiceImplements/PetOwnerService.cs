@@ -5,6 +5,7 @@ using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
+using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StaffResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
@@ -242,6 +243,44 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
             return storeSerResponses;
+        }
+
+        public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime)
+        {
+            var services = _unitOfWork.ServiceRepository.Get(includeProperties: "ServiceType")
+                                            .Where(ss => ss.ServiceTypeId == serviceTypeId);
+
+            if (dateTime.HasValue)
+            {
+                services = services.Where(s =>
+                    s.StoreServices.Any(ss => ss.StartTime <= dateTime.Value));
+            }
+
+            services = services.OrderByDescending(s => s.TotalRating)
+                                .ThenByDescending(s => s.BookingCount)
+                                .ThenBy(s => s.Cost);
+
+            var serviceResponses = _mapper.Map<List<SerResponse>>(services);
+            return serviceResponses;
+        }
+
+        public async Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? dateTime)
+        {
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == serviceId,
+                                                    includeProperties: "Store");
+
+            if (dateTime.HasValue)
+            {
+                storeServices = storeServices.Where(ss => ss.StartTime <= dateTime.Value);
+            }
+
+            var stores = storeServices.Select(ss => ss.Store)
+                                    .Distinct()
+                                    .OrderByDescending(s => s.TotalRating)
+                                    .ToList();
+
+            var stResponses = _mapper.Map<List<StResponse>>(stores);
+            return stResponses;
         }
 
         public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id)

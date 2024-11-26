@@ -2,6 +2,7 @@
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
+using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StaffResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
@@ -20,6 +21,8 @@ namespace FluffyPaw_Application.Services
         Task<List<StoreSerResponse>> SuggestionSameTime(long id);
         Task<List<StoreResponse>> GetStoreById(long id);
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId);
+        Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime);
+        Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? dateTime);
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id);
         Task<List<BookingResponse>> GetAllBooking();
         Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus);

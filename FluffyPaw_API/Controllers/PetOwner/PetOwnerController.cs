@@ -100,6 +100,22 @@ namespace FluffyPaw_API.Controllers.PetOwner
             return CustomResult("Tải dữ liệu thành công.", storeServices);
         }
 
+        [HttpGet("GetAllStoreServiceByServiceIdDateTime")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime)
+        {
+            var storeServices = await _petOwnerService.GetAllServiceByServiceTypeIdDateTime(serviceTypeId, dateTime);
+            return CustomResult("Tải dữ liệu thành công.", storeServices);
+        }
+
+        [HttpGet("GetAllStoreByServiceIdDateTime")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? dateTime)
+        {
+            var storeServices = await _petOwnerService.GetAllStoreByServiceIdDateTime(serviceId, dateTime);
+            return CustomResult("Tải dữ liệu thành công.", storeServices);
+        }
+
         [HttpGet("GetAllStoreServiceByServiceId/{id}")]
         [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllStoreServiceByServiceId(long id)
