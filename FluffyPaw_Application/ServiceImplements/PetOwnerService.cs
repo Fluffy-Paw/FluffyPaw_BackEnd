@@ -669,5 +669,16 @@ namespace FluffyPaw_Application.ServiceImplements
 
             return trackingResponse;
         }
+
+        public async Task<List<StoreSerResponse>> RecommendService()
+        {
+            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId).FirstOrDefault();
+            var pet = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status == PetStatus.Available.ToString());
+            
+            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.Status == StoreServiceStatus.Available.ToString()).ToList();
+
+            return new List<StoreSerResponse>();
+        }
     }
 }

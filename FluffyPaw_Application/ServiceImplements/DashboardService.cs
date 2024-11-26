@@ -1,5 +1,6 @@
 ﻿using FluffyPaw_Application.DTO.Response.DasboardResponse;
 using FluffyPaw_Application.Services;
+using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
@@ -49,21 +50,65 @@ namespace FluffyPaw_Application.ServiceImplements
             var brand = _unitOfWork.BrandRepository.Get(u => u.AccountId.Equals(userId)).FirstOrDefault();
             var stores = _unitOfWork.StoreRepository.Get(b => b.BrandId.Equals(brand.Id)).ToList();
             var storeIds = stores.Select(s => s.Id).ToList();
-            var services = _unitOfWork.StoreServiceRepository.Get(s => storeIds.Contains(s.StoreId)).ToList();
-            var serviceIds = services.Select(s => s.Id).ToList();
-            var booking = _unitOfWork.BookingRepository.Get(s => serviceIds.Contains(s.StoreServiceId)).ToList();
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(s => storeIds.Contains(s.StoreId), includeProperties: "Store,Service").ToList();
+            var storeServiceIds = storeServices.Select(s => s.Id).ToList();
+            var bookings = _unitOfWork.BookingRepository.Get(s => storeServiceIds.Contains(s.StoreServiceId)).ToList();
+            
+            int numOfReports = 0;
+            foreach (var id in storeIds)
+            {
+                var report = _unitOfWork.ReportRepository.Get(rp => rp.TargetId.Equals(id)).ToList();
+                numOfReports += report.Count();
+            }
 
-            int numOfAll = booking.Count;
-            int NumOfAccepted = booking.Count(a => a.Status.Equals(BookingStatus.Accepted.ToString()));
-            int NumOfCanceled = booking.Count(c => c.Status.Equals(BookingStatus.Canceled.ToString()));
-            int NumOfPending = booking.Count(p => p.Status.Equals(BookingStatus.Pending.ToString()));
+            List<double> revenues = new List<double>();
+            for (int i = 1; i<=12;  i++)
+            {
+                var bookingsByMonth = bookings.FindAll(b => b.CreateDate.Month == i);
+                double revenue = bookingsByMonth.Sum(r => r.Cost);
+                revenues.Add(revenue);
+            }
+            
+            List<StoreServiceResponse> topServices = new List<StoreServiceResponse>();
+            var services = storeServices.OrderByDescending(s => s.Service.BookingCount).ToList();
+            foreach (var service in services)
+            {
+                var ss = new StoreServiceResponse
+                {
+                    StoreName = service.Store.Name,
+                    ServiceName = service.Service.Name,
+                    NumberOfBooking = service.Service.BookingCount
+                };
+                topServices.Add(ss);
+            }
+
+            //var storeServiceDict = storeServices.ToDictionary(ss => ss.Id);
+            //var countTopServices = bookings.GroupBy(b => b.StoreServiceId).Select(g => new { serviceId = g.Key, count = g.Count() }).OrderByDescending(ob => ob.count).Take(3).ToList();
+            //foreach (var item in countTopServices)
+            //{
+            //    //topServices.Add(storeServices.Find(ss => ss.Id == item.serviceId));
+            //    if (storeServiceDict.TryGetValue(item.serviceId, out var storeService))
+            //    {
+            //        var ss = new StoreServiceResponse
+            //        {
+            //            StoreName = storeService.Store.Name,
+            //            ServiceName = storeService.Service.Name,
+            //            NumberOfBooking = item.count
+            //        };
+            //        topServices.Add(ss);
+            //    }
+            //}
 
             var response = new SMDashboardResponse
             {
-                NumOfAll = numOfAll,
-                NumOfAccepted = NumOfAccepted,
-                NumOfCanceled = NumOfCanceled,
-                NumOfPending = NumOfPending
+                NumOfAll = bookings.Count(),
+                NumOfAccepted = bookings.Count(a => a.Status.Equals(BookingStatus.Accepted.ToString())),
+                NumOfCanceled = bookings.Count(c => c.Status.Equals(BookingStatus.Canceled.ToString())),
+                NumOfPending = bookings.Count(p => p.Status.Equals(BookingStatus.Pending.ToString())),
+                NumOfStores = stores.Count(),
+                NumOfReports = numOfReports,
+                Revenues = revenues,
+                TopServices = topServices
             };
 
             return response;
