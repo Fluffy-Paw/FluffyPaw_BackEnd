@@ -326,7 +326,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thông tin của StoreManager.");
             }
 
-            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id && b.Status == true).FirstOrDefault();
             if (brand == null)
             {
                 throw new CustomException.DataNotFoundException("Thương hiệu của bạn chưa được hệ thống xác thực. Vui lòng thử lại sau");
