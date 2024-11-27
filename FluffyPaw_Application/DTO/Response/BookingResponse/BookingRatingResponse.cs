@@ -16,10 +16,12 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public long PetOwnerId { get; set; }
 
-        public int Vote { get; set; }
+        public int ServiceVote { get; set; }
 
-        public string? Description { get; set; }
+        public int StoreVote { get; set; }
 
-        public string? Image { get; set; }
+        public string Description { get; set; }
+
+        public string Image { get; set; }
     }
 }

@@ -12,7 +12,9 @@ namespace FluffyPaw_Application.DTO.Request.BookingRequest
 {
     public class BookingRatingRequest : IMapFrom<BookingRating>
     {
-        public int Vote { get; set; }
+        public int ServiceVote { get; set; }
+
+        public int StoreVote { get; set; }
 
         public string? Description { get; set; }
 

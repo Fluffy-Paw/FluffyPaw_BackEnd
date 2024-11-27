@@ -1,6 +1,7 @@
 ﻿using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Response;
+using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using System;
@@ -17,6 +18,7 @@ namespace FluffyPaw_Application.Services
         Task<int> GetTotalService();
         Task<int> GetTotalStore();
         Task<double> GetRevenue(RevenueRequest revenueRequest);
+        Task<List<BillingRecordResponse>> GetAllBillingRecord();
         Task<List<StaffResponse>> GetAllStaffBySM();
         Task<List<StoreResponse>> GetAllStoreBySM();
         Task<List<StoreResponse>> GetAllStoreFalseBySM();
