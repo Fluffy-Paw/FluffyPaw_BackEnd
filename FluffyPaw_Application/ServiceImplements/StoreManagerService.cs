@@ -3,6 +3,7 @@ using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Response;
+using FluffyPaw_Application.DTO.Response.BookingResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
@@ -175,6 +176,20 @@ namespace FluffyPaw_Application.ServiceImplements
                                             .Sum(b => b.Cost);
 
             return revenue;
+        }
+
+        public async Task<List<BillingRecordResponse>> GetAllBillingRecord()
+        {
+            var user = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(user);
+            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
+
+            var billingRecords = _unitOfWork.BillingRecordRepository.Get(brs => brs.WalletId == wallet.Id,
+                                                    orderBy: q => q.OrderByDescending(br => br.CreateDate),
+                                                    includeProperties: "Booking").ToList();
+
+            var billingRecordResponses = _mapper.Map<List<BillingRecordResponse>>(billingRecords);
+            return billingRecordResponses;
         }
 
         public async Task<List<StaffResponse>> GetAllStaffBySM()

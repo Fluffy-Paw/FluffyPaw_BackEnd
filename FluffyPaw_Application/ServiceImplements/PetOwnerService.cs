@@ -142,6 +142,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var stores = storeServices
                             .Select(ss => ss.Store)
+                            .OrderByDescending(ss => ss.TotalRating)
                             .Distinct();
 
             foreach (var store in stores)
@@ -313,6 +314,7 @@ namespace FluffyPaw_Application.ServiceImplements
             foreach (var pet in pets)
             {
                 var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id,
+                                                orderBy: q => q.OrderByDescending(b => b.CreateDate),
                                                 includeProperties: "StoreService,StoreService.Store,StoreService.Service,Pet").ToList();
                 if (!bookings.Any())
                 {
@@ -344,6 +346,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id
                                             && (string.IsNullOrEmpty(bookingStatus) || b.Status == bookingStatus),
+                                            orderBy: q => q.OrderByDescending(b => b.CreateDate),
                                             includeProperties: "StoreService,StoreService.Store,StoreService.Service,Pet");
             if (!bookings.Any())
             {
