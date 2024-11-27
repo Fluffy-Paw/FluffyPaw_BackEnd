@@ -46,7 +46,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<BookingResponse> GetBookingById(long id)
         {
-            var existingBooking = _unitOfWork.BookingRepository.GetByID(id);
+            var existingBooking = _unitOfWork.BookingRepository.Get(b => b.Id == id,
+                                        includeProperties: "Pet,StoreService,StoreService.Service,StoreService.Store");
             if (existingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -88,6 +89,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             booking.Checkin = true;
             booking.CheckinTime = CoreHelper.SystemTimeNow.AddHours(7);
+            booking.CheckinImage = await _firebaseConfiguration.UploadImage(checkinRequest.CheckinImagge);
             _unitOfWork.BookingRepository.Update(booking);
 
             var notificationRequest = new NotificationRequest
@@ -110,7 +112,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponses;
         }
 
-        public async Task<List<BookingResponse>> Checkout(CheckOutRequest checkRequest)
+        public async Task<List<BookingResponse>> Checkout(CheckOutRequest checkOutRequest)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -129,7 +131,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var bookingResponses = new List<BookingResponse>();
             double totalAmountToAdd = 0;
 
-            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == checkRequest.Id,
+            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == checkOutRequest.Id,
                                         includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
             if (booking == null)
             {
@@ -161,21 +163,23 @@ namespace FluffyPaw_Application.ServiceImplements
                 booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
             }
 
+            booking.CheckoutImage = await _firebaseConfiguration.UploadImage(checkOutRequest.CheckoutImage);
+
             _unitOfWork.BookingRepository.Update(booking);
             await _unitOfWork.SaveAsync();
 
             if (serviceTypeName == "Vaccine")
             {
                 var pet = _unitOfWork.PetRepository.Get(p => p.Id == booking.Id).FirstOrDefault();
-                var imageUrl = await _firebaseConfiguration.UploadImage(checkRequest.Image);
+                var imageUrl = await _firebaseConfiguration.UploadImage(checkOutRequest.Image);
                 var vaccineHistory = new VaccineHistory
                 {
                     Image = imageUrl,
-                    Name = checkRequest.Name,
-                    PetCurrentWeight = checkRequest.PetCurrentWeight ?? pet.Weight,
+                    Name = checkOutRequest.Name,
+                    PetCurrentWeight = checkOutRequest.PetCurrentWeight ?? pet.Weight,
                     VaccineDate = (DateTimeOffset)booking.CheckOutTime,
-                    NextVaccineDate = checkRequest.NextVaccineDate,
-                    Description = checkRequest.Description,
+                    NextVaccineDate = checkOutRequest.NextVaccineDate,
+                    Description = checkOutRequest.Description,
                     Status = VaccineStatus.Complete.ToString()
                 };
 
@@ -183,12 +187,10 @@ namespace FluffyPaw_Application.ServiceImplements
                 await _unitOfWork.SaveAsync();
             }
 
-            
-
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = booking.Pet.PetOwner.AccountId,
-                Name = "Check in booking",
+                Name = "Check out booking",
                 Type = NotificationType.Checkout.ToString(),
                 Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} check out thành công.",
                 ReferenceId = booking.Id
@@ -219,6 +221,18 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 _unitOfWork.BillingRecordRepository.Insert(newBillingRecord);
                 await _unitOfWork.SaveAsync();
+
+                var brandNotificationRequest = new NotificationRequest
+                {
+                    ReceiverId = store.Brand.AccountId,
+                    Name = "Check out booking",
+                    Type = NotificationType.Checkout.ToString(),
+                    Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} " +
+                                                        $"từ cửa hàng {store.Name} check out thành công.",
+                    ReferenceId = booking.Id
+                };
+
+                await _notificationService.CreateNotification(brandNotificationRequest);
             }
             else if (booking.PaymentMethod == BookingPaymentMethod.COD.ToString())
             {
@@ -233,6 +247,18 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 _unitOfWork.BillingRecordRepository.Insert(newBillingRecord);
                 await _unitOfWork.SaveAsync();
+
+                var brandNotificationRequest = new NotificationRequest
+                {
+                    ReceiverId = store.Brand.AccountId,
+                    Name = "Check out booking",
+                    Type = NotificationType.Checkout.ToString(),
+                    Description = $"Đã xác nhận dịch vụ {booking.StoreService.Service.Name} của {booking.Pet.Name} " +
+                                                        $"từ cửa hàng {store.Name} check out thành công.",
+                    ReferenceId = booking.Id
+                };
+
+                await _notificationService.CreateNotification(brandNotificationRequest);
             }
 
             await _unitOfWork.SaveAsync();

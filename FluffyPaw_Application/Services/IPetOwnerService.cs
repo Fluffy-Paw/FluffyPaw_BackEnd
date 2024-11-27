@@ -6,6 +6,7 @@ using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StaffResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.StoreServiceResponse;
+using FluffyPaw_Domain.Entities;
 
 namespace FluffyPaw_Application.Services
 {
@@ -29,8 +30,11 @@ namespace FluffyPaw_Application.Services
 
         Task<List<StoreResponse>> GetStoreById(long id);
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId);
+
         Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime);
+
         Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? dateTime);
+
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id);
 
         Task<List<BookingResponse>> GetAllBooking();
@@ -42,12 +46,21 @@ namespace FluffyPaw_Application.Services
         Task<BookingResponse> CreateBookingTimeSelection(TimeSelectionRequest timeSelectionRequest);
 
         Task<bool> CancelBooking(long id);
+
         Task<List<BillingRecordResponse>> GetAllBillingRecord();
+
         Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id);
+
         Task<TrackingResponse> GetTrackingById(long id);
 
         Task<List<StoreServicePOResponse>> RecommendServicePO();
 
         Task<List<StoreServicePOResponse>> RecommendServiceGuest();
+
+        Task<List<Store>> SearchStore(string character);
+        
+        Task<List<StoreServicePOResponse>> SearchStoreService(string character);
+
+        Task<List<Brand>> SearchBrand(string character);
     }
 }
