@@ -40,11 +40,15 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public bool Checkin { get; set; }
 
-        public DateTimeOffset CheckinTime { get; set; }
+        public DateTimeOffset? CheckinTime { get; set; }
 
-        public bool Checkout { get; set; }
+        public string CheckinImage { get; set; }
 
-        public DateTimeOffset CheckOutTime { get; set; }
+        public bool CheckOut { get; set; }
+
+        public DateTimeOffset? CheckOutTime { get; set; }
+
+        public string CheckoutImage { get; set; }
 
         public string Status { get; set; }
 
