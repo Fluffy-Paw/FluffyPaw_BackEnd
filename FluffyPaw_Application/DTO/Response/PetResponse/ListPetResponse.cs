@@ -24,6 +24,8 @@ namespace FluffyPaw_Application.DTO.Response.PetResponse
 
         public float Weight { get; set; }
 
+        public bool IsNeuter { get; set; }
+
         public string Status { get; set; }
     }
 }
