@@ -241,7 +241,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == serviceId
                                                     && ss.StoreId == storeId
                                                     && ss.Status == StoreServiceStatus.Available.ToString(),
-                                                    includeProperties: "Service");
+                                                    includeProperties: "Service,Service.Brand");
             if (!storeServices.Any())
             {
                 throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình của dịch vụ {service.Name}.");
@@ -253,7 +253,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime)
         {
-            var services = _unitOfWork.ServiceRepository.Get(includeProperties: "ServiceType")
+            var services = _unitOfWork.ServiceRepository.Get(includeProperties: "ServiceType,Brand")
                                             .Where(ss => ss.ServiceTypeId == serviceTypeId);
 
             if (dateTime.HasValue)
