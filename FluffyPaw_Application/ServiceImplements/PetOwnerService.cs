@@ -4,6 +4,7 @@ using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.DTO.Response.DasboardResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
@@ -253,7 +254,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime)
         {
-            var services = _unitOfWork.ServiceRepository.Get(includeProperties: "ServiceType,Brand")
+            var services = _unitOfWork.ServiceRepository.Get(includeProperties: "ServiceType,Brand,Certificate")
                                             .Where(ss => ss.ServiceTypeId == serviceTypeId);
 
             if (dateTime.HasValue)
@@ -265,8 +266,17 @@ namespace FluffyPaw_Application.ServiceImplements
             services = services.OrderByDescending(s => s.TotalRating)
                                 .ThenByDescending(s => s.BookingCount)
                                 .ThenBy(s => s.Cost);
+            
+            /*var serviceResponses = new List<SerResponse>();
 
+            foreach (var service in services)
+            {
+                var certificates = _unitOfWork.CertificateRepository.Get(c => c.ServiceId == service.Id);
+
+
+            }*/
             var serviceResponses = _mapper.Map<List<SerResponse>>(services);
+
             return serviceResponses;
         }
 
