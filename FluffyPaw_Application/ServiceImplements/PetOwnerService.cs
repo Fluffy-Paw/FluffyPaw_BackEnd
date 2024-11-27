@@ -308,7 +308,17 @@ namespace FluffyPaw_Application.ServiceImplements
                                     .OrderByDescending(s => s.TotalRating)
                                     .ToList();
 
+            foreach (var store in stores)
+            {
+                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id)
+                    .Select(sf => sf.Files)
+                    .ToList();
+
+                store.Files = storeFiles.ToList();
+            }
+
             var stResponses = _mapper.Map<List<StResponse>>(stores);
+
             return stResponses;
         }
 
