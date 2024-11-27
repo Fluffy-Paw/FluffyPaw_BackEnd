@@ -47,7 +47,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<BookingResponse> GetBookingById(long id)
         {
             var existingBooking = _unitOfWork.BookingRepository.Get(b => b.Id == id,
-                                        includeProperties: "Pet,StoreService,StoreService.Service,StoreService.Store");
+                                        includeProperties: "Pet,StoreService,StoreService.Service,StoreService.Store").FirstOrDefault();
             if (existingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
