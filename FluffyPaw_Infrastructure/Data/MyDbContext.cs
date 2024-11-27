@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -123,8 +125,8 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<PetCategory>().HasData(
-                new PetCategory { Id = 1, Name = "Dog" },
-                new PetCategory { Id = 2, Name = "Cat" }
+                new PetCategory { Id = 1, Name = "Chó" },
+                new PetCategory { Id = 2, Name = "Mèo" }
                 );
 
             modelBuilder.Entity<PetType>().HasData(
@@ -167,19 +169,19 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Pet>().HasData(
-                new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTime.Parse("2022-08-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test", IsNeuter = true, Status = "Available" },
-                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 18, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "Female", Weight = 5F, Dob = DateTime.Parse("2022-10-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test1", IsNeuter = false, Status = "Available" }
+                new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Nam", Weight = 6.5F, Dob = DateTime.Parse("2022-08-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test", IsNeuter = true, Status = "Available" },
+                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 18, BehaviorCategoryId = 2, Name = "MeowMeow", Sex = "Nữ", Weight = 5F, Dob = DateTime.Parse("2022-10-23"), Allergy = "none", MicrochipNumber = "none", Decription = "test1", IsNeuter = false, Status = "Available" }
                 );
 
             modelBuilder.Entity<VaccineHistory>().HasData(
-                new VaccineHistory { Id = 1, PetId = 1, Image = "none", Name = "Vaccine 1", PetCurrentWeight = 4, VaccineDate = DateTime.Parse("2024-10-08"), NextVaccineDate = DateTime.Parse("2024-10-13"), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString()},
-                new VaccineHistory { Id = 2, PetId = 2, Image = "none", Name = "Vaccine 2", PetCurrentWeight = 4, VaccineDate = DateTime.Parse("2024-09-09"), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() }
+                new VaccineHistory { Id = 1, PetId = 1, Image = "none", Name = "Loại 1", PetCurrentWeight = 4, VaccineDate = DateTime.Parse("2024-10-08"), NextVaccineDate = DateTime.Parse("2024-10-13"), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString()},
+                new VaccineHistory { Id = 2, PetId = 2, Image = "none", Name = "Loại 2", PetCurrentWeight = 4, VaccineDate = DateTime.Parse("2024-09-09"), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() }
                 );
 
             modelBuilder.Entity<ServiceType>().HasData(
-                new ServiceType { Id = 1, Name = "Grooming"},
-                new ServiceType { Id = 2, Name = "Vaccine" },
-                new ServiceType { Id = 3, Name = "Hotel" }
+                new ServiceType { Id = 1, Name = "Chăm sóc & Làm đẹp" },
+                new ServiceType { Id = 2, Name = "Tiêm chủng" },
+                new ServiceType { Id = 3, Name = "Khách sạn" }
                 );
 
             modelBuilder.Entity<Brand>().HasData(
@@ -195,41 +197,41 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Service>().HasData(
-                new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Pet Grooming", Image = "https://phongkhamthuythithipet.com/wp-content/uploads/2024/07/dich-vu-cham-soc-lam-dep-cho-thu-cung.jpg", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", BookingCount = 1, TotalRating = 0, Status = true },
-                new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Vaccine", Image = "https://hillcrestvets.co.za/wp-content/uploads/2020/10/Pet-Vaccinations.jpg", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
-                new Service { Id = 3, ServiceTypeId = 3, BrandId = 2, Name = "Hotel for your Boss", Image = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", Duration = TimeSpan.FromHours(23), Cost = 100000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true }
+                new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Chăm sóc cho Boss", Image = "https://phongkhamthuythithipet.com/wp-content/uploads/2024/07/dich-vu-cham-soc-lam-dep-cho-thu-cung.jpg", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", BookingCount = 1, TotalRating = 0, Status = true },
+                new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Tiêm chủng A", Image = "https://hillcrestvets.co.za/wp-content/uploads/2020/10/Pet-Vaccinations.jpg", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true },
+                new Service { Id = 3, ServiceTypeId = 3, BrandId = 2, Name = "Ngôi nhà thân thiện", Image = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", Duration = TimeSpan.FromHours(23), Cost = 100000, Description = "test", BookingCount = 0, TotalRating = 0, Status = true }
                 );
 
             modelBuilder.Entity<Certificate>().HasData(
-                new Certificate { Id = 1, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
-                new Certificate { Id = 2, ServiceId = 1, Name = "Certificate of Excellence in Pet Grooming", File = "test", Description = "none" },
-                new Certificate { Id = 3, ServiceId = 2, Name = "Certificate of Excellence in Pet Vaccine", File = "test", Description = "none" },
-                new Certificate { Id = 4, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" },
-                new Certificate { Id = 5, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" },
-                new Certificate { Id = 6, ServiceId = 3, Name = "Certificate of Excellence in Pet Hotel", File = "test", Description = "none" }
+                new Certificate { Id = 1, ServiceId = 1, Name = "Bằng chuyên gia về Chăm sóc & Làm đẹp", File = "test", Description = "none" },
+                new Certificate { Id = 2, ServiceId = 1, Name = "Bằng chuyên gia về Chăm sóc & Làm đẹp", File = "test", Description = "none" },
+                new Certificate { Id = 3, ServiceId = 2, Name = "Bằng chuyên gia về Tiêm chủng", File = "test", Description = "none" },
+                new Certificate { Id = 4, ServiceId = 3, Name = "Bằng chuyên gia về Khách sạn", File = "test", Description = "none" },
+                new Certificate { Id = 5, ServiceId = 3, Name = "Bằng chuyên gia về Khách sạn", File = "test", Description = "none" },
+                new Certificate { Id = 6, ServiceId = 3, Name = "Bằng chuyên gia về Khách sạn", File = "test", Description = "none" }
                 );
 
             modelBuilder.Entity<StoreService>().HasData(
-                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 2, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(10), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 3, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(14), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 4, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 5, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 6, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 7, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 8, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 9, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(10).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 10, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 25, 12, 0, 0, TimeSpan.Zero), CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 11, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 26, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 12, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 27, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 13, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 28, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 14, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 29, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 15, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 30, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 16, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 01, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 17, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 25, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 18, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 26, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 19, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 27, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
-                new StoreService { Id = 20, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 28, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() }
+                new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 2, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(10), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 3, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(14), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 4, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 5, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 6, StoreId = 2, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 7, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 8, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 9, StoreId = 3, ServiceId = 2, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), LimitPetOwner = 50, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 10, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 29, 12, 0, 0, TimeSpan.Zero), CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 11, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 11, 30, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 12, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 01, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 13, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 02, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 14, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 03, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 15, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 04, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 16, StoreId = 3, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 05, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 17, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 06, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 18, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 07, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 19, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 08, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
+                new StoreService { Id = 20, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 09, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() }
                 );
         }
     }
