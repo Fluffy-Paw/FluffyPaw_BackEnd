@@ -183,6 +183,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 await _unitOfWork.SaveAsync();
             }
 
+            
+
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = booking.Pet.PetOwner.AccountId,
@@ -201,8 +203,37 @@ namespace FluffyPaw_Application.ServiceImplements
             bookingResponses.Add(bookingResponse);
 
             var brandWallet = _unitOfWork.WalletRepository.Get(bw => bw.AccountId == store.Brand.AccountId).FirstOrDefault();
-            brandWallet.Balance += totalAmountToAdd;
-            _unitOfWork.WalletRepository.Update(brandWallet);
+            if (booking.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
+            {
+                brandWallet.Balance += totalAmountToAdd;
+                _unitOfWork.WalletRepository.Update(brandWallet);
+
+                var newBillingRecord = new BillingRecord
+                {
+                    WalletId = brandWallet.Id,
+                    BookingId = booking.Id,
+                    Amount = booking.Cost,
+                    Description = $"Doanh thu của dịch vụ {storeService.Service.Name} từ cửa hàng {store.Name} đã được cộng vào ví FluffyPay.",
+                    CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
+                };
+
+                _unitOfWork.BillingRecordRepository.Insert(newBillingRecord);
+                await _unitOfWork.SaveAsync();
+            }
+            else if (booking.PaymentMethod == BookingPaymentMethod.COD.ToString())
+            {
+                var newBillingRecord = new BillingRecord
+                {
+                    WalletId = brandWallet.Id,
+                    BookingId = booking.Id,
+                    Amount = booking.Cost,
+                    Description = $"Khách đã thanh toán trực tiếp tại cửa hàng cho dịch vụ {storeService.Service.Name} từ cửa hàng {store.Name}.",
+                    CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
+                };
+
+                _unitOfWork.BillingRecordRepository.Insert(newBillingRecord);
+                await _unitOfWork.SaveAsync();
+            }
 
             await _unitOfWork.SaveAsync();
 
@@ -315,7 +346,8 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 BookingId = bookingId,
                 PetOwnerId = po.Id,
-                Vote = createBookingRatingRequest.Vote,
+                ServiceVote = createBookingRatingRequest.ServiceVote,
+                StoreVote = createBookingRatingRequest.StoreVote,
                 Description = createBookingRatingRequest.Description,
                 Image = uploadedImageUrl
             };
@@ -323,7 +355,8 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.BookingRatingRepository.Insert(newBookingRating);
             await _unitOfWork.SaveAsync();
 
-            UpdateTotalRatingByBookingRatingId(newBookingRating.Id);
+            UpdateServiceTotalRatingByBookingRatingId(newBookingRating.Id);
+            UpdateStoreTotalRatingByBookingRatingId(newBookingRating.Id);
 
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(newBookingRating);
             return bookingRatingResponse;
@@ -332,7 +365,6 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<BookingRatingResponse> UpdateBookingRatingById(long id, BookingRatingRequest bookingRatingRequest)
         {
-            // Validate the user
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
             if (account == null)
@@ -340,14 +372,12 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
             }
 
-            // Validate the pet owner
             var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
             if (po == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy chủ thú cưng liên kết với tài khoản.");
             }
 
-            // Validate the existing booking rating
             var existingBookingRating = _unitOfWork.BookingRatingRepository
                 .Get(ebr => ebr.Id == id && ebr.PetOwnerId == po.Id)
                 .FirstOrDefault();
@@ -357,18 +387,14 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá.");
             }
 
-            // Map the updated values
             _mapper.Map(bookingRatingRequest, existingBookingRating);
 
-            // Save changes
             await _unitOfWork.SaveAsync();
 
-            // Recalculate the total rating
-            UpdateTotalRatingByBookingRatingId(existingBookingRating.Id);
+            UpdateServiceTotalRatingByBookingRatingId(existingBookingRating.Id);
+            UpdateStoreTotalRatingByBookingRatingId(existingBookingRating.Id);
 
-            // Create the response object
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(existingBookingRating);
-
             return bookingRatingResponse;
         }
 
@@ -403,7 +429,7 @@ namespace FluffyPaw_Application.ServiceImplements
             await _unitOfWork.SaveAsync();
 
             var ratings = _unitOfWork.BookingRatingRepository.Get(br => br.BookingId != booking.Id)
-                .Select(br => br.Vote)
+                .Select(br => br.ServiceVote)
                 .ToList();
 
             service.TotalRating = ratings.Any() ? (float)ratings.Average() : 0;
@@ -414,7 +440,7 @@ namespace FluffyPaw_Application.ServiceImplements
         }
 
 
-        public void UpdateTotalRatingByBookingRatingId(long bookingRatingId)
+        public void UpdateServiceTotalRatingByBookingRatingId(long bookingRatingId)
         {
             var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(bookingRatingId);
             var booking = _unitOfWork.BookingRepository.GetByID(bookingRating.BookingId);
@@ -424,23 +450,43 @@ namespace FluffyPaw_Application.ServiceImplements
             var allStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == service.Id).ToList();
             var allStoreServiceIds = allStoreServices.Select(ss => ss.Id).ToList();
 
-            // Get all Bookings related to those StoreServices
             var allBookings = _unitOfWork.BookingRepository.Get(b => allStoreServiceIds.Contains(b.StoreServiceId)).ToList();
             var allBookingIds = allBookings.Select(b => b.Id).ToList();
 
-            // Get all BookingRatings for those Bookings
             var allBookingRatings = _unitOfWork.BookingRatingRepository.Get(br => allBookingIds.Contains(br.BookingId)).ToList();
 
-            // Calculate total votes and total count
-            var totalVotes = allBookingRatings.Sum(br => br.Vote);
+            var totalVotes = allBookingRatings.Sum(br => br.ServiceVote);
             var totalCount = allBookingRatings.Count;
 
-            // Update TotalRating of the Service
             service.TotalRating = totalCount > 0 ? (float)totalVotes / totalCount : 0f;
 
-            // Save changes to the database
             _unitOfWork.ServiceRepository.Update(service);
             _unitOfWork.Save();
         }
+
+        public void UpdateStoreTotalRatingByBookingRatingId(long bookingRatingId)
+        {
+            var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(bookingRatingId);
+            var booking = _unitOfWork.BookingRepository.GetByID(bookingRating.BookingId);
+            var storeService = _unitOfWork.StoreServiceRepository.GetByID(booking.StoreServiceId);
+            var store = _unitOfWork.StoreRepository.GetByID(storeService.StoreId);
+
+            var allStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id).ToList();
+            var allStoreServiceIds = allStoreServices.Select(ss => ss.Id).ToList();
+
+            var allBookings = _unitOfWork.BookingRepository.Get(b => allStoreServiceIds.Contains(b.StoreServiceId)).ToList();
+            var allBookingIds = allBookings.Select(b => b.Id).ToList();
+
+            var allBookingRatings = _unitOfWork.BookingRatingRepository.Get(br => allBookingIds.Contains(br.BookingId)).ToList();
+
+            var totalVotes = allBookingRatings.Sum(br => br.StoreVote);
+            var totalCount = allBookingRatings.Count;
+
+            store.TotalRating = totalCount > 0 ? (float)totalVotes / totalCount : 0f;
+
+            _unitOfWork.StoreRepository.Update(store);
+            _unitOfWork.Save();
+        }
+
     }
 }

@@ -18,7 +18,9 @@ namespace FluffyPaw_Domain.Entities
 
         public long PetOwnerId { get; set; }
 
-        public int Vote { get; set; }
+        public int ServiceVote { get; set; }
+
+        public int StoreVote { get; set; }
 
         public string? Description { get; set; }
 
