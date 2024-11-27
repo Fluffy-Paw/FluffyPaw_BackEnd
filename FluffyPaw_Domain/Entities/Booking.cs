@@ -34,10 +34,14 @@ namespace FluffyPaw_Domain.Entities
         public bool Checkin { get; set; }
 
         public DateTimeOffset? CheckinTime { get; set; }
+
+        public string CheckinImage { get; set; }
         
         public bool CheckOut { get; set; }
 
         public DateTimeOffset? CheckOutTime { get; set; }
+
+        public string CheckoutImage { get; set; }
 
         public string Status { get; set; }
 
