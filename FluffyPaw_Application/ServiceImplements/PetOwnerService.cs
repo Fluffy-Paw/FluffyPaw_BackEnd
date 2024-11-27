@@ -816,6 +816,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 service.StoreName = item.Store.Name;
                 service.ServiceName = item.Service.Name;
                 service.Image = item.Service.Image;
+                service.Cost = item.Service.Cost;
 
                 result.Add(service);
             }
@@ -829,10 +830,10 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString(), includeProperties: "Store,Service").ToList();
 
-            var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-            var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId).FirstOrDefault();
-            var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status == PetStatus.Available.ToString());
-            var petIds = pets.Select(p => p.Id).ToList();
+            //var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
+            //var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId).FirstOrDefault();
+            //var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status == PetStatus.Available.ToString());
+            //var petIds = pets.Select(p => p.Id).ToList();
 
             //var storeServiceDict = listStoreServices.ToDictionary(ss => ss.Id);
             //var servicePointList = new List<ServicePoint>();
@@ -860,6 +861,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 service.StoreName = item.Store.Name;
                 service.ServiceName = item.Service.Name;
                 service.Image = item.Service.Image;
+                service.Cost = item.Service.Cost;
 
                 result.Add(service);
             }
@@ -894,6 +896,34 @@ namespace FluffyPaw_Application.ServiceImplements
             point -= report;
 
             return point;
+        }
+
+        public async Task<List<Store>> SearchStore(string character)
+        {
+            return _unitOfWork.StoreRepository.Get(s => s.Status == true && s.Name.Contains(character)).ToList();
+        }
+
+        public async Task<List<StoreServicePOResponse>> SearchStoreService(string character)
+        {
+            var result = new List<StoreServicePOResponse>();
+            var list = _unitOfWork.StoreServiceRepository.Get(ss => ss.Status.Equals(StoreServiceStatus.Available.ToString()) && ss.Service.Name.Contains(character), includeProperties: "Service,Store").ToList();
+            foreach (var item in list)
+            {
+                var service = _mapper.Map<StoreServicePOResponse>(item);
+                service.StoreName = item.Store.Name;
+                service.ServiceName = item.Service.Name;
+                service.Image = item.Service.Image;
+                service.Cost = item.Service.Cost;
+
+                result.Add(service);
+            }
+
+            return result;
+        }
+
+        public async Task<List<Brand>> SearchBrand(string character)
+        {
+            return _unitOfWork.BrandRepository.Get(s => s.Status == true && s.Name.Contains(character)).ToList();
         }
     }
 }

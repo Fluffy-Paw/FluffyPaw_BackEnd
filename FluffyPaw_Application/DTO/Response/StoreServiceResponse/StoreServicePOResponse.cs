@@ -16,6 +16,8 @@ namespace FluffyPaw_Application.DTO.Response.StoreServiceResponse
 
         public string ServiceName { get; set; }
 
+        public double Cost { get; set; }
+
         public string? Image {  get; set; }
 
         public DateTimeOffset StartTime { get; set; }
