@@ -12,26 +12,42 @@ namespace FluffyPaw_Application.Services
     public interface IPetOwnerService
     {
         Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest);
+
         Task<PetOwnerResponse> GetPetOwnerDetail();
+
         Task<List<StoreResponse>> GetAllStore();
+
         Task<List<StoreResponse>> GetAllStoreByBrandId(long id);
+
         Task<List<StoreResponse>> GetAllStoreByServiceTypeId(long id);
+
         Task<StoreSerResponse> GetStoreServiceById(long id);
+
         Task<List<StoreSerResponse>> SuggestionSameTimeAndBrand(long id);
+
         Task<List<StoreSerResponse>> SuggestionSameTime(long id);
+
         Task<List<StoreResponse>> GetStoreById(long id);
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId);
         Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime);
         Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? dateTime);
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id);
+
         Task<List<BookingResponse>> GetAllBooking();
+
         Task<List<BookingResponse>> GetAllBookingByPetId(long id, string? bookingStatus);
+
         Task<List<BookingResponse>> CreateBooking(CreateBookingRequest createBookingRequest);
+
         Task<BookingResponse> CreateBookingTimeSelection(TimeSelectionRequest timeSelectionRequest);
+
         Task<bool> CancelBooking(long id);
         Task<List<BillingRecordResponse>> GetAllBillingRecord();
         Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id);
         Task<TrackingResponse> GetTrackingById(long id);
 
+        Task<List<StoreServicePOResponse>> RecommendServicePO();
+
+        Task<List<StoreServicePOResponse>> RecommendServiceGuest();
     }
 }

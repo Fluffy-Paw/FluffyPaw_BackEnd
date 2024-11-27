@@ -8,6 +8,6 @@ namespace FluffyPaw_Application.DTO.Request.EmailRequest
 {
     public class SendMailPasswordRequest
     {
-        public string Username { get; set; }
+        public string Email { get; set; }
     }
 }
