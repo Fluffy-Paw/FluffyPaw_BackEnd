@@ -273,7 +273,6 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var storeResponses = new List<StoreResponse>();
-
             foreach (var store in stores)
             {
                 var storeResponse = _mapper.Map<StoreResponse>(store);

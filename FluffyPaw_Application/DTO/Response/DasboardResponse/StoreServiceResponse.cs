@@ -10,6 +10,7 @@ namespace FluffyPaw_Application.DTO.Response.DasboardResponse
 {
     public class StoreServiceResponse
     {
+        public int Id { get; set; }
         public string StoreName { get; set; }
 
         public string ServiceName { get; set; }
