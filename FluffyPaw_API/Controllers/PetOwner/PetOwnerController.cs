@@ -202,5 +202,26 @@ namespace FluffyPaw_API.Controllers.PetOwner
             var services = await _petOwnerService.RecommendServicePO();
             return CustomResult("Tải dữ liệu thành công.", services);
         }
+
+        [HttpGet("SearchStore")]
+        public async Task<IActionResult> SearchStore(string searchKey)
+        {
+            var stores = await _petOwnerService.SearchStore(searchKey);
+            return CustomResult("Tải dữ liệu thành công.", stores);
+        }
+
+        [HttpGet("SearchStoreService")]
+        public async Task<IActionResult> SearchStoreService(string searchKey)
+        {
+            var services = await _petOwnerService.SearchStoreService(searchKey);
+            return CustomResult("Tải dữ liệu thành công.", services);
+        }
+
+        [HttpGet("SearchBrand")]
+        public async Task<IActionResult> SearchBrand(string searchKey)
+        {
+            var brands = await _petOwnerService.SearchBrand(searchKey);
+            return CustomResult("Tải dữ liệu thành công.", brands);
+        }
     }
 }
