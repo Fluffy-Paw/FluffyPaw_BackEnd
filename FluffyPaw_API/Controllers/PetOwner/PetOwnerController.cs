@@ -28,6 +28,14 @@ namespace FluffyPaw_API.Controllers.PetOwner
             return CustomResult("Lấy thông tin thành công.", po);
         }
 
+        [HttpGet("GetBrandById/{id}")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetBrandById(long id)
+        {
+            var brand = await _petOwnerService.GetBrandById(id);
+            return CustomResult("Lấy thông tin thành công.", brand);
+        }
+
         [HttpPatch("UpdatePetOwnerAccount")]
         [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> UpdatePetOwnerAccount([FromForm] PetOwnerRequest petOwnerRequest)

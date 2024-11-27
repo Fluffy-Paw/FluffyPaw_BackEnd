@@ -1,6 +1,7 @@
 ﻿using FluffyPaw_Application.DTO.Request.BookingRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StaffResponse;
@@ -15,6 +16,8 @@ namespace FluffyPaw_Application.Services
         Task<PetOwnerResponse> UpdatePetOwnerAccount(PetOwnerRequest petOwnerRequest);
 
         Task<PetOwnerResponse> GetPetOwnerDetail();
+
+        Task<BrResponse> GetBrandById(long id);
 
         Task<List<StoreResponse>> GetAllStore();
 

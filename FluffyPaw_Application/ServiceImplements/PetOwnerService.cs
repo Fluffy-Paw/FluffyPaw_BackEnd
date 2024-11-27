@@ -4,6 +4,7 @@ using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.DTO.Response.DasboardResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
@@ -87,6 +88,18 @@ namespace FluffyPaw_Application.ServiceImplements
             result.Email = po.Account.Email;
 
             return result;
+        }
+
+        public async Task<BrResponse> GetBrandById(long id)
+        {
+            var brand = _unitOfWork.BrandRepository.Get(b => b.Id == id &&  b.Status == true).FirstOrDefault();
+            if (brand == null)
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu này không tồn tại.");
+            }
+
+            var brandResponse = _mapper.Map<BrResponse>(brand);
+            return brandResponse;
         }
 
         public async Task<List<StoreResponse>> GetAllStore()
