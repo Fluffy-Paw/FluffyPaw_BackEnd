@@ -85,16 +85,19 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeServiceDict = storeServices.ToDictionary(ss => ss.Id);
             var countTopServices = bookings.GroupBy(b => b.StoreServiceId).Select(g => new { serviceId = g.Key, count = g.Count() }).OrderByDescending(ob => ob.count).Take(3).ToList();
+            int id = 1;
             foreach (var item in countTopServices)
             {
                 if (storeServiceDict.TryGetValue(item.serviceId, out var storeService))
                 {
                     var ss = new StoreServiceResponse
                     {
+                        Id = id,
                         StoreName = storeService.Store.Name,
                         ServiceName = storeService.Service.Name,
                         NumberOfBooking = item.count
                     };
+                    id++;
                     topServices.Add(ss);
                 }
             }

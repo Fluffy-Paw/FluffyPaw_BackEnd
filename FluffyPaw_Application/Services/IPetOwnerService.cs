@@ -43,8 +43,8 @@ namespace FluffyPaw_Application.Services
         Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id);
         Task<TrackingResponse> GetTrackingById(long id);
 
-        Task<List<StoreSerResponse>> RecommendServicePO();
+        Task<List<StoreServicePOResponse>> RecommendServicePO();
 
-        Task<List<StoreSerResponse>> RecommendServiceGuest();
+        Task<List<StoreServicePOResponse>> RecommendServiceGuest();
     }
 }

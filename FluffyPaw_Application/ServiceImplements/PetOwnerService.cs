@@ -18,6 +18,7 @@ using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -750,9 +751,9 @@ namespace FluffyPaw_Application.ServiceImplements
             return trackingResponse;
         }
 
-        public async Task<List<StoreSerResponse>> RecommendServiceGuest()
+        public async Task<List<StoreServicePOResponse>> RecommendServiceGuest()
         {
-            var result = new List<StoreSerResponse>();
+            var result = new List<StoreServicePOResponse>();
 
             var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString(), includeProperties: "Store,Service").ToList();
 
@@ -767,14 +768,22 @@ namespace FluffyPaw_Application.ServiceImplements
                 listStoreServices[n] = temp;
             }
 
-            _mapper.Map(listStoreServices, result);
+            foreach (var item in listStoreServices)
+            {
+                var service = _mapper.Map<StoreServicePOResponse>(item);
+                service.StoreName = item.Store.Name;
+                service.ServiceName = item.Service.Name;
+                service.Image = item.Service.Image;
+
+                result.Add(service);
+            }
 
             return result;
         }
 
-        public async Task<List<StoreSerResponse>> RecommendServicePO()
+        public async Task<List<StoreServicePOResponse>> RecommendServicePO()
         {
-            var result = new List<StoreSerResponse>();
+            var result = new List<StoreServicePOResponse>();
 
             var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString(), includeProperties: "Store,Service").ToList();
 
@@ -783,48 +792,39 @@ namespace FluffyPaw_Application.ServiceImplements
             var pets = _unitOfWork.PetRepository.Get(p => p.PetOwnerId == po.Id && p.Status == PetStatus.Available.ToString());
             var petIds = pets.Select(p => p.Id).ToList();
 
-            if (!pets.Any())
-            {
-                Random rng = new Random();
-                int n = listStoreServices.Count;
-                while (n > 1)
-                {
-                    n--;
-                    int k = rng.Next(n + 1);
-                    StoreService temp = listStoreServices[k];
-                    listStoreServices[k] = listStoreServices[n];
-                    listStoreServices[n] = temp;
-                }
-                _mapper.Map(listStoreServices, result);
-            }
-            else
-            {
-                //var storeServiceDict = listStoreServices.ToDictionary(ss => ss.Id);
-                //var servicePointList = new List<ServicePoint>();
-                //var vaccines = _unitOfWork.VaccineHistoryRepository.Get(v => petIds.Contains(v.PetId)).ToList();
+            //var storeServiceDict = listStoreServices.ToDictionary(ss => ss.Id);
+            //var servicePointList = new List<ServicePoint>();
+            //var vaccines = _unitOfWork.VaccineHistoryRepository.Get(v => petIds.Contains(v.PetId)).ToList();
 
-                //foreach (var service in listStoreServices)
-                //{
-                //    var point = await CalculatePoint(service);
-                //    if (vaccines.Any() && service.Service.ServiceTypeId == 2) point += 10;
-                //    servicePointList.Add(new ServicePoint { ServiceId = service.Id, Point =  point});
-                //}
-                //var list = servicePointList.OrderByDescending(ob => ob.Point).ToList();
-                //foreach (var item in list)
-                //{
-                //    if (storeServiceDict.TryGetValue(item.ServiceId, out var storeService))
-                //    {
-                //        result.Add(_mapper.Map<StoreSerResponse>(storeService));
-                //    }
-                //}
+            //foreach (var service in listStoreServices)
+            //{
+            //    var point = await CalculatePoint(service);
+            //    if (vaccines.Any() && service.Service.ServiceTypeId == 2) point += 10;
+            //    servicePointList.Add(new ServicePoint { ServiceId = service.Id, Point =  point});
+            //}
+            //var list = servicePointList.OrderByDescending(ob => ob.Point).ToList();
+            //foreach (var item in list)
+            //{
+            //    if (storeServiceDict.TryGetValue(item.ServiceId, out var storeService))
+            //    {
+            //        result.Add(_mapper.Map<StoreSerResponse>(storeService));
+            //    }
+            //}
 
-                var list = listStoreServices.OrderByDescending(s => s.Service.TotalRating).ThenByDescending(s => s.Store.TotalRating).ThenByDescending(s => s.Service.BookingCount).ToList();
-                _mapper.Map(list, result);
+            var list = listStoreServices.OrderByDescending(s => s.Service.TotalRating).ThenByDescending(s => s.Store.TotalRating).ThenByDescending(s => s.Service.BookingCount).ToList();
+            foreach (var item in list)
+            {
+                var service = _mapper.Map<StoreServicePOResponse>(item);
+                service.StoreName = item.Store.Name;
+                service.ServiceName = item.Service.Name;
+                service.Image = item.Service.Image;
+
+                result.Add(service);
             }
 
             return result;
         }
-        
+
         public async Task<double> CalculatePoint(StoreService storeService)
         {
             var point = 0;
