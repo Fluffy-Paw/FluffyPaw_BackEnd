@@ -20,6 +20,12 @@ namespace FluffyPaw_Application.DTO.Response.StoreServiceResponse
 
         public string ServiceType { get; set; }
 
+        public long ServiceTypeId { get; set; }
+
+        public string BrandName { get; set; }
+
+        public long BrandId { get; set; }
+
         public double Cost { get; set; }
 
         public string? Image {  get; set; }
@@ -31,5 +37,15 @@ namespace FluffyPaw_Application.DTO.Response.StoreServiceResponse
         public int CurrentPetOwner { get; set; }
 
         public string Status { get; set; }
+
+        public TimeSpan Duration { get; set; }
+
+        public string? Description { get; set; }
+
+        public int BookingCount { get; set; }
+
+        public float TotalRating { get; set; }
+
+
     }
 }
