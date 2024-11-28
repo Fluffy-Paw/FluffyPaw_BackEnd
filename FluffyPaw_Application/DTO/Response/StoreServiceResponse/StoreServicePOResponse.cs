@@ -14,7 +14,11 @@ namespace FluffyPaw_Application.DTO.Response.StoreServiceResponse
 
         public string StoreName { get; set; }
 
+        public long StoreId { get; set; }
+
         public string ServiceName { get; set; }
+
+        public string ServiceType { get; set; }
 
         public double Cost { get; set; }
 
