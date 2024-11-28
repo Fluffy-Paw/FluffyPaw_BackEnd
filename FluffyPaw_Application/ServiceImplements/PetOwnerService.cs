@@ -920,7 +920,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var result = new List<StoreServicePOResponse>();
 
-            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString() && ss.CurrentPetOwner < ss.LimitPetOwner, includeProperties: "Store,Service,Service.ServiceType").ToList();
+            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString() && ss.CurrentPetOwner < ss.LimitPetOwner, includeProperties: "Store,Service,Service.ServiceType,Service.Brand").ToList();
 
             //var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             //var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId).FirstOrDefault();
@@ -966,7 +966,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 result.Add(service);
             }
 
-            return result.Take(100).ToList();
+            return result;
         }
 
         public async Task<double> CalculatePoint(StoreService storeService)
@@ -1006,7 +1006,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<List<StoreServicePOResponse>> SearchStoreService(string character)
         {
             var result = new List<StoreServicePOResponse>();
-            var list = _unitOfWork.StoreServiceRepository.Get(ss => ss.Status.Equals(StoreServiceStatus.Available.ToString()) && ss.Service.Name.Contains(character), includeProperties: "Service,Store,Service.ServiceType").ToList();
+            var list = _unitOfWork.StoreServiceRepository.Get(ss => ss.Status.Equals(StoreServiceStatus.Available.ToString()) && ss.Service.Name.Contains(character), includeProperties: "Store,Service,Service.ServiceType,Service.Brand").ToList();
             foreach (var item in list)
             {
                 var service = _mapper.Map<StoreServicePOResponse>(item);
@@ -1026,7 +1026,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 result.Add(service);
             }
 
-            return result.Take(100).ToList();
+            return result;
         }
 
         public async Task<List<Brand>> SearchBrand(string character)
