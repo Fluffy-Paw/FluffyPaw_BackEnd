@@ -82,8 +82,9 @@ namespace FluffyPaw_Application.ServiceImplements
             return serviceResponses;
         }
 
-        public async Task<List<SerResponse>> GetAllServiceByStoreId(long id)
+        public async Task<List<SerStoResponse>> GetAllServiceByStoreId(long id)
         {
+            var store = _unitOfWork.StoreRepository.GetByID(id);
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == id).ToList();
             if (storeServices == null)
             {
@@ -92,7 +93,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var groupedServices = storeServices.GroupBy(ss => ss.ServiceId);
 
-            var serviceResponses = new List<SerResponse>();
+            var serStoResponses = new List<SerStoResponse>();
             foreach (var group in groupedServices)
             {
                 var serviceId = group.Key;
@@ -106,26 +107,28 @@ namespace FluffyPaw_Application.ServiceImplements
                     throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của cửa hàng này.");
                 }
 
-                var serviceResponse = _mapper.Map<SerResponse>(service);
+                var serStoResponse = _mapper.Map<SerStoResponse>(service);
 
-                serviceResponse.ServiceTypeName = service.ServiceType.Name;
+                serStoResponse.ServiceTypeName = service.ServiceType.Name;
+                serStoResponse.StoreName = store.Name;
+                serStoResponse.StoreAddress = store.Address;
 
-                serviceResponses.Add(serviceResponse);
+                serStoResponses.Add(serStoResponse);
 
                 var certificates = _unitOfWork.CertificateRepository.Get(c => c.ServiceId == service.Id).ToList();
 
-                serviceResponse.Certificate = certificates?
+                serStoResponse.Certificate = certificates?
                     .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
                     .ToList();
 
-                serviceResponses.Add(serviceResponse);
+                serStoResponses.Add(serStoResponse);
             }
-            if (!serviceResponses.Any())
+            if (!serStoResponses.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
             }
 
-            return serviceResponses;
+            return serStoResponses;
         }
 
         public async Task<SerResponse> CreateService(SerRequest serviceRequest)
