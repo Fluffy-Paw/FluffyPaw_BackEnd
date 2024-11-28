@@ -106,11 +106,22 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeResponse = _mapper.Map<StoreResponse>(store);
 
-            var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id, includeProperties: "Files")
-                                .Select(sf => sf.Files)
-                                .ToList();
+            var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id)
+                                                  .ToList();
 
-            storeResponse.Files = _mapper.Map<List<FileResponse>>(storeFiles);
+            var files = new List<FileResponse>();
+
+            foreach (var storeFile in storeFiles)
+            {
+                var file = _unitOfWork.FilesRepository.GetByID(storeFile.FileId);
+                if (file != null)
+                {
+                    var fileResponse = _mapper.Map<FileResponse>(file);
+                    files.Add(fileResponse);
+                }
+            }
+
+            storeResponse.Files = files;
 
             return storeResponse;
         }
