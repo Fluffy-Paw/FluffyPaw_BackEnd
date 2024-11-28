@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 {
-    public class SerResponse : IMapFrom<Service>, IMapFrom<Brand>
+    public class SerResponse : IMapFrom<Service>, IMapFrom<Brand>, IMapFrom<Certificate>
     {
         public long Id { get; set; }
 
@@ -38,14 +38,14 @@ namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 
         public string ServiceTypeName { get; set; }
 
-        public ICollection<CertificatesResponse> Certificate { get; set; }
+        public ICollection<CertificatesResponse> Certificate { get; set; } = new List<CertificatesResponse>();
 
         public void Mapping (Profile profile)
         {
             profile.CreateMap<Service, SerResponse>()
-                .ForMember(dest => dest.ServiceTypeName, opt => opt.MapFrom(src => src.ServiceType.Name));
-            profile.CreateMap<Service, SerResponse>()
-                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name));
+                .ForMember(dest => dest.ServiceTypeName, opt => opt.MapFrom(src => src.ServiceType.Name))
+                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name))
+                .ForMember(dest => dest.Certificate, opt => opt.MapFrom(src => src.Certificates));
         }
 
     }

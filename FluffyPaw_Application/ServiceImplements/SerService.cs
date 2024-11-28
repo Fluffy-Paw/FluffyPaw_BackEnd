@@ -98,7 +98,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 var serviceId = group.Key;
 
                 var service = _unitOfWork.ServiceRepository
-                    .Get(s => s.Id == serviceId, includeProperties: "ServiceType,Certificate")
+                    .Get(s => s.Id == serviceId, includeProperties: "ServiceType,Certificates")
                     .FirstOrDefault();
 
                 if (service == null)
@@ -109,6 +109,14 @@ namespace FluffyPaw_Application.ServiceImplements
                 var serviceResponse = _mapper.Map<SerResponse>(service);
 
                 serviceResponse.ServiceTypeName = service.ServiceType.Name;
+
+                serviceResponses.Add(serviceResponse);
+
+                var certificates = _unitOfWork.CertificateRepository.Get(c => c.ServiceId == service.Id).ToList();
+
+                serviceResponse.Certificate = certificates?
+                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
+                    .ToList();
 
                 serviceResponses.Add(serviceResponse);
             }

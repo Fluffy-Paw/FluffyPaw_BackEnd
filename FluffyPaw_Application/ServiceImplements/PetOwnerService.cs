@@ -4,6 +4,8 @@ using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.BrandResponse;
+using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.DTO.Response.DasboardResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.PetOwnerResponse;
@@ -86,6 +88,18 @@ namespace FluffyPaw_Application.ServiceImplements
             result.Email = po.Account.Email;
 
             return result;
+        }
+
+        public async Task<BrResponse> GetBrandById(long id)
+        {
+            var brand = _unitOfWork.BrandRepository.Get(b => b.Id == id && b.Status == true).FirstOrDefault();
+            if (brand == null)
+            {
+                throw new CustomException.DataNotFoundException("Thương hiệu này không tồn tại.");
+            }
+
+            var brandResponse = _mapper.Map<BrResponse>(brand);
+            return brandResponse;
         }
 
         public async Task<List<StoreResponse>> GetAllStore()
@@ -208,31 +222,25 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeSerResponses;
         }
 
-        public async Task<List<StoreResponse>> GetStoreById(long id)
+        public async Task<StResponse> GetStoreById(long id)
         {
-            var stores = _unitOfWork.StoreRepository.Get(s => s.Id == id, includeProperties: "Brand").ToList();
-            if (!stores.Any())
+            var store = _unitOfWork.StoreRepository.Get(s => s.Id == id, includeProperties: "Brand").FirstOrDefault();
+
+            if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
             }
 
-            var storeResponses = new List<StoreResponse>();
+            var storeResponse = _mapper.Map<StResponse>(store);
 
-            foreach (var store in stores)
-            {
-                var storeResponse = _mapper.Map<StoreResponse>(store);
+            var storeFiles = _unitOfWork.StoreFileRepository.Get(s => s.StoreId == store.Id, includeProperties: "Files")
+                                                            .Select(sf => sf.Files)
+                                                            .ToList();
 
-                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id, includeProperties: "Files")
-                                .Select(sf => sf.Files)
-                                .ToList();
-
-                storeResponse.Files = _mapper.Map<List<FileResponse>>(storeFiles);
-
-                storeResponses.Add(storeResponse);
-            }
-
-            return storeResponses;
+            storeResponse.Files = _mapper.Map<List<FileResponse>>(storeFiles);
+            return storeResponse;
         }
+
 
         public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId)
         {
@@ -241,7 +249,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == serviceId
                                                     && ss.StoreId == storeId
                                                     && ss.Status == StoreServiceStatus.Available.ToString(),
-                                                    includeProperties: "Service");
+                                                    includeProperties: "Service,Service.Brand");
             if (!storeServices.Any())
             {
                 throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình của dịch vụ {service.Name}.");
@@ -253,22 +261,72 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime)
         {
-            var services = _unitOfWork.ServiceRepository.Get(includeProperties: "ServiceType")
+            var services = _unitOfWork.ServiceRepository.Get(s => s.Status == true, includeProperties: "ServiceType,Brand,StoreServices")
                                             .Where(ss => ss.ServiceTypeId == serviceTypeId);
 
             if (dateTime.HasValue)
             {
-                services = services.Where(s =>
-                    s.StoreServices.Any(ss => ss.StartTime <= dateTime.Value));
+                DateTimeOffset localDateTime = dateTime.Value.ToLocalTime();
+
+                int hour = localDateTime.Hour;
+
+                if (hour >= 7 && hour < 10)
+                {
+                    services = services.Where(s =>
+                        s.StoreServices != null && s.StoreServices.Any(ss => ss.StartTime.Hour >= 7 && ss.StartTime.Hour < 10));
+                    if (!services.Any())
+                    {
+                        throw new CustomException.DataNotFoundException("Không tìm thấy bất kì dịch vụ nào có khung giờ này.");
+                    }
+                }
+                else if (hour >= 10 && hour < 14)
+                {
+                    services = services.Where(s =>
+                        s.StoreServices != null && s.StoreServices.Any(ss => ss.StartTime.Hour >= 10 && ss.StartTime.Hour < 14));
+                    if (!services.Any())
+                    {
+                        throw new CustomException.DataNotFoundException("Không tìm thấy bất kì dịch vụ nào có khung giờ này.");
+                    }
+                }
+                else if (hour >= 14 && hour < 19)
+                {
+                    services = services.Where(s =>
+                        s.StoreServices != null && s.StoreServices.Any(ss => ss.StartTime.Hour >= 14 && ss.StartTime.Hour < 19));
+                    if (!services.Any())
+                    {
+                        throw new CustomException.DataNotFoundException("Không tìm thấy bất kì dịch vụ nào có khung giờ này.");
+                    }
+                }
+                else
+                {
+                    throw new CustomException.InvalidDataException("Khung giờ bạn đang tìm không thuộc từ 7h đến 19h.");
+                }
             }
 
-            services = services.OrderByDescending(s => s.TotalRating)
-                                .ThenByDescending(s => s.BookingCount)
-                                .ThenBy(s => s.Cost);
+            var serviceList = services
+                .OrderByDescending(s => s.TotalRating)
+                .ThenByDescending(s => s.BookingCount)
+                .ThenBy(s => s.Cost)
+                .ToList();
 
-            var serviceResponses = _mapper.Map<List<SerResponse>>(services);
+            var serviceResponses = new List<SerResponse>();
+
+            foreach (var service in serviceList)
+            {
+                var serResponse = _mapper.Map<SerResponse>(service);
+
+                var certificates = _unitOfWork.CertificateRepository.Get(c => c.ServiceId == service.Id).ToList();
+
+                serResponse.Certificate = certificates?
+                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
+                    .ToList();
+
+                serviceResponses.Add(serResponse);
+            }
+
             return serviceResponses;
         }
+
 
         public async Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? dateTime)
         {
@@ -285,7 +343,17 @@ namespace FluffyPaw_Application.ServiceImplements
                                     .OrderByDescending(s => s.TotalRating)
                                     .ToList();
 
+            foreach (var store in stores)
+            {
+                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id)
+                    .Select(sf => sf.Files)
+                    .ToList();
+
+                store.Files = storeFiles.ToList();
+            }
+
             var stResponses = _mapper.Map<List<StResponse>>(stores);
+
             return stResponses;
         }
 
@@ -727,6 +795,10 @@ namespace FluffyPaw_Application.ServiceImplements
             var billingRecords = _unitOfWork.BillingRecordRepository.Get(brs => brs.WalletId == wallet.Id,
                                                     orderBy: q => q.OrderByDescending(br => br.CreateDate),
                                                     includeProperties: "Booking").ToList();
+            if (!billingRecords.Any())
+            {
+                throw new CustomException.DataNotFoundException("Bạn không có đơn nào.");
+            }
             var billingRecordResponses = _mapper.Map<List<BillingRecordResponse>>(billingRecords);
             return billingRecordResponses;
         }

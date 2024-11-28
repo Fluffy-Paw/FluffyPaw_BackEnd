@@ -39,7 +39,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var serviceTypeId = _unitOfWork.ServiceTypeRepository.Get(st => st.Id == id).FirstOrDefault();
             if (serviceTypeId == null)
             {
-                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ.");
+                throw new CustomException.DataNotFoundException("Không tìm thấy loại dịch vụ.");
             }
             var serviceTypeResponse = _mapper.Map<ServiceTypeResponse>(serviceTypeId);
             return serviceTypeResponse;

@@ -47,7 +47,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<BookingResponse> GetBookingById(long id)
         {
             var existingBooking = _unitOfWork.BookingRepository.Get(b => b.Id == id,
-                                        includeProperties: "Pet,StoreService,StoreService.Service,StoreService.Store");
+                                        includeProperties: "Pet,StoreService,StoreService.Service,StoreService.Store").FirstOrDefault();
             if (existingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -146,7 +146,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var serviceTypeName = storeService.Service.ServiceType.Name;
-            if (serviceTypeName == "Hotel")
+            if (serviceTypeName == "Tạm trú")
             {
                 booking.CheckOut = true;
                 booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
@@ -168,7 +168,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.BookingRepository.Update(booking);
             await _unitOfWork.SaveAsync();
 
-            if (serviceTypeName == "Vaccine")
+            if (serviceTypeName == "Tiêm chủng")
             {
                 var pet = _unitOfWork.PetRepository.Get(p => p.Id == booking.Id).FirstOrDefault();
                 var imageUrl = await _firebaseConfiguration.UploadImage(checkOutRequest.Image);
