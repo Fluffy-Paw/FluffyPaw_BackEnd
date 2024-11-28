@@ -187,6 +187,10 @@ namespace FluffyPaw_Application.ServiceImplements
             var billingRecords = _unitOfWork.BillingRecordRepository.Get(brs => brs.WalletId == wallet.Id,
                                                     orderBy: q => q.OrderByDescending(br => br.CreateDate),
                                                     includeProperties: "Booking").ToList();
+            if (!billingRecords.Any())
+            {
+                throw new CustomException.DataNotFoundException("Bạn không có đơn nào.");
+            }
 
             var billingRecordResponses = _mapper.Map<List<BillingRecordResponse>>(billingRecords);
             return billingRecordResponses;

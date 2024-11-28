@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.Mapper;
 using FluffyPaw_Domain.Entities;
 using System;
@@ -27,7 +28,7 @@ namespace FluffyPaw_Application.DTO.Response.PetOwnerResponse
 
         public bool Status { get; set; }
 
-        public List<Files> Files { get; set; }
+        public List<FileResponse> Files { get; set; }
 
         public void Mapping(Profile profile)
         {

@@ -31,7 +31,8 @@ namespace FluffyPaw_Application.Services
 
         Task<List<StoreSerResponse>> SuggestionSameTime(long id);
 
-        Task<List<StoreResponse>> GetStoreById(long id);
+        Task<StResponse> GetStoreById(long id);
+
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId);
 
         Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime);
