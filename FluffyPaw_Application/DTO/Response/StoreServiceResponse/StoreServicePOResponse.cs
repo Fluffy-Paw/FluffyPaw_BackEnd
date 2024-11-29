@@ -18,6 +18,8 @@ namespace FluffyPaw_Application.DTO.Response.StoreServiceResponse
 
         public string ServiceName { get; set; }
 
+        public long ServiceId { get; set; }
+
         public string ServiceType { get; set; }
 
         public long ServiceTypeId { get; set; }

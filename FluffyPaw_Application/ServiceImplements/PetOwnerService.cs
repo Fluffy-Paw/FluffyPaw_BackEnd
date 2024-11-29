@@ -1029,9 +1029,23 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<List<Brand>> SearchBrand(string character)
+        public async Task<List<SearchBrandResponse>> SearchBrand(string character)
         {
-            return _unitOfWork.BrandRepository.Get(s => s.Status == true && s.Name.Contains(character)).ToList();
+            var brands = _unitOfWork.BrandRepository.Get(b => b.Status == true && b.Name.Contains(character)).ToList();
+            var result = _mapper.Map<List<SearchBrandResponse>>(brands);
+            foreach (var brand in result)
+            {
+                var services = _unitOfWork.ServiceRepository.Get(s => s.BrandId == brand.Id).ToList();
+                var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id).ToList();
+
+                var serviceList = _mapper.Map<List<BrandServiceResponse>>(services);
+                brand.ServiceNames = serviceList;
+                brand.TotalStore = stores.Count;
+                brand.TotalServices = services.Count;
+                brand.Rating = stores.Average(s => s.TotalRating);
+            }
+
+            return result;
         }
     }
 }
