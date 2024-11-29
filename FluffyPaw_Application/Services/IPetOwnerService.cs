@@ -65,6 +65,6 @@ namespace FluffyPaw_Application.Services
         
         Task<List<StoreServicePOResponse>> SearchStoreService(string character);
 
-        Task<List<Brand>> SearchBrand(string character);
+        Task<List<SearchBrandResponse>> SearchBrand(string character);
     }
 }
