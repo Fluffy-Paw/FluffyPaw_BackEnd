@@ -621,7 +621,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
                                 ess => ess.Id == storeServiceId
                                 && ess.Status == StoreServiceStatus.Available.ToString()
-                                && ess.Service.ServiceType.Name == "Hotel",
+                                && ess.Service.ServiceType.Name == "Khách sạn",
                                 includeProperties: "Service,Store,Store.Account").FirstOrDefault();
                 if (existingStoreService == null)
                 {
