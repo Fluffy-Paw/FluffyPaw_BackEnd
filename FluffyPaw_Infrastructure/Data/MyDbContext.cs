@@ -68,6 +68,17 @@ namespace FluffyPaw_Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<StoreFile>()
+            .HasOne(sf => sf.Store)
+            .WithMany(s => s.StoreFile)
+            .HasForeignKey(sf => sf.StoreId);
+
+            // Cấu hình quan hệ giữa StoreFile và File
+            modelBuilder.Entity<StoreFile>()
+                .HasOne(sf => sf.Files)
+                .WithMany()
+                .HasForeignKey(sf => sf.FileId);
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Account>().HasData(
@@ -190,10 +201,10 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Store>().HasData(
-                new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Chi nhánh A", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 5f, Status = true},
-                new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Chi nhánh B", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 4f, Status = true},
-                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true},
-                new Store { Id = 4, BrandId = 2, AccountId = 9, Name = "Chi nhánh D", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true}
+                new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Chi nhánh A", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 0f, Status = true},
+                new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Chi nhánh B", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 0f, Status = true},
+                new Store { Id = 3, BrandId = 2, AccountId = 8, Name = "Chi nhánh C", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 0f, Status = true},
+                new Store { Id = 4, BrandId = 2, AccountId = 9, Name = "Chi nhánh D", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 0f, Status = true}
                 );
 
             modelBuilder.Entity<Service>().HasData(
@@ -232,6 +243,21 @@ namespace FluffyPaw_Infrastructure.Data
                 new StoreService { Id = 18, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 07, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 19, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 08, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 20, StoreId = 4, ServiceId = 3, StartTime = new DateTimeOffset(2024, 12, 09, 12, 0, 0, TimeSpan.Zero), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() }
+                );
+            modelBuilder.Entity<Files>().HasData(
+                new Files { Id = 1, File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", CreateDate = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), Status = true },
+                new Files { Id = 2, File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", CreateDate = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), Status = true },
+                new Files { Id = 3, File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", CreateDate = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), Status = true },
+                new Files { Id = 4, File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", CreateDate = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), Status = true },
+                new Files { Id = 5, File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", CreateDate = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), Status = true }
+                );
+
+            modelBuilder.Entity<StoreFile>().HasData(
+                new StoreFile { Id = 1, FileId = 1, StoreId = 1 },
+                new StoreFile { Id = 2, FileId = 2, StoreId = 1 },
+                new StoreFile { Id = 3, FileId = 3, StoreId = 1 },
+                new StoreFile { Id = 4, FileId = 4, StoreId = 3 },
+                new StoreFile { Id = 5, FileId = 5, StoreId = 3 }
                 );
         }
     }
