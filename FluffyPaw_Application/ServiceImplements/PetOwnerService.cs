@@ -872,7 +872,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var result = new List<StoreServicePOResponse>();
 
-            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString(), includeProperties: "Store,Service").ToList();
+            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString() && ss.CurrentPetOwner < ss.LimitPetOwner, includeProperties: "Store,Service,Service.ServiceType,Service.Brand").ToList();
 
             Random rng = new Random();
             int n = listStoreServices.Count;
@@ -890,20 +890,28 @@ namespace FluffyPaw_Application.ServiceImplements
                 var service = _mapper.Map<StoreServicePOResponse>(item);
                 service.StoreName = item.Store.Name;
                 service.ServiceName = item.Service.Name;
+                service.ServiceType = item.Service.ServiceType.Name;
                 service.Image = item.Service.Image;
                 service.Cost = item.Service.Cost;
+                service.Duration = item.Service.Duration;
+                service.ServiceTypeId = item.Service.ServiceTypeId;
+                service.BrandName = item.Service.Brand.Name;
+                service.BrandId = item.Service.Brand.Id;
+                service.Description = item.Service.Description;
+                service.BookingCount = item.Service.BookingCount;
+                service.TotalRating = item.Service.TotalRating;
 
                 result.Add(service);
             }
 
-            return result;
+            return result.Take(100).ToList();
         }
 
         public async Task<List<StoreServicePOResponse>> RecommendServicePO()
         {
             var result = new List<StoreServicePOResponse>();
 
-            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString(), includeProperties: "Store,Service").ToList();
+            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString() && ss.CurrentPetOwner < ss.LimitPetOwner, includeProperties: "Store,Service,Service.ServiceType,Service.Brand").ToList();
 
             //var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             //var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId == accountId).FirstOrDefault();
@@ -935,8 +943,16 @@ namespace FluffyPaw_Application.ServiceImplements
                 var service = _mapper.Map<StoreServicePOResponse>(item);
                 service.StoreName = item.Store.Name;
                 service.ServiceName = item.Service.Name;
+                service.ServiceType = item.Service.ServiceType.Name;
                 service.Image = item.Service.Image;
                 service.Cost = item.Service.Cost;
+                service.Duration = item.Service.Duration;
+                service.ServiceTypeId = item.Service.ServiceTypeId;
+                service.BrandName = item.Service.Brand.Name;
+                service.BrandId = item.Service.Brand.Id;
+                service.Description = item.Service.Description;
+                service.BookingCount = item.Service.BookingCount;
+                service.TotalRating = item.Service.TotalRating;
 
                 result.Add(service);
             }
@@ -981,14 +997,22 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<List<StoreServicePOResponse>> SearchStoreService(string character)
         {
             var result = new List<StoreServicePOResponse>();
-            var list = _unitOfWork.StoreServiceRepository.Get(ss => ss.Status.Equals(StoreServiceStatus.Available.ToString()) && ss.Service.Name.Contains(character), includeProperties: "Service,Store").ToList();
+            var list = _unitOfWork.StoreServiceRepository.Get(ss => ss.Status.Equals(StoreServiceStatus.Available.ToString()) && ss.Service.Name.Contains(character), includeProperties: "Store,Service,Service.ServiceType,Service.Brand").ToList();
             foreach (var item in list)
             {
                 var service = _mapper.Map<StoreServicePOResponse>(item);
                 service.StoreName = item.Store.Name;
                 service.ServiceName = item.Service.Name;
+                service.ServiceType = item.Service.ServiceType.Name;
                 service.Image = item.Service.Image;
                 service.Cost = item.Service.Cost;
+                service.Duration = item.Service.Duration;
+                service.ServiceTypeId = item.Service.ServiceTypeId;
+                service.BrandName = item.Service.Brand.Name;
+                service.BrandId = item.Service.Brand.Id;
+                service.Description = item.Service.Description;
+                service.BookingCount = item.Service.BookingCount;
+                service.TotalRating = item.Service.TotalRating;
 
                 result.Add(service);
             }
@@ -996,9 +1020,51 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<List<Brand>> SearchBrand(string character)
+        public async Task<List<SearchBrandResponse>> SearchBrand(string character)
         {
-            return _unitOfWork.BrandRepository.Get(s => s.Status == true && s.Name.Contains(character)).ToList();
+            var brands = _unitOfWork.BrandRepository.Get(b => b.Status == true && b.Name.Contains(character)).ToList();
+            var result = _mapper.Map<List<SearchBrandResponse>>(brands);
+            foreach (var brand in result)
+            {
+                var services = _unitOfWork.ServiceRepository.Get(s => s.BrandId == brand.Id).ToList();
+                var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id).ToList();
+
+                var serviceList = _mapper.Map<List<BrandServiceResponse>>(services);
+                brand.ServiceNames = serviceList;
+                brand.TotalStore = stores.Count;
+                brand.TotalServices = services.Count;
+                brand.Rating = stores.Average(s => s.TotalRating);
+            }
+
+            return result;
+        }
+
+        public async Task<List<StoreServicePOResponse>> Top6StoreServices()
+        {
+            var result = new List<StoreServicePOResponse>();
+
+            var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString() && ss.CurrentPetOwner < ss.LimitPetOwner, includeProperties: "Store,Service,Service.ServiceType,Service.Brand").OrderByDescending(ob => ob.Service.TotalRating).Take(6).ToList();
+
+            foreach (var item in listStoreServices)
+            {
+                var service = _mapper.Map<StoreServicePOResponse>(item);
+                service.StoreName = item.Store.Name;
+                service.ServiceName = item.Service.Name;
+                service.ServiceType = item.Service.ServiceType.Name;
+                service.Image = item.Service.Image;
+                service.Cost = item.Service.Cost;
+                service.Duration = item.Service.Duration;
+                service.ServiceTypeId = item.Service.ServiceTypeId;
+                service.BrandName = item.Service.Brand.Name;
+                service.BrandId = item.Service.Brand.Id;
+                service.Description = item.Service.Description;
+                service.BookingCount = item.Service.BookingCount;
+                service.TotalRating = item.Service.TotalRating;
+
+                result.Add(service);
+            }
+
+            return result.Take(100).ToList();
         }
     }
 }
