@@ -225,7 +225,6 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<StResponse> GetStoreById(long id)
         {
             var store = _unitOfWork.StoreRepository.Get(s => s.Id == id, includeProperties: "Brand").FirstOrDefault();
-
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
@@ -233,8 +232,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeResponse = _mapper.Map<StResponse>(store);
 
-            var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id)
-                                                  .ToList();
+            var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id).ToList();
 
             var files = new List<FileResponse>();
 

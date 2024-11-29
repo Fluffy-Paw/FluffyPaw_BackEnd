@@ -20,6 +20,8 @@ namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 
         public string BrandName { get; set; }
 
+        public long StoreId { get; set; }
+
         public string StoreName { get; set; }
 
         public string StoreAddress { get; set; }

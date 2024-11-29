@@ -110,6 +110,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 var serStoResponse = _mapper.Map<SerStoResponse>(service);
 
                 serStoResponse.ServiceTypeName = service.ServiceType.Name;
+                serStoResponse.StoreId = store.Id;
                 serStoResponse.StoreName = store.Name;
                 serStoResponse.StoreAddress = store.Address;
 
