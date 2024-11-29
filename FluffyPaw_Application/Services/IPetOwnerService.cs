@@ -61,6 +61,8 @@ namespace FluffyPaw_Application.Services
 
         Task<List<StoreServicePOResponse>> RecommendServiceGuest();
 
+        Task<List<StoreServicePOResponse>> Top6StoreServices();
+
         Task<List<Store>> SearchStore(string character);
         
         Task<List<StoreServicePOResponse>> SearchStoreService(string character);
