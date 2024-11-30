@@ -37,12 +37,12 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var triggerOneDay = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneDay)
-                .StartAt(booking.StartTime.AddHours(-31))
+                .StartAt(booking.StartTime.AddMinutes(-5))
                 .Build();
 
             var triggerOneHour = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneHour)
-                .StartAt(booking.StartTime.AddHours(-8))
+                .StartAt(booking.StartTime.AddMinutes(-1))
                 .Build();
 
             await _scheduler.ScheduleJob(job, new HashSet<ITrigger> { triggerOneDay, triggerOneHour }, true);
@@ -65,7 +65,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var triggerOneHour = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneHour)
-                .StartAt(booking.CreateDate.AddHours(8))
+                .StartAt(booking.CreateDate.AddMinutes(0.5))
             .Build();
 
             await _scheduler.ScheduleJob(job, triggerOneHour);
