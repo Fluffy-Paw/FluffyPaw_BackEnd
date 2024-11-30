@@ -21,7 +21,7 @@ namespace FluffyPaw_Application.DTO.Request.BookingRequest
 
         public float? PetCurrentWeight { get; set; }
 
-        public DateTimeOffset NextVaccineDate { get; set; }
+        public DateTimeOffset? NextVaccineDate { get; set; }
 
         public string? Description { get; set; }
     }

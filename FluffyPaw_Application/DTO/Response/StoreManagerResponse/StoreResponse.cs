@@ -44,6 +44,8 @@ namespace FluffyPaw_Application.DTO.Response.StoreManagerResponse
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Store, StoreResponse>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.BrandId, opt => opt.MapFrom(src => src.Brand.Id))
                 .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name))
                 .ForMember(dest => dest.Logo, opt => opt.MapFrom(src => src.Brand.Logo))
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Account.Username));

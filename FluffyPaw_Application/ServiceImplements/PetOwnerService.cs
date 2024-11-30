@@ -104,13 +104,45 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<StoreResponse>> GetAllStore()
         {
-            var stores = _unitOfWork.StoreRepository.Get(s => s.Status == true, includeProperties: "Brand");
+            var stores = _unitOfWork.StoreRepository.Get(s => s.Status == true, includeProperties: "Brand").ToList();
+
             if (!stores.Any())
             {
                 throw new CustomException.DataNotFoundException("Thương hiệu chưa đăng kí các chi nhánh cửa hàng.");
             }
 
-            var storeResponses = _mapper.Map<List<StoreResponse>>(stores);
+            var storeServiceIds = _unitOfWork.StoreServiceRepository.Get(ss => stores.Select(s => s.Id).Contains(ss.StoreId))
+                                       .Select(ss => new { ss.Id, ss.StoreId }).ToList();
+
+            var bookingIds = _unitOfWork.BookingRepository.Get(b => storeServiceIds.Select(ss => ss.Id).Contains(b.StoreServiceId))
+                                    .Select(b => new { b.Id, b.StoreServiceId }).ToList();
+
+            var bookingRatings = _unitOfWork.BookingRatingRepository.Get(br => bookingIds.Select(b => b.Id)
+                                .Contains(br.BookingId) && br.StoreVote >= 4)
+                                 .GroupBy(br => br.Booking.StoreServiceId)
+                                 .ToDictionary(g => g.Key, g => g.Count()); 
+
+            var storeResponses = new List<StoreResponse>();
+
+            foreach (var store in stores)
+            {
+                int validVotesCount = 0;
+
+                var storeServiceIdsForStore = storeServiceIds.Where(ss => ss.StoreId == store.Id).Select(ss => ss.Id);
+
+                foreach (var storeServiceId in storeServiceIdsForStore)
+                {
+                    if (bookingRatings.ContainsKey(storeServiceId))
+                    {
+                        validVotesCount += bookingRatings[storeServiceId];
+                    }
+                }
+
+                var storeResponse = _mapper.Map<StoreResponse>(store);
+
+                storeResponses.Add(storeResponse);
+            }
+
             return storeResponses;
         }
 
@@ -488,13 +520,10 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
 
                 var overlappingBooking = _unitOfWork.BookingRepository.Get(b =>
-                                                    b.PetId == petId &&
-                                                    b.StoreServiceId == createBookingRequest.StoreServiceId &&
-                                                    (b.Status == BookingStatus.Pending.ToString()
-                                                    || b.Status == BookingStatus.Accepted.ToString()) &&
-                                                    b.StartTime < newEndTime &&
-                                                    b.EndTime > newStartTime
-                                                    );
+                                        b.PetId == petId &&
+                                        (b.Status == BookingStatus.Pending.ToString() || b.Status == BookingStatus.Accepted.ToString()) &&
+                                        b.StartTime < newEndTime &&
+                                        b.EndTime > newStartTime);
                 if (overlappingBooking.Any())
                 {
                     throw new CustomException.InvalidDataException($"Thú cưng {pet.Name} đã có lịch trong khung thời gian này.");
