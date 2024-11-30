@@ -262,7 +262,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                                     includeProperties: "Service,Service.Brand");
             if (!storeServices.Any())
             {
-                throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình của dịch vụ {service.Name}.");
+                throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình nào.");
             }
 
             var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
