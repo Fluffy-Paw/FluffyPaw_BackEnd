@@ -656,7 +656,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 await _unitOfWork.SaveAsync();
             }
 
-
             var newBooking = new Booking
             {
                 PetId = timeSelectionRequest.PetId,
@@ -701,6 +700,9 @@ namespace FluffyPaw_Application.ServiceImplements
 
             await _unitOfWork.SaveAsync();
 
+            await _jobScheduler.ScheduleOverTimeRefund(newBooking);
+            await _jobScheduler.ScheduleBookingNotification(newBooking);
+
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = store.AccountId,
@@ -710,9 +712,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReferenceId = newBooking.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
-
-            await _jobScheduler.ScheduleOverTimeRefund(newBooking);
-            await _jobScheduler.ScheduleBookingNotification(newBooking);
 
             var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
             return bookingResponse;
