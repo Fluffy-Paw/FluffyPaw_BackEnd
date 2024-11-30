@@ -477,7 +477,8 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString()).FirstOrDefault();
+                                            && pb.Status == BookingStatus.Pending.ToString(),
+                                            includeProperties: "Pet,Pet.PetOwner").FirstOrDefault();
             if (pendingBooking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -498,7 +499,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             _unitOfWork.Save();
 
-            var poAccountId = pendingBooking.Pet.PetOwner.Account.Id;
+            var poAccountId = pendingBooking.Pet.PetOwner.AccountId;
             var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == poAccountId).FirstOrDefault();
             wallet.Balance += pendingBooking.Cost;
 

@@ -1,4 +1,5 @@
 ﻿using FluffyPaw_Application.Services;
+using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Repository.Enum;
 using Quartz;
@@ -38,12 +39,14 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                 booking.Status = BookingStatus.OverTime.ToString();
                 _unitOfWork.BookingRepository.Update(booking);
 
-                var pet = _unitOfWork.PetRepository.GetByID(booking.PetId);
-                var po = _unitOfWork.PetOwnerRepository.GetByID(pet.PetOwnerId);
-                var wallet = _unitOfWork.WalletRepository.GetByID(po.AccountId);
-                wallet.Balance += booking.Cost;
-                _unitOfWork.WalletRepository.Update(wallet);
-
+                if (booking.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
+                {
+                    var pet = _unitOfWork.PetRepository.GetByID(booking.PetId);
+                    var po = _unitOfWork.PetOwnerRepository.GetByID(pet.PetOwnerId);
+                    var wallet = _unitOfWork.WalletRepository.GetByID(po.AccountId);
+                    wallet.Balance += booking.Cost;
+                    _unitOfWork.WalletRepository.Update(wallet);
+                }
                 await _unitOfWork.SaveAsync();
                 
             }

@@ -279,20 +279,11 @@ namespace FluffyPaw_Application.ServiceImplements
                 .Select(ss => ss.Id)
                 .ToList();
 
-            if (!storeServiceIds.Any())
-            {
-                throw new CustomException.DataNotFoundException("Dịch vụ này không có lịch trình nào.");
-            }
 
             var bookingIds = _unitOfWork.BookingRepository
                 .Get(b => storeServiceIds.Contains(b.StoreServiceId))
                 .Select(b => b.Id)
                 .ToList();
-
-            if (!bookingIds.Any())
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch nào liên quan đến dịch vụ này.");
-            }
 
             var bookingRatings = _unitOfWork.BookingRatingRepository
                 .Get(br => bookingIds.Contains(br.BookingId))
@@ -306,6 +297,35 @@ namespace FluffyPaw_Application.ServiceImplements
             var bookingRatingResponses = bookingRatings
                 .Select(br => _mapper.Map<BookingRatingResponse>(br))
                 .ToList();
+
+            return bookingRatingResponses;
+        }
+
+        public async Task<List<BookingRatingResponse>> GetAllBookingRatingByStoreId(long id)
+        {
+            var store = _unitOfWork.StoreRepository.GetByID(id);
+            if (store == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
+            }
+
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == id).ToList();
+
+            var storeServiceIds = storeServices.Select(ss => ss.Id).ToList();
+
+            var bookingIds = _unitOfWork.BookingRepository
+                .Get(b => storeServiceIds.Contains(b.StoreServiceId))
+                .Select(b => b.Id)
+                .ToList();
+
+            var bookingRatings = _unitOfWork.BookingRatingRepository.Get(br => bookingIds.Contains(br.BookingId)).ToList();
+
+            if (!bookingRatings.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá nào cho cửa hàng này.");
+            }
+
+            var bookingRatingResponses = bookingRatings.Select(br => _mapper.Map<BookingRatingResponse>(br)).ToList();
 
             return bookingRatingResponses;
         }

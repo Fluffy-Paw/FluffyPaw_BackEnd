@@ -225,7 +225,6 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<StResponse> GetStoreById(long id)
         {
             var store = _unitOfWork.StoreRepository.Get(s => s.Id == id, includeProperties: "Brand").FirstOrDefault();
-
             if (store == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
@@ -233,8 +232,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var storeResponse = _mapper.Map<StResponse>(store);
 
-            var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id)
-                                                  .ToList();
+            var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id).ToList();
 
             var files = new List<FileResponse>();
 
@@ -264,55 +262,34 @@ namespace FluffyPaw_Application.ServiceImplements
                                                     includeProperties: "Service,Service.Brand");
             if (!storeServices.Any())
             {
-                throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình của dịch vụ {service.Name}.");
+                throw new CustomException.DataNotFoundException($"Không tìm thấy lịch trình nào.");
             }
 
             var storeSerResponses = _mapper.Map<List<StoreSerResponse>>(storeServices);
             return storeSerResponses;
         }
 
-        public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? dateTime)
+        public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime)
         {
             var services = _unitOfWork.ServiceRepository.Get(s => s.Status == true, includeProperties: "ServiceType,Brand,StoreServices")
                                             .Where(ss => ss.ServiceTypeId == serviceTypeId);
 
-            if (dateTime.HasValue)
+            if (startTime.HasValue && endTime.HasValue)
             {
-                DateTimeOffset localDateTime = dateTime.Value.ToLocalTime();
+                DateTimeOffset localStartTime = startTime.Value.ToLocalTime();
+                DateTimeOffset localEndTime = endTime.Value.ToLocalTime();
 
-                int hour = localDateTime.Hour;
+                services = services.Where(s =>
+                    s.StoreServices != null && s.StoreServices.Any(ss =>
+                        ss.StartTime >= localStartTime && ss.StartTime <= localEndTime
+                    ));
 
-                if (hour >= 7 && hour < 10)
+                if (!services.Any())
                 {
-                    services = services.Where(s =>
-                        s.StoreServices != null && s.StoreServices.Any(ss => ss.StartTime.Hour >= 7 && ss.StartTime.Hour < 10));
-                    if (!services.Any())
-                    {
-                        throw new CustomException.DataNotFoundException("Không tìm thấy bất kì dịch vụ nào có khung giờ này.");
-                    }
+                    throw new CustomException.DataNotFoundException($"Không tìm thấy bất kì dịch vụ nào " +
+                               $"trong khung giờ từ {startTime.Value.ToString("HH:mm:ss")} đến {endTime.Value.ToString("HH:mm:ss")} này.");
                 }
-                else if (hour >= 10 && hour < 14)
-                {
-                    services = services.Where(s =>
-                        s.StoreServices != null && s.StoreServices.Any(ss => ss.StartTime.Hour >= 10 && ss.StartTime.Hour < 14));
-                    if (!services.Any())
-                    {
-                        throw new CustomException.DataNotFoundException("Không tìm thấy bất kì dịch vụ nào có khung giờ này.");
-                    }
-                }
-                else if (hour >= 14 && hour < 19)
-                {
-                    services = services.Where(s =>
-                        s.StoreServices != null && s.StoreServices.Any(ss => ss.StartTime.Hour >= 14 && ss.StartTime.Hour < 19));
-                    if (!services.Any())
-                    {
-                        throw new CustomException.DataNotFoundException("Không tìm thấy bất kì dịch vụ nào có khung giờ này.");
-                    }
-                }
-                else
-                {
-                    throw new CustomException.InvalidDataException("Khung giờ bạn đang tìm không thuộc từ 7h đến 19h.");
-                }
+
             }
 
             var serviceList = services
@@ -340,14 +317,26 @@ namespace FluffyPaw_Application.ServiceImplements
         }
 
 
-        public async Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? dateTime)
+        public async Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? startTime, DateTimeOffset? endTime)
         {
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == serviceId,
                                                     includeProperties: "Store");
 
-            if (dateTime.HasValue)
+            if (startTime.HasValue && endTime.HasValue)
             {
-                storeServices = storeServices.Where(ss => ss.StartTime <= dateTime.Value);
+                DateTimeOffset localStartTime = startTime.Value.ToLocalTime();
+                DateTimeOffset localEndTime = endTime.Value.ToLocalTime();
+
+                // Lọc storeServices dựa trên khoảng thời gian từ startTime đến endTime
+                storeServices = storeServices.Where(ss =>
+                    ss.StartTime >= localStartTime && ss.StartTime <= localEndTime
+                );
+
+                if (!storeServices.Any())
+                {
+                    throw new CustomException.DataNotFoundException($"Không tìm thấy cửa hàng nào có lịch trình" +
+                        $" trong khoảng thời gian từ {startTime.Value.ToString("HH:mm:ss")} đến {endTime.Value.ToString("HH:mm:ss")}.");
+                }
             }
 
             var stores = storeServices.Select(ss => ss.Store)
@@ -632,7 +621,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 var existingStoreService = _unitOfWork.StoreServiceRepository.Get(
                                 ess => ess.Id == storeServiceId
                                 && ess.Status == StoreServiceStatus.Available.ToString()
-                                && ess.Service.ServiceType.Name == "Hotel",
+                                && ess.Service.ServiceType.Name == "Khách sạn",
                                 includeProperties: "Service,Store,Store.Account").FirstOrDefault();
                 if (existingStoreService == null)
                 {
@@ -666,7 +655,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.StoreServiceRepository.Update(existingStoreService);
                 await _unitOfWork.SaveAsync();
             }
-
 
             var newBooking = new Booking
             {
@@ -712,6 +700,9 @@ namespace FluffyPaw_Application.ServiceImplements
 
             await _unitOfWork.SaveAsync();
 
+            await _jobScheduler.ScheduleOverTimeRefund(newBooking);
+            await _jobScheduler.ScheduleBookingNotification(newBooking);
+
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = store.AccountId,
@@ -721,9 +712,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReferenceId = newBooking.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
-
-            await _jobScheduler.ScheduleOverTimeRefund(newBooking);
-            await _jobScheduler.ScheduleBookingNotification(newBooking);
 
             var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
             return bookingResponse;
