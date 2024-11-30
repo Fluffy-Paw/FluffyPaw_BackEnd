@@ -43,7 +43,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
 
             var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == BrandId.Id && ss.Status  == true,
-                includeProperties: "Certificate").ToList();
+                includeProperties: "Certificates").ToList();
 
             if (!services.Any())
             {

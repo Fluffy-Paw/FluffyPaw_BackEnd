@@ -552,8 +552,9 @@ namespace FluffyPaw_Application.ServiceImplements
                 bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
                 bookingResponses.Add(bookingResponse);
 
-                await _jobScheduler.ScheduleOverTimeRefund(newBooking);
+
                 await _jobScheduler.ScheduleBookingNotification(newBooking);
+                await _jobScheduler.ScheduleOverTimeRefund(newBooking);
 
                 var storeAccountId = existingStoreService.Store.Account.Id;
                 var notificationRequest = new NotificationRequest
