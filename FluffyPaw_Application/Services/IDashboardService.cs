@@ -16,5 +16,7 @@ namespace FluffyPaw_Application.Services
         Task<AdminDashboardResponse> GetMonthStaticsAdmin(int month);
 
         Task<AdminDashboardResponse> GetAllStaticsAdmin();
+
+        Task<SMDashboardResponse> GetAllStaticsStaff();
     }
 }

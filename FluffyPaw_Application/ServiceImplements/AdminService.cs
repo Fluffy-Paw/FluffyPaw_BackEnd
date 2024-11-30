@@ -265,7 +265,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<WithdrawNotificationResponse>> GetWithdrawRequest()
         {
-            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("WithDraw Request") && n.ReceiverId == 1).ToList();
+            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("Rút tiền") && n.ReceiverId == 1).ToList();
             if (!list.Any()) throw new CustomException.DataNotFoundException("Không có yêu cầu rút tiền nào");
 
             List<WithdrawNotificationResponse> result = new List<WithdrawNotificationResponse>();

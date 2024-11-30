@@ -40,6 +40,14 @@ namespace FluffyPaw_API.Controllers.Dashboard
             return CustomResult(result);
         }
 
+        [HttpGet("GetAllStaticsStaff")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetAllStaticsStaff()
+        {
+            var result = await _dashboardService.GetAllStaticsStaff();
+            return CustomResult(result);
+        }
+
         [HttpGet("GetMonthStaticsSM/{month}")]
         [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> GetMonthStaticsSM(int month)
