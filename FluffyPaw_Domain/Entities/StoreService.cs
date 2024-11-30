@@ -33,6 +33,8 @@ namespace FluffyPaw_Domain.Entities
         [ForeignKey("ServiceId")]
         public virtual Service Service { get; set; }
 
+        public ICollection<Booking> Bookings { get; set; }
+
         public StoreService()
         {
             StartTime = CoreHelper.SystemTimeNow;

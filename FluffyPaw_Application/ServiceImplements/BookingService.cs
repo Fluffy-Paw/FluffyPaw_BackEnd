@@ -146,25 +146,11 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var serviceTypeName = storeService.Service.ServiceType.Name;
-            if (serviceTypeName == "Tạm trú")
-            {
-                booking.CheckOut = true;
-                booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
-            }
 
-            else
-            {
-                if (booking.Status != BookingStatus.Ended.ToString())
-                {
-                    throw new CustomException.InvalidDataException("Đặt lịch này cần phải kết thúc trước khi check out.");
-                }
-
-                booking.CheckOut = true;
-                booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
-            }
-
+            booking.CheckOut = true;
+            booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
+            booking.EndTime = CoreHelper.SystemTimeNow.AddHours(7);
             booking.CheckoutImage = await _firebaseConfiguration.UploadImage(checkOutRequest.CheckoutImage);
-
             _unitOfWork.BookingRepository.Update(booking);
             await _unitOfWork.SaveAsync();
 
