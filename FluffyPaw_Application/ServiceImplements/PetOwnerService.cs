@@ -279,6 +279,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             storeResponse.Files = files;
+            storeResponse.BrandName = store.Brand.Name;
 
             return storeResponse;
         }
