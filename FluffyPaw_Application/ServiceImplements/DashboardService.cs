@@ -28,17 +28,38 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<AdminDashboardResponse> GetAllStaticsAdmin()
         {
             var accounts = _unitOfWork.AccountRepository.GetAll().ToList();
+            var transactions = _unitOfWork.TransactionRepository.GetAll().ToList();
 
             int numPO = accounts.Count(po => po.RoleName.Equals(RoleName.PetOwner.ToString()));
             int numSM = accounts.Count(sm => sm.RoleName.Equals(RoleName.StoreManager.ToString()));
             int numStore = accounts.Count(s => s.RoleName.Equals(RoleName.Staff.ToString()));
+
+            List<double> withdrawRevenues = new List<double>();
+            List<double> depositRevenues = new List<double>();
+
+            for (int i = 1; i <= 12; i++)
+            {
+                var transactionsByMonth = transactions.FindAll(b => b.CreateTime.Month == i && b.Type == "Rút tiền");
+                double revenue = transactionsByMonth.Sum(r => r.Amount);
+                withdrawRevenues.Add(revenue);
+            }
+
+            for (int i = 1; i <= 12; i++)
+            {
+                var transactionsByMonth = transactions.FindAll(b => b.CreateTime.Month == i && b.Type == "Nạp tiền");
+                double revenue = transactionsByMonth.Sum(r => r.Amount);
+                depositRevenues.Add(revenue);
+            }
+
 
             var response = new AdminDashboardResponse
             {
                 TotalPOs = numPO,
                 TotalSMs = numSM,
                 TotalStore = numStore,
-                TotalUser = accounts.Count
+                TotalUser = accounts.Count,
+                DepositRevenues = depositRevenues,
+                WithdrawRevenues = withdrawRevenues
             };
 
             return response;

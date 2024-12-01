@@ -16,5 +16,9 @@ namespace FluffyPaw_Application.DTO.Response.DasboardResponse
 
         public int TotalPOs { get; set; }
 
+        public List<double> WithdrawRevenues { get; set; }
+
+        public List<double> DepositRevenues { get; set; }
+
     }
 }

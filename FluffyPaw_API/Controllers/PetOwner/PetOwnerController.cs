@@ -195,18 +195,10 @@ namespace FluffyPaw_API.Controllers.PetOwner
             return CustomResult("Tải dữ liệu thành công.", tracking);
         }
 
-        [HttpGet("RecommendServiceGuest")]
-        public async Task<IActionResult> RecommendServiceGuest()
+        [HttpGet("RecommendService")]
+        public async Task<IActionResult> RecommendService()
         {
-            var services = await _petOwnerService.RecommendServiceGuest();
-            return CustomResult("Tải dữ liệu thành công.", services);
-        }
-
-        [HttpGet("RecommendServicePO")]
-        [Authorize(Roles = "PetOwner")]
-        public async Task<IActionResult> RecommendServicePO()
-        {
-            var services = await _petOwnerService.RecommendServicePO();
+            var services = await _petOwnerService.RecommendService();
             return CustomResult("Tải dữ liệu thành công.", services);
         }
 
