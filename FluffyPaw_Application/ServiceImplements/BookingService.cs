@@ -280,9 +280,18 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá nào cho dịch vụ này.");
             }
 
-            var bookingRatingResponses = bookingRatings
-                .Select(br => _mapper.Map<BookingRatingResponse>(br))
-                .ToList();
+            var petOwnerIds = bookingRatings.Select(br => br.PetOwnerId).Distinct().ToList();
+            var petOwners = _unitOfWork.PetOwnerRepository.Get(po => petOwnerIds.Contains(po.Id), includeProperties: "Account").ToList();
+
+            var bookingRatingResponses = _mapper.Map<List<BookingRatingResponse>>(bookingRatings);
+
+            foreach (var bookingRatingResponse in bookingRatingResponses)
+            {
+                var petOwner = petOwners.FirstOrDefault(po => po.Id == bookingRatingResponse.PetOwnerId);
+                var account = petOwner?.Account;
+                bookingRatingResponse.FullName = petOwner?.FullName;
+                bookingRatingResponse.Avatar = account?.Avatar;
+            }
 
             return bookingRatingResponses;
         }
@@ -311,7 +320,18 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá nào cho cửa hàng này.");
             }
 
-            var bookingRatingResponses = bookingRatings.Select(br => _mapper.Map<BookingRatingResponse>(br)).ToList();
+            var petOwnerIds = bookingRatings.Select(br => br.PetOwnerId).Distinct().ToList();
+            var petOwners = _unitOfWork.PetOwnerRepository.Get(po => petOwnerIds.Contains(po.Id), includeProperties: "Account").ToList();
+
+            var bookingRatingResponses = _mapper.Map<List<BookingRatingResponse>>(bookingRatings);
+
+            foreach (var bookingRatingResponse in bookingRatingResponses)
+            {
+                var petOwner = petOwners.FirstOrDefault(po => po.Id == bookingRatingResponse.PetOwnerId);
+                var account = petOwner?.Account;
+                bookingRatingResponse.FullName = petOwner?.FullName;
+                bookingRatingResponse.Avatar = account?.Avatar;
+            }
 
             return bookingRatingResponses;
         }
@@ -319,24 +339,30 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<BookingRatingResponse> GetBookingRatingByBookingId(long id)
         {
             var booking = _unitOfWork.BookingRepository.GetByID(id);
-            var bookingRating = _unitOfWork.BookingRatingRepository.Get(b => b.BookingId == booking.Id).FirstOrDefault();
+            var bookingRating = _unitOfWork.BookingRatingRepository.Get(b => b.BookingId == booking.Id,
+                                             includeProperties: "PetOwner,PetOwner.Account").FirstOrDefault();
             if (bookingRating == null)
             {
                 throw new CustomException.DataNotFoundException("Khoong tìm thấy đánh giá này.");
             }
 
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(bookingRating);
+            bookingRatingResponse.FullName = bookingRating.PetOwner.FullName;
+            bookingRatingResponse.Avatar = bookingRating.PetOwner.Account.Avatar;
             return bookingRatingResponse;
         }
         public async Task<BookingRatingResponse> GetBookingRatingById(long id)
         {
-            var bookingRating = _unitOfWork.BookingRatingRepository.GetByID(id);
+            var bookingRating = _unitOfWork.BookingRatingRepository.Get(br => br.Id == id, 
+                                            includeProperties: "PetOwner,PetOwner.Account").FirstOrDefault();
             if (bookingRating == null)
             {
                 throw new CustomException.DataNotFoundException("Khoong tìm thấy đánh giá này.");
             }
 
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(bookingRating);
+            bookingRatingResponse.FullName = bookingRating.PetOwner.FullName;
+            bookingRatingResponse.Avatar = bookingRating.PetOwner.Account.Avatar;
             return bookingRatingResponse;
         }
 
@@ -349,7 +375,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
             }
 
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id, includeProperties: "Account").FirstOrDefault();
             if (po == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy chủ thú cưng liên kết với tài khoản này.");
@@ -391,6 +417,8 @@ namespace FluffyPaw_Application.ServiceImplements
             UpdateStoreTotalRatingByBookingRatingId(newBookingRating.Id);
 
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(newBookingRating);
+            bookingRatingResponse.FullName = po.FullName;
+            bookingRatingResponse.Avatar = po.Account.Avatar;
             return bookingRatingResponse;
         }
 
@@ -404,16 +432,14 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
             }
 
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id).FirstOrDefault();
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id, 
+                                            includeProperties: "Account").FirstOrDefault();
             if (po == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy chủ thú cưng liên kết với tài khoản.");
             }
 
-            var existingBookingRating = _unitOfWork.BookingRatingRepository
-                .Get(ebr => ebr.Id == id && ebr.PetOwnerId == po.Id)
-                .FirstOrDefault();
-
+            var existingBookingRating = _unitOfWork.BookingRatingRepository.Get(ebr => ebr.Id == id && ebr.PetOwnerId == po.Id).FirstOrDefault();
             if (existingBookingRating == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá.");
@@ -421,12 +447,20 @@ namespace FluffyPaw_Application.ServiceImplements
 
             _mapper.Map(bookingRatingRequest, existingBookingRating);
 
+            if (bookingRatingRequest.Image != null)
+            {
+                var imgUrl = await _firebaseConfiguration.UploadImage(bookingRatingRequest.Image);
+                existingBookingRating.Image = imgUrl;
+            }
+
             await _unitOfWork.SaveAsync();
 
             UpdateServiceTotalRatingByBookingRatingId(existingBookingRating.Id);
             UpdateStoreTotalRatingByBookingRatingId(existingBookingRating.Id);
 
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(existingBookingRating);
+            bookingRatingResponse.FullName = po.FullName;
+            bookingRatingResponse.Avatar = po.Account.Avatar;
             return bookingRatingResponse;
         }
 
