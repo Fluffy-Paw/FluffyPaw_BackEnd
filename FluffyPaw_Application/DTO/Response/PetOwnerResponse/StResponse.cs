@@ -16,6 +16,8 @@ namespace FluffyPaw_Application.DTO.Response.PetOwnerResponse
 
         public long BrandId { get; set; }
 
+        public string BrandName { get; set; }
+
         public string Name { get; set; }
 
         public string OperatingLicense { get; set; }
