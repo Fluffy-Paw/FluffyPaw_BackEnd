@@ -857,6 +857,8 @@ namespace FluffyPaw_Application.ServiceImplements
             var account = _unitOfWork.AccountRepository.GetByID(user);
             var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
 
+
+            var billingRecordResponses = new List<BillingRecordResponse>();
             var billingRecords = _unitOfWork.BillingRecordRepository.Get(brs => brs.WalletId == wallet.Id,
                                                     orderBy: q => q.OrderByDescending(br => br.CreateDate),
                                                     includeProperties: "Booking").ToList();
@@ -864,7 +866,13 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Bạn không có đơn nào.");
             }
-            var billingRecordResponses = _mapper.Map<List<BillingRecordResponse>>(billingRecords);
+
+            foreach (var billingRecord in billingRecords)
+            {
+                var billingRecordResponse = _mapper.Map<BillingRecordResponse>(billingRecord);
+                billingRecordResponse.Code = billingRecord.Booking.Code;
+                billingRecordResponses.Add(billingRecordResponse);
+            }
             return billingRecordResponses;
         }
 
