@@ -9,5 +9,6 @@ namespace FluffyPaw_Domain.Interfaces
     public interface IHashing
     {
         string SHA512Hash(string text);
+        string GenerateCode();
     }
 }

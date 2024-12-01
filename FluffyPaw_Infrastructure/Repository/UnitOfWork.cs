@@ -40,7 +40,6 @@ namespace FluffyPaw_Infrastructure.Repository
         private IGenericRepository<Tracking> _trackingRepository;
         private IGenericRepository<TrackingFile> _trackingFileRepository;
         private IGenericRepository<VaccineHistory> _vaccineHistoryRepository;
-        private IGenericRepository<Voucher> _voucherRepository;
         private IGenericRepository<Wallet> _walletRepository;
         private IGenericRepository<Transaction> _transactionRepository;
 
@@ -397,19 +396,6 @@ namespace FluffyPaw_Infrastructure.Repository
                     _vaccineHistoryRepository = new GenericRepository<VaccineHistory>(_context);
                 }
                 return _vaccineHistoryRepository;
-            }
-        }
-
-        public IGenericRepository<Voucher> VoucherRepository
-        {
-            get
-            {
-
-                if (_voucherRepository == null)
-                {
-                    _voucherRepository = new GenericRepository<Voucher>(_context);
-                }
-                return _voucherRepository;
             }
         }
 

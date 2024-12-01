@@ -84,19 +84,28 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<SerStoResponse>> GetAllServiceByStoreId(long id)
         {
-            var store = _unitOfWork.StoreRepository.GetByID(id);
+            var store = _unitOfWork.StoreRepository.Get(s => s.Id == id, includeProperties: "Brand").FirstOrDefault();
+            if (store == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
+            }
+
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == id).ToList();
-            if (storeServices == null)
+            if (storeServices == null || !storeServices.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình của cửa hàng này.");
             }
 
-            var groupedServices = storeServices.GroupBy(ss => ss.ServiceId);
+            var groupedServices = storeServices
+                .GroupBy(ss => ss.ServiceId)
+                .Select(g => g.First())
+                .ToList();
 
             var serStoResponses = new List<SerStoResponse>();
-            foreach (var group in groupedServices)
+
+            foreach (var storeService in groupedServices)
             {
-                var serviceId = group.Key;
+                var serviceId = storeService.ServiceId;
 
                 var service = _unitOfWork.ServiceRepository
                     .Get(s => s.Id == serviceId, includeProperties: "ServiceType,Certificates")
@@ -109,13 +118,13 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 var serStoResponse = _mapper.Map<SerStoResponse>(service);
 
+                serStoResponse.BrandName = store.Brand.Name;
                 serStoResponse.ServiceTypeName = service.ServiceType.Name;
                 serStoResponse.StoreId = store.Id;
                 serStoResponse.StoreName = store.Name;
                 serStoResponse.StoreAddress = store.Address;
 
-                serStoResponses.Add(serStoResponse);
-
+                // Get the certificates for the current service
                 var certificates = _unitOfWork.CertificateRepository.Get(c => c.ServiceId == service.Id).ToList();
 
                 serStoResponse.Certificate = certificates?
@@ -124,6 +133,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 serStoResponses.Add(serStoResponse);
             }
+
             if (!serStoResponses.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");

@@ -15,6 +15,8 @@ namespace FluffyPaw_Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
+        public string Code { get; set; }
+
         public long PetId { get; set; }
 
         public long StoreServiceId { get; set; }
