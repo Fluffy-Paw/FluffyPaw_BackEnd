@@ -57,13 +57,13 @@ namespace FluffyPaw_Application.Services
 
         Task<TrackingResponse> GetTrackingById(long id);
 
-        Task<List<SerResponse>> RecommendService();
+        Task<List<SerStoResponse>> RecommendService();
 
-        Task<List<SerResponse>> Top6StoreServices();
+        Task<List<SerStoResponse>> Top6StoreServices();
 
         Task<List<Store>> SearchStore(string character);
         
-        Task<List<SerResponse>> SearchStoreService(string character);
+        Task<List<SerStoResponse>> SearchStoreService(string character);
 
         Task<List<SearchBrandResponse>> SearchBrand(string character);
     }

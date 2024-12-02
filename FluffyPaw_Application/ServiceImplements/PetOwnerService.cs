@@ -884,7 +884,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                             .FirstOrDefault();
 
             var duringBooking = _unitOfWork.BookingRepository.Get(db => db.Id == id
-                                            //&& db.StoreService.Store.Id == store.Id
+                                            //&& db.StoreService.Store.Id == stores.Id
                                             && db.Status != BookingStatus.Denied.ToString(),
                                             includeProperties: "StoreService,StoreService.Store").FirstOrDefault();
             if (duringBooking == null)
@@ -938,36 +938,59 @@ namespace FluffyPaw_Application.ServiceImplements
             return trackingResponse;
         }
 
-        public async Task<List<SerResponse>> RecommendService()
+        public async Task<List<SerStoResponse>> RecommendService()
         {
-            //var result = new List<StoreServicePOResponse>();
+            var stores = _unitOfWork.StoreRepository.Get(includeProperties: "Brand").ToList();
+            if (stores == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
+            }
 
-            //var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString() && ss.CurrentPetOwner < ss.LimitPetOwner, includeProperties: "Store,Service,Service.ServiceType,Service.Brand").OrderByDescending(ob => ob.Service.BookingCount).ToList();
-            var listStoreServices = _unitOfWork.ServiceRepository.Get(s => s.Status == true, includeProperties: "ServiceType,Brand,StoreServices").OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).ToList();
+            var serStoResponses = new List<SerStoResponse>();
 
-            //foreach (var item in listStoreServices)
-            //{
-            //    if (!result.FindAll(r => r.ServiceId == item.ServiceId && r.StoreId == item.StoreId).Any())
-            //    {
-            //        var service = _mapper.Map<StoreServicePOResponse>(item);
-            //        service.StoreName = item.Store.Name;
-            //        service.ServiceName = item.Service.Name;
-            //        service.ServiceType = item.Service.ServiceType.Name;
-            //        service.Image = item.Service.Image;
-            //        service.Cost = item.Service.Cost;
-            //        service.Duration = item.Service.Duration;
-            //        service.ServiceTypeId = item.Service.ServiceTypeId;
-            //        service.BrandName = item.Service.Brand.Name;
-            //        service.BrandId = item.Service.Brand.Id;
-            //        service.Description = item.Service.Description;
-            //        service.BookingCount = item.Service.BookingCount;
-            //        service.TotalRating = item.Service.TotalRating;
+            foreach (var store in stores)
+            {
+                var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id).ToList();
+                if (storeServices == null || !storeServices.Any())
+                {
+                    throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình của cửa hàng này.");
+                }
 
-            //        result.Add(service);
-            //    }
-            //}
+                var groupedServices = storeServices
+                    .GroupBy(ss => ss.ServiceId)
+                    .Select(g => g.First())
+                    .ToList();
 
-            return _mapper.Map<List<SerResponse>>(listStoreServices);
+                foreach (var storeService in groupedServices)
+                {
+                    var serviceId = storeService.ServiceId;
+
+                    var service = _unitOfWork.ServiceRepository
+                        .Get(s => s.Id == serviceId, includeProperties: "ServiceType,Certificates")
+                        .FirstOrDefault();
+
+                    if (service == null)
+                    {
+                        throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của cửa hàng này.");
+                    }
+
+                    var serStoResponse = _mapper.Map<SerStoResponse>(service);
+
+                    serStoResponse.BrandName = store.Brand.Name;
+                    serStoResponse.ServiceTypeName = service.ServiceType.Name;
+                    serStoResponse.StoreId = store.Id;
+                    serStoResponse.StoreName = store.Name;
+                    serStoResponse.StoreAddress = store.Address;
+
+                    serStoResponses.Add(serStoResponse);
+                }
+
+                if (!serStoResponses.Any())
+                {
+                    throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
+                }
+            }
+            return serStoResponses.OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).ToList();
         }
 
         public async Task<List<StoreServicePOResponse>> RecommendServicePO()
@@ -1057,32 +1080,59 @@ namespace FluffyPaw_Application.ServiceImplements
             return _unitOfWork.StoreRepository.Get(s => s.Status == true && s.Name.Contains(character)).ToList();
         }
 
-        public async Task<List<SerResponse>> SearchStoreService(string character)
+        public async Task<List<SerStoResponse>> SearchStoreService(string character)
         {
-            //var result = new List<StoreServicePOResponse>();
-            //var list = _unitOfWork.StoreServiceRepository.Get(ss => ss.Status.Equals(StoreServiceStatus.Available.ToString()) && ss.Service.Name.Contains(character), includeProperties: "Store,Service,Service.ServiceType,Service.Brand").ToList();
-            //foreach (var item in list)
-            //{
-            //    var service = _mapper.Map<StoreServicePOResponse>(item);
-            //    service.StoreName = item.Store.Name;
-            //    service.ServiceName = item.Service.Name;
-            //    service.ServiceType = item.Service.ServiceType.Name;
-            //    service.Image = item.Service.Image;
-            //    service.Cost = item.Service.Cost;
-            //    service.Duration = item.Service.Duration;
-            //    service.ServiceTypeId = item.Service.ServiceTypeId;
-            //    service.BrandName = item.Service.Brand.Name;
-            //    service.BrandId = item.Service.Brand.Id;
-            //    service.Description = item.Service.Description;
-            //    service.BookingCount = item.Service.BookingCount;
-            //    service.TotalRating = item.Service.TotalRating;
+            var stores = _unitOfWork.StoreRepository.Get(includeProperties: "Brand").ToList();
+            if (stores == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
+            }
 
-            //    result.Add(service);
-            //}
+            var serStoResponses = new List<SerStoResponse>();
 
-            var listStoreServices = _unitOfWork.ServiceRepository.Get(s => s.Status == true && s.Name.Contains(character), includeProperties: "ServiceType,Brand,StoreServices").OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).ToList();
+            foreach (var store in stores)
+            {
+                var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id).ToList();
+                if (storeServices == null || !storeServices.Any())
+                {
+                    throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình của cửa hàng này.");
+                }
 
-            return _mapper.Map<List<SerResponse>>(listStoreServices);
+                var groupedServices = storeServices
+                    .GroupBy(ss => ss.ServiceId)
+                    .Select(g => g.First())
+                    .ToList();
+
+                foreach (var storeService in groupedServices)
+                {
+                    var serviceId = storeService.ServiceId;
+
+                    var service = _unitOfWork.ServiceRepository
+                        .Get(s => s.Id == serviceId, includeProperties: "ServiceType,Certificates")
+                        .FirstOrDefault();
+
+                    if (service == null)
+                    {
+                        throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của cửa hàng này.");
+                    }
+
+                    var serStoResponse = _mapper.Map<SerStoResponse>(service);
+
+                    serStoResponse.BrandName = store.Brand.Name;
+                    serStoResponse.ServiceTypeName = service.ServiceType.Name;
+                    serStoResponse.StoreId = store.Id;
+                    serStoResponse.StoreName = store.Name;
+                    serStoResponse.StoreAddress = store.Address;
+
+                    serStoResponses.Add(serStoResponse);
+                }
+
+                if (!serStoResponses.Any())
+                {
+                    throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
+                }
+            }
+            return serStoResponses.Where(s => s.Name.ToLower().Contains(character.ToLower())).OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).ToList();
         }
 
         public async Task<List<SearchBrandResponse>> SearchBrand(string character)
@@ -1104,38 +1154,59 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<List<SerResponse>> Top6StoreServices()
+        public async Task<List<SerStoResponse>> Top6StoreServices()
         {
-            //var result = new List<StoreServicePOResponse>();
+            var stores = _unitOfWork.StoreRepository.Get(includeProperties: "Brand").ToList();
+            if (stores == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng này.");
+            }
 
-            //var listStoreServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StartTime > DateTimeOffset.UtcNow && ss.Status == StoreServiceStatus.Available.ToString() && ss.CurrentPetOwner < ss.LimitPetOwner, includeProperties: "Store,Service,Service.ServiceType,Service.Brand").OrderByDescending(ob => ob.Service.BookingCount).ToList();
+            var serStoResponses = new List<SerStoResponse>();
 
+            foreach (var store in stores)
+            {
+                var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id).ToList();
+                if (storeServices == null || !storeServices.Any())
+                {
+                    throw new CustomException.DataNotFoundException("Không tìm thấy lịch trình của cửa hàng này.");
+                }
 
-            //foreach (var item in listStoreServices)
-            //{
-            //    if (!result.FindAll(r => r.ServiceId == item.ServiceId && r.StoreId == item.StoreId).Any())
-            //    {
-            //        var service = _mapper.Map<StoreServicePOResponse>(item);
-            //        service.StoreName = item.Store.Name;
-            //        service.ServiceName = item.Service.Name;
-            //        service.ServiceType = item.Service.ServiceType.Name;
-            //        service.Image = item.Service.Image;
-            //        service.Cost = item.Service.Cost;
-            //        service.Duration = item.Service.Duration;
-            //        service.ServiceTypeId = item.Service.ServiceTypeId;
-            //        service.BrandName = item.Service.Brand.Name;
-            //        service.BrandId = item.Service.Brand.Id;
-            //        service.Description = item.Service.Description;
-            //        service.BookingCount = item.Service.BookingCount;
-            //        service.TotalRating = item.Service.TotalRating;
+                var groupedServices = storeServices
+                    .GroupBy(ss => ss.ServiceId)
+                    .Select(g => g.First())
+                    .ToList();
 
-            //        result.Add(service);
-            //    }
-            //}
+                foreach (var storeService in groupedServices)
+                {
+                    var serviceId = storeService.ServiceId;
 
-            var listStoreServices = _unitOfWork.ServiceRepository.Get(s => s.Status == true, includeProperties: "ServiceType,Brand,StoreServices").OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).Take(6).ToList();
+                    var service = _unitOfWork.ServiceRepository
+                        .Get(s => s.Id == serviceId, includeProperties: "ServiceType,Certificates")
+                        .FirstOrDefault();
 
-            return _mapper.Map<List<SerResponse>>(listStoreServices);
+                    if (service == null)
+                    {
+                        throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của cửa hàng này.");
+                    }
+
+                    var serStoResponse = _mapper.Map<SerStoResponse>(service);
+
+                    serStoResponse.BrandName = store.Brand.Name;
+                    serStoResponse.ServiceTypeName = service.ServiceType.Name;
+                    serStoResponse.StoreId = store.Id;
+                    serStoResponse.StoreName = store.Name;
+                    serStoResponse.StoreAddress = store.Address;
+
+                    serStoResponses.Add(serStoResponse);
+                }
+
+                if (!serStoResponses.Any())
+                {
+                    throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
+                }
+            }
+            return serStoResponses.OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).Take(6).ToList();
         }
 
     }
