@@ -29,7 +29,6 @@ namespace FluffyPaw_API.Controllers.Report
         }
 
         [HttpGet("GetAllReportByStoreId/{id}")]
-        [Authorize(Roles = "Admin,Staff,StoreManager")]
         public async Task<IActionResult> GetAllReportByStoreId(long id)
         {
             var reports = await _reportService.GetAllReportByStoreId(id);
@@ -53,7 +52,6 @@ namespace FluffyPaw_API.Controllers.Report
         }
 
         [HttpGet("GetAllReportCategoryName")]
-        [Authorize(Roles = "Staff,PetOwner")]
         public async Task<IActionResult> GetAllReportCategoryName()
         {
             var reportCateogories = await _reportService.GetAllReportCategoryName();
