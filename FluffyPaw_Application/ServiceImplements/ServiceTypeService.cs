@@ -19,12 +19,14 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IAuthentication _authentication;
+        private readonly IFirebaseConfiguration _firebaseConfiguration;
 
-        public ServiceTypeService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication)
+        public ServiceTypeService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication, IFirebaseConfiguration firebaseConfiguration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _authentication = authentication;
+            _firebaseConfiguration = firebaseConfiguration;
         }
 
         public IEnumerable<ServiceTypeResponse> GetAllServiceType()
@@ -55,7 +57,11 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var newServiceType = _mapper.Map<ServiceType>(serviceTypeRequest);
-
+            if (serviceTypeRequest.Image != null)
+            {
+                newServiceType.Image = await _firebaseConfiguration.UploadImage(serviceTypeRequest.Image);
+            }
+            _unitOfWork.Save();
             _unitOfWork.ServiceTypeRepository.Insert(newServiceType);
             _unitOfWork.Save();
 
@@ -83,6 +89,10 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             _mapper.Map(serviceTypeRequest, existingServiceType);
+            if (serviceTypeRequest.Image != null)
+            {
+                existingServiceType.Image = await _firebaseConfiguration.UploadImage(serviceTypeRequest.Image);
+            }
             _unitOfWork.Save();
 
             var serviceTypeResponse = _mapper.Map<ServiceTypeResponse>(existingServiceType);

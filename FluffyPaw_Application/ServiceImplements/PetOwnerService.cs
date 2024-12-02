@@ -584,6 +584,7 @@ namespace FluffyPaw_Application.ServiceImplements
                         WalletId = wallet.Id,
                         BookingId = newBooking.Id,
                         Amount = newBooking.Cost,
+                        Type = BillingType.Subtract.ToString(),
                         Description = $"Đặt lịch dịch vụ {existingStoreService.Service.Name}.",
                         CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
                     };
@@ -755,6 +756,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     WalletId = wallet.Id,
                     BookingId = newBooking.Id,
                     Amount = newBooking.Cost,
+                    Type = BillingType.Subtract.ToString(),
                     Description = $"Đặt lịch dịch vụ {service.Name} từ {firstStoreService.StartTime.ToString("HH:mm:ss dd/MM/yyyy")} đến" +
                                     $"{lastStoreService.StartTime.ToString("HH:mm:ss dd/MM/yyyy")}.",
                     CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
@@ -828,6 +830,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     WalletId = wallet.Id,
                     BookingId = pendingBooking.Id,
                     Amount = pendingBooking.Cost,
+                    Type = BillingType.Add.ToString(),
                     Description = $"Huỷ Đặt lịch dịch vụ {storeService.Service.Name}.",
                     CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
                 };

@@ -37,7 +37,7 @@ namespace FluffyPaw_API.Controllers.Service
 
         [HttpPost("CreateServiceType")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateServiceType(ServiceTypeRequest serviceTypeRequest)
+        public async Task<IActionResult> CreateServiceType([FromForm] ServiceTypeRequest serviceTypeRequest)
         {
             ServiceTypeResponse serviceType = await _serviceTypeService.CreateServiceType(serviceTypeRequest);
             return CustomResult("Tạo loại dịch vụ thành công.", serviceType);
@@ -45,7 +45,7 @@ namespace FluffyPaw_API.Controllers.Service
 
         [HttpPatch("UpdateServiceType/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateServiceType(long id, ServiceTypeRequest serviceTypeRequest)
+        public async Task<IActionResult> UpdateServiceType(long id, [FromForm] ServiceTypeRequest serviceTypeRequest)
         {
             var serviceType = await _serviceTypeService.UpdateServiceType(id, serviceTypeRequest);
             return CustomResult("Cập nhật loại dịch vụ thành công.", serviceType);
