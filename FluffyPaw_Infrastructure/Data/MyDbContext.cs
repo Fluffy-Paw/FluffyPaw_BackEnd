@@ -189,9 +189,9 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<ServiceType>().HasData(
-                new ServiceType { Id = 1, Name = "Chăm sóc & Làm đẹp" },
-                new ServiceType { Id = 2, Name = "Tiêm chủng" },
-                new ServiceType { Id = 3, Name = "Khách sạn" }
+                new ServiceType { Id = 1, Name = "Chăm sóc & Làm đẹp", Image = "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/11/dich-vu-cham-soc-thu-cung-tai-nha-1.jpg" },
+                new ServiceType { Id = 2, Name = "Tiêm chủng", Image = "https://www.vietdvm.com/images/content/2015/05/CNTY/tiem-vaccine-cho-cho.jpg" },
+                new ServiceType { Id = 3, Name = "Khách sạn", Image = "https://vethospital.vnua.edu.vn/wp-content/uploads/2019/12/61c4036d5df6a4a8fde7-1024x768.jpg" }
                 );
 
             modelBuilder.Entity<Brand>().HasData(

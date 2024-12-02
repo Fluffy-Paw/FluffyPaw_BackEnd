@@ -487,7 +487,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId
                                                 && ss.StoreId == store.Id
                                                 && ss.Status == StoreServiceStatus.Available.ToString(),
-                                                includeProperties: "Service")
+                                                includeProperties: "Service,Store")
                                                 .FirstOrDefault();
             if (storeService == null)
             {
@@ -508,7 +508,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 WalletId = wallet.Id,
                 BookingId = pendingBooking.Id,
                 Amount = pendingBooking.Cost,
-                Description = $"Đặt lịch dịch vụ {storeService.Service.Name} bị từ chối.",
+                Type = BillingType.Add.ToString(),
+                Description = $"Đặt lịch dịch vụ {storeService.Service.Name} của cửa hàng {storeService.Store.Name} bị từ chối.",
                 CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
             };
 
@@ -572,6 +573,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 WalletId = poWallet.Id,
                 BookingId = booking.Id,
                 Amount = booking.Cost,
+                Type = BillingType.Add.ToString(),
                 Description = $"Đặt lịch dịch vụ {booking.StoreService.Service.Name} đã bị hủy bởi cửa hàng.",
                 CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
             };

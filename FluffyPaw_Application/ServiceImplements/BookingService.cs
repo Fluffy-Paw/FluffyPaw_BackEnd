@@ -151,6 +151,7 @@ namespace FluffyPaw_Application.ServiceImplements
             booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
             booking.EndTime = CoreHelper.SystemTimeNow.AddHours(7);
             booking.CheckoutImage = await _firebaseConfiguration.UploadImage(checkOutRequest.CheckoutImage);
+            booking.Status = BookingStatus.Ended.ToString();
             _unitOfWork.BookingRepository.Update(booking);
             await _unitOfWork.SaveAsync();
 

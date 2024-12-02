@@ -331,7 +331,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var services = _unitOfWork.ServiceRepository.Get(s => s.BrandId == brand.Id && s.Status == false,
-                                            includeProperties: "ServiceType,Certificate");
+                                            includeProperties: "ServiceType,Certificates");
             if (!services.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào chưa được xác thực.");
