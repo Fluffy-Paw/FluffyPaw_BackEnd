@@ -339,11 +339,16 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<BookingRatingResponse> GetBookingRatingByBookingId(long id)
         {
             var booking = _unitOfWork.BookingRepository.GetByID(id);
+            if (booking == null)
+            {
+                throw new CustomException.DataNotFoundException("Đơn đặt bạn chọn không tồn tại.");
+            }
+
             var bookingRating = _unitOfWork.BookingRatingRepository.Get(b => b.BookingId == booking.Id,
                                              includeProperties: "PetOwner,PetOwner.Account").FirstOrDefault();
             if (bookingRating == null)
             {
-                throw new CustomException.DataNotFoundException("Khoong tìm thấy đánh giá này.");
+                throw new CustomException.DataNotFoundException("Không tìm thấy đánh giá của đơn đặt này.");
             }
 
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(bookingRating);
