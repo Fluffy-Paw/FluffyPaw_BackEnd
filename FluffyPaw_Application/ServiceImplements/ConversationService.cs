@@ -418,28 +418,28 @@ namespace FluffyPaw_Application.ServiceImplements
 
         private async Task NotifyMessage(Conversation conversation, string roleName, string content, bool hasFiles)
         {
-            string notificationMessage;
+            //string notificationMessage;
 
             if (roleName == RoleName.Staff.ToString())
             {
                 var store = _unitOfWork.StoreRepository.Get(a => a.AccountId == conversation.StaffAccountId).FirstOrDefault();
 
-                notificationMessage = hasFiles
+                /*notificationMessage = hasFiles
                     ? $"Cửa hàng {store.Name} đã gửi ảnh."
-                    : $"Cửa hàng {store.Name} đã gửi tin nhắn";
+                    : $"Cửa hàng {store.Name} đã gửi tin nhắn";*/
 
-                await _notiHub.MessageNotification(notificationMessage, conversation.PoAccountId,
+                await _notiHub.MessageNotification(content, conversation.PoAccountId,
                                     NotificationType.Message.ToString(), conversation.Id);
             }
             else if (roleName == RoleName.PetOwner.ToString())
             {
                 var po = _unitOfWork.PetOwnerRepository.Get(a => a.AccountId == conversation.PoAccountId).FirstOrDefault();
 
-                notificationMessage = hasFiles
+                /*notificationMessage = hasFiles
                     ? $"Người chủ của thú cưng {po.FullName} đã gửi ảnh."
-                    : $"Người chủ của thú cưng {po.FullName} đã gửi tin nhắn";
+                    : $"Người chủ của thú cưng {po.FullName} đã gửi tin nhắn";*/
 
-                await _notiHub.MessageNotification(notificationMessage, conversation.StaffAccountId,
+                await _notiHub.MessageNotification(content, conversation.StaffAccountId,
                                     NotificationType.Message.ToString(), conversation.Id);
             }
         }
