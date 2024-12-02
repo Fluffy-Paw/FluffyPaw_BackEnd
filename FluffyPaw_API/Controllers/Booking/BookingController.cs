@@ -54,7 +54,6 @@ namespace FluffyPaw_API.Controllers.Booking
         }
 
         [HttpGet("GetAllBookingRatingByStoreId/{id}")]
-        [Authorize(Roles = "Staff,PetOwner")]
         public async Task<IActionResult> GetAllBookingRatingByStoreId(long id)
         {
             var bookingRatings = await _bookingService.GetAllBookingRatingByStoreId(id);
