@@ -29,6 +29,8 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public string Image { get; set; }
 
+        public DateTimeOffset CreateDate { get; set; }
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<BookingRating, BookingRatingResponse>()

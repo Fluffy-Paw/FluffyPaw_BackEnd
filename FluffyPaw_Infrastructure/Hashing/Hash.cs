@@ -17,5 +17,15 @@ namespace FluffyPaw_Infrastructure.Hashing
             byte[] hashBytes = sha512.ComputeHash(input);
             return Convert.ToHexString(hashBytes);
         }
+
+        public string GenerateCode()
+        {
+            var random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var code = new string(Enumerable.Range(0, 8) 
+                                          .Select(_ => chars[random.Next(chars.Length)])
+                                          .ToArray());
+            return code;
+        }
     }
 }

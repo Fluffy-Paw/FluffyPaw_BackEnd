@@ -407,7 +407,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 ServiceVote = createBookingRatingRequest.ServiceVote,
                 StoreVote = createBookingRatingRequest.StoreVote,
                 Description = createBookingRatingRequest.Description,
-                Image = uploadedImageUrl
+                Image = uploadedImageUrl,
+                CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
             };
 
             _unitOfWork.BookingRatingRepository.Insert(newBookingRating);
@@ -419,6 +420,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(newBookingRating);
             bookingRatingResponse.FullName = po.FullName;
             bookingRatingResponse.Avatar = po.Account.Avatar;
+            bookingRatingResponse.CreateDate = CoreHelper.SystemTimeNow;
             return bookingRatingResponse;
         }
 
@@ -453,6 +455,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 existingBookingRating.Image = imgUrl;
             }
 
+            existingBookingRating.CreateDate = CoreHelper.SystemTimeNow.AddHours(7);
+
             await _unitOfWork.SaveAsync();
 
             UpdateServiceTotalRatingByBookingRatingId(existingBookingRating.Id);
@@ -461,6 +465,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var bookingRatingResponse = _mapper.Map<BookingRatingResponse>(existingBookingRating);
             bookingRatingResponse.FullName = po.FullName;
             bookingRatingResponse.Avatar = po.Account.Avatar;
+            bookingRatingResponse.CreateDate = CoreHelper.SystemTimeNow;
             return bookingRatingResponse;
         }
 

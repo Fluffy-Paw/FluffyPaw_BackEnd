@@ -16,6 +16,8 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public long BookingId { get; set; }
 
+        public string Code { get; set; }
+
         public double Amount { get; set; }
 
         public string Description { get; set; }

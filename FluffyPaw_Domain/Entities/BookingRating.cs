@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluffyPaw_Domain.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,10 +27,17 @@ namespace FluffyPaw_Domain.Entities
 
         public string? Image { get; set; }
 
+        public DateTimeOffset CreateDate { get; set; }
+
         [ForeignKey("BookingId")]
         public virtual Booking Booking { get; set; }
 
         [ForeignKey("PetOwnerId")]
         public virtual PetOwner PetOwner { get; set; }
+
+        public BookingRating()
+        {
+            CreateDate = CoreHelper.SystemTimeNow;
+        }
     }
 }

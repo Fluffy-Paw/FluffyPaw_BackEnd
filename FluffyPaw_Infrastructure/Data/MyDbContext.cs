@@ -48,7 +48,6 @@ namespace FluffyPaw_Infrastructure.Data
         public DbSet<Tracking> Trackings { get; set; }
         public DbSet<TrackingFile> TrackingFiles { get; set; }
         public DbSet<VaccineHistory> VaccineHistories { get; set; }
-        public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
 
         public DbSet<Transaction> Transactions { get; set; }

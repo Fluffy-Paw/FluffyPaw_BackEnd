@@ -36,6 +36,7 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IJobScheduler _jobScheduler;
         private readonly IFirebaseConfiguration _firebaseConfiguration;
         private readonly INotificationService _notificationService;
+        private readonly IHashing _hashing;
 
         public PetOwnerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
                     IHttpContextAccessor httpContextAccessor, IHashing hashing,
@@ -49,6 +50,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _jobScheduler = jobScheduler;
             _firebaseConfiguration = firebaseConfiguration;
             _notificationService = notificationService;
+            _hashing = hashing;
         }
 
         public async Task<PetOwnerResponse> GetPetOwnerDetail()
@@ -120,7 +122,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var bookingRatings = _unitOfWork.BookingRatingRepository.Get(br => bookingIds.Select(b => b.Id)
                                 .Contains(br.BookingId) && br.StoreVote >= 4)
                                  .GroupBy(br => br.Booking.StoreServiceId)
-                                 .ToDictionary(g => g.Key, g => g.Count()); 
+                                 .ToDictionary(g => g.Key, g => g.Count());
 
             var storeResponses = new List<StoreResponse>();
 
@@ -279,6 +281,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             storeResponse.Files = files;
+            storeResponse.BrandName = store.Brand.Name;
 
             return storeResponse;
         }
@@ -529,8 +532,24 @@ namespace FluffyPaw_Application.ServiceImplements
                     throw new CustomException.InvalidDataException($"Thú cưng {pet.Name} đã có lịch trong khung thời gian này.");
                 }
 
+                var existingBookingCodes = _unitOfWork.BookingRepository.Get(b => true).Select(b => b.Code);
+
+                string code = "";
+                bool status = true;
+
+                while (status)
+                {
+                    code = _hashing.GenerateCode();
+
+                    if (!existingBookingCodes.Contains(code))
+                    {
+                        status = false;
+                    }
+                }
+
                 var newBooking = new Booking
                 {
+                    Code = code,
                     PetId = petId,
                     StoreServiceId = createBookingRequest.StoreServiceId,
                     PaymentMethod = createBookingRequest.PaymentMethod,
@@ -686,8 +705,24 @@ namespace FluffyPaw_Application.ServiceImplements
                 await _unitOfWork.SaveAsync();
             }
 
+            var existingBookingCodes = _unitOfWork.BookingRepository.Get(b => true).Select(b => b.Code);
+
+            string code = "";
+            bool status = true;
+
+            while (status)
+            {
+                code = _hashing.GenerateCode();
+
+                if (!existingBookingCodes.Contains(code))
+                {
+                    status = false;
+                }
+            }
+
             var newBooking = new Booking
             {
+                Code = code,
                 PetId = timeSelectionRequest.PetId,
                 StoreServiceId = firstStoreServiceId,
                 PaymentMethod = timeSelectionRequest.PaymentMethod,
@@ -822,6 +857,8 @@ namespace FluffyPaw_Application.ServiceImplements
             var account = _unitOfWork.AccountRepository.GetByID(user);
             var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
 
+
+            var billingRecordResponses = new List<BillingRecordResponse>();
             var billingRecords = _unitOfWork.BillingRecordRepository.Get(brs => brs.WalletId == wallet.Id,
                                                     orderBy: q => q.OrderByDescending(br => br.CreateDate),
                                                     includeProperties: "Booking").ToList();
@@ -829,7 +866,13 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Bạn không có đơn nào.");
             }
-            var billingRecordResponses = _mapper.Map<List<BillingRecordResponse>>(billingRecords);
+
+            foreach (var billingRecord in billingRecords)
+            {
+                var billingRecordResponse = _mapper.Map<BillingRecordResponse>(billingRecord);
+                billingRecordResponse.Code = billingRecord.Booking.Code;
+                billingRecordResponses.Add(billingRecordResponse);
+            }
             return billingRecordResponses;
         }
 
@@ -1094,5 +1137,6 @@ namespace FluffyPaw_Application.ServiceImplements
 
             return _mapper.Map<List<SerResponse>>(listStoreServices);
         }
+
     }
 }
