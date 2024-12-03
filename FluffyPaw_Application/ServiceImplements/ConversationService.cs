@@ -428,7 +428,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     ? $"Cửa hàng {store.Name} đã gửi ảnh."
                     : $"Cửa hàng {store.Name} đã gửi tin nhắn";*/
 
-                await _notiHub.MessageNotification(content, conversation.StaffAccountId,
+                await _notiHub.MessageNotification(content, conversation.PoAccountId,
                                     NotificationType.Message.ToString(), conversation.Id);
             }
             else if (roleName == RoleName.PetOwner.ToString())
@@ -439,7 +439,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     ? $"Người chủ của thú cưng {po.FullName} đã gửi ảnh."
                     : $"Người chủ của thú cưng {po.FullName} đã gửi tin nhắn";*/
 
-                await _notiHub.MessageNotification(content, conversation.PoAccountId,
+                await _notiHub.MessageNotification(content, conversation.StaffAccountId,
                                     NotificationType.Message.ToString(), conversation.Id);
             }
         }
