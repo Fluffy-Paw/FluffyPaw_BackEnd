@@ -304,11 +304,15 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeSerResponses;
         }
 
-        public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime, double cost)
+        public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime, double? cost)
         {
-            var services = _unitOfWork.ServiceRepository.Get(s => s.Status == true &&
-                                            s.Cost <= cost, includeProperties: "ServiceType,Brand,StoreServices")
+            var services = _unitOfWork.ServiceRepository.Get(s => s.Status == true, includeProperties: "ServiceType,Brand,StoreServices")
                                             .Where(ss => ss.ServiceTypeId == serviceTypeId);
+
+            if (cost.HasValue)
+            {
+                services = services.Where(s => s.Cost <= cost.Value);
+            }
 
             if (startTime.HasValue && endTime.HasValue)
             {

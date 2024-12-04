@@ -107,7 +107,7 @@ namespace FluffyPaw_API.Controllers.PetOwner
         }
 
         [HttpGet("GetAllServiceByServiceTypeIdDateTime")]
-        public async Task<IActionResult> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime, double cost)
+        public async Task<IActionResult> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime, double? cost)
         {
             var services = await _petOwnerService.GetAllServiceByServiceTypeIdDateTime(serviceTypeId, startTime, endTime, cost);
             return CustomResult("Tải dữ liệu thành công.", services);
