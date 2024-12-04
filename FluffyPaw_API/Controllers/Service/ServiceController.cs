@@ -43,6 +43,13 @@ namespace FluffyPaw_API.Controllers.Service
             return CustomResult("Tải dữ liệu thành công.", services);
         }
 
+        [HttpGet("GetServiceById/{id}")]
+        public async Task<IActionResult> GetServiceById(long id)
+        {
+            var service = await _serService.GetServiceById(id);
+            return CustomResult("Tải dữ liệu thành công.", service);
+        }
+
         [HttpPost("CreateService")]
         [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> CreateService([FromForm] SerRequest serviceRequest)
