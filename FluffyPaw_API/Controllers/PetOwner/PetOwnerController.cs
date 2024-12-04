@@ -107,7 +107,6 @@ namespace FluffyPaw_API.Controllers.PetOwner
         }
 
         [HttpGet("GetAllServiceByServiceTypeIdDateTime")]
-        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime, double cost)
         {
             var services = await _petOwnerService.GetAllServiceByServiceTypeIdDateTime(serviceTypeId, startTime, endTime, cost);
@@ -115,7 +114,6 @@ namespace FluffyPaw_API.Controllers.PetOwner
         }
 
         [HttpGet("GetAllStoreByServiceIdDateTime")]
-        [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? startTime, DateTimeOffset? endTime)
         {
             var storeServices = await _petOwnerService.GetAllStoreByServiceIdDateTime(serviceId, startTime, endTime);
