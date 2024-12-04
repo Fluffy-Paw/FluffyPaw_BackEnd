@@ -304,9 +304,10 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeSerResponses;
         }
 
-        public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime)
+        public async Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime, double cost)
         {
-            var services = _unitOfWork.ServiceRepository.Get(s => s.Status == true, includeProperties: "ServiceType,Brand,StoreServices")
+            var services = _unitOfWork.ServiceRepository.Get(s => s.Status == true &&
+                                            s.Cost <= cost, includeProperties: "ServiceType,Brand,StoreServices")
                                             .Where(ss => ss.ServiceTypeId == serviceTypeId);
 
             if (startTime.HasValue && endTime.HasValue)
@@ -321,10 +322,9 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 if (!services.Any())
                 {
-                    throw new CustomException.DataNotFoundException($"Không tìm thấy bất kì dịch vụ nào " +
-                               $"trong khung giờ từ {startTime.Value.ToString("HH:mm:ss")} đến {endTime.Value.ToString("HH:mm:ss")} này.");
+                    throw new CustomException.DataNotFoundException($"Không tìm thấy bất kỳ dịch vụ nào " +
+                               $"trong khung giờ từ {startTime.Value.ToString("HH:mm:ss dd/MM/yyyy")} đến {endTime.Value.ToString("HH:mm:ss dd/MM/yyyy")} này.");
                 }
-
             }
 
             var serviceList = services

@@ -20,7 +20,11 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public string PetName { get; set; }
 
+        public long ServiceId { get; set; }
+
         public string ServiceName { get; set; }
+
+        public long StoreId { get; set; }
 
         public string StoreName { get; set; }
 
@@ -57,11 +61,12 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Booking, BookingResponse>()
+                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => src.StoreService.ServiceId))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.StoreService.Service.Name))
+                .ForMember(dest => dest.StoreId, opt => opt.MapFrom(src => src.StoreService.StoreId))
                 .ForMember(dest => dest.StoreName, opt => opt.MapFrom(src => src.StoreService.Store.Name))
                 .ForMember(dest => dest.PetName, opt => opt.MapFrom(src => src.Pet.Name))
-                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.StoreService.Store.Address))
-                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.StoreService.Service.Name))
-                ;
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.StoreService.Store.Address));
         }
     }
 }
