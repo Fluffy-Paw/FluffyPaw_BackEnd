@@ -378,6 +378,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _unitOfWork.ConversationMessageRepository.Insert(newMessage);
             await _unitOfWork.SaveAsync();
 
+            var images = new List<string>();
             var fileResponses = new List<FileResponse>();
             if (conversationMessageRequest.Files != null)
             {
@@ -401,13 +402,15 @@ namespace FluffyPaw_Application.ServiceImplements
 
                     var fileResponse = _mapper.Map<FileResponse>(newFile);
                     fileResponses.Add(fileResponse);
+
+                    images.Add(newFile.File);
                 }
             }
 
             conversation.LastMessage = newMessage.Content;
             _unitOfWork.Save();
 
-            await NotifyMessage(conversation, account.RoleName, newMessage.Content, conversationMessageRequest.Files != null && conversationMessageRequest.Files.Any());
+            await NotifyMessage(conversation, account.RoleName, newMessage.Content, images, conversationMessageRequest.Files != null && conversationMessageRequest.Files.Any());
 
             var conversationMessageResponse = _mapper.Map<ConversationMessageResponse>(newMessage);
             conversationMessageResponse.CreateTime = CoreHelper.SystemTimeNow;
@@ -416,7 +419,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return conversationMessageResponse;
         }
 
-        private async Task NotifyMessage(Conversation conversation, string roleName, string content, bool hasFiles)
+        private async Task NotifyMessage(Conversation conversation, string roleName, string content, List<string> images, bool hasFiles)
         {
             //string notificationMessage;
 
@@ -428,7 +431,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     ? $"Cửa hàng {store.Name} đã gửi ảnh."
                     : $"Cửa hàng {store.Name} đã gửi tin nhắn";*/
 
-                await _notiHub.MessageNotification(conversation.StaffAccountId, conversation.PoAccountId, content,
+                await _notiHub.MessageNotification(conversation.StaffAccountId, conversation.PoAccountId, content, images,
                                     NotificationType.Message.ToString(), conversation.Id);
             }
             else if (roleName == RoleName.PetOwner.ToString())
@@ -439,7 +442,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     ? $"Người chủ của thú cưng {po.FullName} đã gửi ảnh."
                     : $"Người chủ của thú cưng {po.FullName} đã gửi tin nhắn";*/
 
-                await _notiHub.MessageNotification(conversation.PoAccountId, conversation.StaffAccountId, content,
+                await _notiHub.MessageNotification(conversation.PoAccountId, conversation.StaffAccountId, content, images,
                                     NotificationType.Message.ToString(), conversation.Id);
             }
         }
