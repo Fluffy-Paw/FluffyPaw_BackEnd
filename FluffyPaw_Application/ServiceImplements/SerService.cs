@@ -142,6 +142,23 @@ namespace FluffyPaw_Application.ServiceImplements
             return serStoResponses;
         }
 
+        public async Task<SerResponse> GetServiceById(long id)
+        {
+            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == id, includeProperties: "Brand,ServiceType,Certificates").FirstOrDefault();
+            if (service == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ này.");
+            }
+
+            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(service.ServiceTypeId);
+            var certificates = _unitOfWork.CertificateRepository.Get(c => c.ServiceId == service.Id);
+            var certificateResponses = _mapper.Map<List<CertificatesResponse>>(certificates);
+
+            var serviceResponse = _mapper.Map<SerResponse>(service);
+            serviceResponse.Certificate = certificateResponses;
+            return serviceResponse;
+        }
+
         public async Task<SerResponse> CreateService(SerRequest serviceRequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
