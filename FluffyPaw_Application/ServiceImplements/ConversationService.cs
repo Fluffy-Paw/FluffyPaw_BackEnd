@@ -421,12 +421,9 @@ namespace FluffyPaw_Application.ServiceImplements
 
         private async Task NotifyMessage(Conversation conversation, string roleName, string content, List<string> images)
         {
-            string notification = null;
+            string notification = content ?? "";
 
-            if (!images.Any())
-            {
-                notification = content;
-            }
+            images = images ?? new List<string>();
 
             if (roleName == RoleName.Staff.ToString())
             {
