@@ -146,10 +146,14 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var serviceTypeName = storeService.Service.ServiceType.Name;
+            storeService.Service.BookingCount++;
 
             booking.CheckOut = true;
             booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);
-            booking.EndTime = CoreHelper.SystemTimeNow.AddHours(7);
+            if (CoreHelper.SystemTimeNow < booking.EndTime)
+            {
+                booking.EndTime = CoreHelper.SystemTimeNow.AddHours(7);
+            }
             booking.CheckoutImage = await _firebaseConfiguration.UploadImage(checkOutRequest.CheckoutImage);
             booking.Status = BookingStatus.Ended.ToString();
             _unitOfWork.BookingRepository.Update(booking);
@@ -202,6 +206,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     WalletId = brandWallet.Id,
                     BookingId = booking.Id,
                     Amount = booking.Cost,
+                    Type = BillingType.Add.ToString(),
                     Description = $"Doanh thu của dịch vụ {storeService.Service.Name} từ cửa hàng {store.Name} đã được cộng vào ví FluffyPay.",
                     CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
                 };
@@ -359,7 +364,7 @@ namespace FluffyPaw_Application.ServiceImplements
         }
         public async Task<BookingRatingResponse> GetBookingRatingById(long id)
         {
-            var bookingRating = _unitOfWork.BookingRatingRepository.Get(br => br.Id == id, 
+            var bookingRating = _unitOfWork.BookingRatingRepository.Get(br => br.Id == id,
                                             includeProperties: "PetOwner,PetOwner.Account").FirstOrDefault();
             if (bookingRating == null)
             {
@@ -440,7 +445,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản.");
             }
 
-            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id, 
+            var po = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == account.Id,
                                             includeProperties: "Account").FirstOrDefault();
             if (po == null)
             {
