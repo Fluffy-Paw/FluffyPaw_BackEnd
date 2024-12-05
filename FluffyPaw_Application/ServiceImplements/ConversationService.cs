@@ -91,7 +91,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 conversationResponse.LastMessage = lastMessage?.Content ?? "Hãy nhắn tin để bắt đầu cuộc trò chuyện.";
                 if (lastMessage != null)
                 {
-                    conversationResponse.TimeSinceLastMessage = CoreHelper.SystemTimeNow - lastMessage.CreateTime;
+                    conversationResponse.TimeSinceLastMessage = CoreHelper.SystemTimeNow.AddHours(7) - lastMessage.CreateTime;
                 }
                 var petOwner = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == conversation.PoAccountId,
                                                 includeProperties: "Account").FirstOrDefault();
@@ -387,6 +387,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     var newFile = new Files
                     {
                         File = await _firebaseConfiguration.UploadImage(file),
+                        CreateDate = CoreHelper.SystemTimeNow.AddHours(7),
                         Status = true
                     };
                     _unitOfWork.FilesRepository.Insert(newFile);
