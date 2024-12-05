@@ -410,7 +410,7 @@ namespace FluffyPaw_Application.ServiceImplements
             conversation.LastMessage = newMessage.Content;
             _unitOfWork.Save();
 
-            await NotifyMessage(conversation, account.RoleName, newMessage.Content, images, conversationMessageRequest.Files != null && conversationMessageRequest.Files.Any());
+            await NotifyMessage(conversation, account.RoleName, newMessage.Content, images);
 
             var conversationMessageResponse = _mapper.Map<ConversationMessageResponse>(newMessage);
             conversationMessageResponse.CreateTime = CoreHelper.SystemTimeNow;
@@ -419,30 +419,27 @@ namespace FluffyPaw_Application.ServiceImplements
             return conversationMessageResponse;
         }
 
-        private async Task NotifyMessage(Conversation conversation, string roleName, string content, List<string> images, bool hasFiles)
+        private async Task NotifyMessage(Conversation conversation, string roleName, string content, List<string> images)
         {
-            //string notificationMessage;
+            string notification = null;
+
+            if (!images.Any())
+            {
+                notification = content;
+            }
 
             if (roleName == RoleName.Staff.ToString())
             {
                 var store = _unitOfWork.StoreRepository.Get(a => a.AccountId == conversation.StaffAccountId).FirstOrDefault();
 
-                /*notificationMessage = hasFiles
-                    ? $"Cửa hàng {store.Name} đã gửi ảnh."
-                    : $"Cửa hàng {store.Name} đã gửi tin nhắn";*/
-
-                await _notiHub.MessageNotification(conversation.StaffAccountId, conversation.PoAccountId, content, images,
+                await _notiHub.MessageNotification(conversation.StaffAccountId, conversation.PoAccountId, notification, images,
                                     NotificationType.Message.ToString(), conversation.Id);
             }
             else if (roleName == RoleName.PetOwner.ToString())
             {
                 var po = _unitOfWork.PetOwnerRepository.Get(a => a.AccountId == conversation.PoAccountId).FirstOrDefault();
 
-                /*notificationMessage = hasFiles
-                    ? $"Người chủ của thú cưng {po.FullName} đã gửi ảnh."
-                    : $"Người chủ của thú cưng {po.FullName} đã gửi tin nhắn";*/
-
-                await _notiHub.MessageNotification(conversation.PoAccountId, conversation.StaffAccountId, content, images,
+                await _notiHub.MessageNotification(conversation.PoAccountId, conversation.StaffAccountId, notification, images,
                                     NotificationType.Message.ToString(), conversation.Id);
             }
         }
