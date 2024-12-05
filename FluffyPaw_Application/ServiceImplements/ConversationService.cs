@@ -402,6 +402,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     _unitOfWork.Save();
 
                     var fileResponse = _mapper.Map<FileResponse>(newFile);
+                    fileResponse.CreateDate = CoreHelper.SystemTimeNow;
                     fileResponses.Add(fileResponse);
 
                     images.Add(newFile.File);
