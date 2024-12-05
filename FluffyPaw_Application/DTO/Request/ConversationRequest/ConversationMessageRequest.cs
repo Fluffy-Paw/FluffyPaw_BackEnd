@@ -13,7 +13,7 @@ namespace FluffyPaw_Application.DTO.Request.ConversationRequest
     {
         public long ConversationId { get; set; }
 
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         public long? ReplyMessageId { get; set; } = null;
 
