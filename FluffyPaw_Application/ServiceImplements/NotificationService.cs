@@ -58,7 +58,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<NotificationResponse> CreateNotification(NotificationRequest notificationRequest)
         {
             var notification = _mapper.Map<Notification>(notificationRequest);
-            notification.CreateDate = CoreHelper.SystemTimeNow;
+            notification.CreateDate = CoreHelper.SystemTimeNow.AddHours(7);
             notification.IsSeen = false;
             notification.Status = NotificationStatus.Unread.ToString();
             _unitOfWork.NotificationRepository.Insert(notification);
@@ -80,7 +80,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 Name = name,
                 Type = type,
                 Description = description,
-                CreateDate = CoreHelper.SystemTimeNow,
+                CreateDate = CoreHelper.SystemTimeNow.AddHours(7),
                 ReferenceId = referenceId,
                 IsSeen = false,
                 Status = NotificationStatus.Unread.ToString()
