@@ -34,7 +34,7 @@ namespace FluffyPaw_API.Controllers.SendMessage
         }
 
         [HttpPost("SendReceipt")]
-        public async Task<IActionResult> SendReceipt([FromBody] SendMailRequest sendMailRequest)
+        public async Task<IActionResult> SendReceipt([FromBody] SendReceiptRequest sendMailRequest)
         {
             var result = await _sendMailService.SendReceipt(sendMailRequest);
             if (result) return CustomResult("Gửi mail thành công.");

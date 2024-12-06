@@ -3,9 +3,11 @@ using FluffyPaw_Application.DTO.Response.AuthResponse;
 using FluffyPaw_Application.Services;
 using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Domain.Utils;
 using Microsoft.AspNetCore.Authentication;
 using System;
 using System.Net.Mail;
+using System.Text;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -115,7 +117,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     }
                 }
 
-                return new ForgetPasswordResponse {Email = user.Email, OTP = otp };
+                return new ForgetPasswordResponse { Email = user.Email, OTP = otp };
             }
             catch
             {
@@ -123,7 +125,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
         }
 
-        public async Task<bool> SendReceipt(SendMailRequest sendMailRequest)
+        public async Task<bool> SendReceipt(SendReceiptRequest sendMailRequest)
         {
             try
             {
@@ -132,55 +134,43 @@ namespace FluffyPaw_Application.ServiceImplements
                     mail.From = new MailAddress("Fluffy Paw <fluffypaw4u@gmail.com>");
                     mail.To.Add(sendMailRequest.Email.Trim());
                     mail.Subject = "Fluffy Paw receipt";
-                    mail.Body =  "<body style = \"font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8e5f6;\" >" +
+
+                    StringBuilder bookingDetailsRows = new StringBuilder();
+                    foreach (var booking in sendMailRequest.bookingResponses)
+                    {
+                        bookingDetailsRows.AppendLine(
+                            "<tr>" +
+                            $"<td style = \"padding: 10px 0\" > { booking.ServiceName } </td>" +
+                            $"<td style = \"text-align: right; padding: 10px 0\"> { booking.Cost } VNĐ </td>" +
+                            "</tr>");
+                    }
+
+                    mail.Body = "<body style = \"font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8e5f6;\" >" +
                                     "<div style = \"max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\" >" +
-                                    
+
                                     "<div style = \"text-align: center; margin-bottom: 20px\" >" +
                                         "<img alt = \"Logo\" src = \"https://firebasestorage.googleapis.com/v0/b/fluffy-paw-8e7c1.appspot.com/o/images%2FLogo.png?alt=media&token=44e03e8f-2630-4bbb-8f30-948ce9e5d7ce\" style = \"width: 260px\" />" +
                                     "</div>" +
 
-                                    "<h2 style = \"margin-bottom: 20px\" > Xin chào {$name}, </h2>" +
-                                    "<p style = \"font-size: 16px\" > Cảm ơn vì đã tin tưởng và sử dụng dịch vụ bên Fluffy Paw, hệ thống xin gửi đến cho bạn hóa đơn sau khi hoàn thành giao dịch nạp/ rút tiền từ Fluffy Pay </p >" +
-                                    
+                                    $"<h2 style = \"margin-bottom: 20px\" > Xin chào { sendMailRequest.CustomerName}, </h2>" +
+                                    "<p style = \"font-size: 16px\" > Cảm ơn vì đã tin tưởng và sử dụng dịch vụ bên Fluffy Paw, hệ thống xin gửi đến cho bạn hóa đơn sau khi hoàn thành thanh toán dịch vụ. </p >" +
+
                                     "<div style = \"background-color: #f8f9fa; border-radius: 5px; padding: 15px; margin-bottom: 20px;\">" +
-                                        "<p style = \"margin: 0\" ><strong> Tổng số tiền nạp / rút: {$total}</strong></p >" +
-                                        "<p style = \"margin: 0\" > Ngày tạo đơn: {$due_date}</p >" +
+                                        $"<p style = \"margin: 0\" ><strong> Tổng số tiền thanh toán: { sendMailRequest.bookingResponses.Sum(b => b.Cost) } </strong></p >" +
+                                        $"<p style = \"margin: 0\" > Ngày tạo đơn: { CoreHelper.SystemTimeNow.AddHours(7).ToString("dd-MM-yyyy") } </p >" +
                                     "</div >" +
-                                    
-                                    "<div style = \"margin-top: 20px; display: flex; justify-content: space-between\">" +
-                                        "<span > Tên tài khoản</span>" +
-                                        "<span >{$username}</span>" +
-                                    "</div>" +
-                                    
-                                    "<div style = \"margin-top: 20px; display: flex; justify-content: space-between\">" +
-                                        "<span > Ngân hàng nhận</span>" +
-                                        "<span >{$bankName}</span>" +
-                                    "</div>" +
-                                    
-                                    "<div style = \"margin-top: 20px; display: flex; justify-content: space-between\">" +
-                                        "<span > Số tài khoản nhận </span>" +
-                                        "<span >{$bankNumber}</span>" +
-                                    "</div >" +
-                                    
+
                                     "<table style = \"width: 100%; border-collapse: collapse; margin-top: 20px\">" +
                                         "<tr style = \"border-bottom: 1px solid #eee\">" +
                                             "<th style = \"text-align: left; padding: 10px 0\" > Chi tiết </th>" +
                                             "<th style = \"text-align: right; padding: 10px 0\" > Số tiền </th>" +
                                         "</tr>" +
-                                        
-                                        "<tr>" +
-                                            "<td style = \"padding: 10px 0\" > Số tiền rút/ nạp </td>" +
-                                            "<td style = \"text-align: right; padding: 10px 0\">{$amount} VNĐ </td>" +
-                                        "</tr>" +
-                                        
-                                        "<tr>" +
-                                            "<td style = \"padding: 10px 0\" > Chiết khấu </td>" +
-                                            "<td style = \"text-align: right; padding: 10px 0\" > 0 VNĐ </td >" +
-                                        "</tr>" +
-                                        
+
+                                        bookingDetailsRows.ToString() +
+
                                         "<tr style = \"border-top: 1px solid #eee\" >" +
                                             "<td style = \"padding: 10px 0\" ><strong> Tổng cộng </ strong ></td>" +
-                                            "<td style = \"text-align: right; padding: 10px 0\"> <strong>{$total}</strong> </td>" +
+                                            $"<td style = \"text-align: right; padding: 10px 0\"> <strong> { sendMailRequest.bookingResponses.Sum(b => b.Cost) } </strong> </td>" +
                                         "</tr>" +
                                     "</table>" +
 

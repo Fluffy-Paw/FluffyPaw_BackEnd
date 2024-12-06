@@ -82,6 +82,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             exitstingPo.Account.Email = petOwnerRequest.Email;
             if (petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
+            exitstingPo.Dob = petOwnerRequest.Dob.Value.AddHours(7);
             var po = _mapper.Map(petOwnerRequest, exitstingPo);
             _unitOfWork.Save();
 
@@ -984,11 +985,11 @@ namespace FluffyPaw_Application.ServiceImplements
 
                     serStoResponses.Add(serStoResponse);
                 }
+            }
 
-                if (!serStoResponses.Any())
-                {
-                    throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
-                }
+            if (!serStoResponses.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
             }
             return serStoResponses.OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).ToList();
         }

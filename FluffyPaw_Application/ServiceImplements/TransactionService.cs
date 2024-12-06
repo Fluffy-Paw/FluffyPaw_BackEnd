@@ -32,7 +32,7 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<bool> AddTransactions(TransactionRequest transactionRequest)
         {
             var transaction = _mapper.Map<Transaction>(transactionRequest);
-            transaction.CreateTime = CoreHelper.SystemTimeNow;
+            transaction.CreateTime = CoreHelper.SystemTimeNow.AddHours(7);
 
             _unitOfWork.TransactionRepository.Insert(transaction);
             await _unitOfWork.SaveAsync();
