@@ -34,14 +34,22 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
+
+            vaccineRequest.VaccineDate.ToOffset(new TimeSpan(7, 0, 0));
+
             if (vaccineRequest.NextVaccineDate < vaccineRequest.VaccineDate || vaccineRequest.VaccineDate > DateTimeOffset.UtcNow)
             {
                 throw new CustomException.InvalidDataException("Ngày của vaccine không hợp lệ");
             }
             var vaccine = _mapper.Map<VaccineHistory>(vaccineRequest);
-            if(vaccineRequest.VaccineImage != null) vaccine.Image = await _firebaseConfiguration.UploadImage(vaccineRequest.VaccineImage);
+            vaccine.VaccineDate = vaccineRequest.VaccineDate.AddHours(7);
+            if (vaccineRequest.VaccineImage != null) vaccine.Image = await _firebaseConfiguration.UploadImage(vaccineRequest.VaccineImage);
             if(vaccine.NextVaccineDate == null) vaccine.Status = VaccineStatus.Complete.ToString();
-            else vaccine.Status = VaccineStatus.Incomplete.ToString();
+            else 
+            {
+                vaccine.Status = VaccineStatus.Incomplete.ToString();
+                vaccine.NextVaccineDate = vaccineRequest.NextVaccineDate.Value.AddHours(7);
+            }
 
             _unitOfWork.VaccineHistoryRepository.Insert(vaccine);
             _unitOfWork.Save();
@@ -57,12 +65,22 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Bạn chưa nhập thông tin vaccine.");
             }
 
-            return _mapper.Map<IEnumerable<ListVaccineResponse>>(vaccineList);
+            var result = _mapper.Map<IEnumerable<ListVaccineResponse>>(vaccineList);
+
+            //foreach (var item in result)
+            //{
+            //    item.VaccineDate.ToOffset(TimeSpan.FromHours(7));
+            //}
+
+            return result;
         }
 
         public async Task<VaccineHistory> GetVaccineHistory(long vaccineId)
         {
-            return _unitOfWork.VaccineHistoryRepository.GetByID(vaccineId);
+            var vaccine = _unitOfWork.VaccineHistoryRepository.GetByID(vaccineId);
+            //vaccine.VaccineDate.ToOffset(TimeSpan.FromHours(7));
+            if (vaccine.NextVaccineDate != null) vaccine.NextVaccineDate.Value.ToOffset(TimeSpan.FromHours(7));
+            return vaccine;
         }
 
         public async Task<bool> RemoveVacine(long vaccineId)
@@ -109,7 +127,8 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             _mapper.Map(vaccineRequest, vaccine);
-
+            vaccine.VaccineDate = vaccineRequest.VaccineDate.AddHours(7);
+            if (vaccine.NextVaccineDate != null) vaccine.NextVaccineDate = vaccineRequest.NextVaccineDate.Value.AddHours(7);
             if (vaccineRequest.VaccineImage != null) vaccine.Image = await _firebaseConfiguration.UploadImage(vaccineRequest.VaccineImage);
             if (vaccine.NextVaccineDate > DateTimeOffset.UtcNow) vaccine.Status = VaccineStatus.Incomplete.ToString();
             else vaccine.Status = VaccineStatus.Complete.ToString();

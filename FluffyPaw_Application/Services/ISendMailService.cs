@@ -12,6 +12,6 @@ namespace FluffyPaw_Application.Services
     {
         Task<string> SendOtpRegister(SendMailRequest sendMailRequest);
         Task<ForgetPasswordResponse> SendOtpForgotPassword(SendMailPasswordRequest sendMailRequest);
-        Task<bool> SendReceipt(SendMailRequest sendMailRequest);
+        Task<bool> SendReceipt(SendReceiptRequest sendMailRequest);
     }
 }
