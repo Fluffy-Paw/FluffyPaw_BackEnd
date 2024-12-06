@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.BookingRequest;
+using FluffyPaw_Application.DTO.Request.EmailRequest;
 using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.PetOwnerRequest;
 using FluffyPaw_Application.DTO.Response;
@@ -37,11 +38,12 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IFirebaseConfiguration _firebaseConfiguration;
         private readonly INotificationService _notificationService;
         private readonly IHashing _hashing;
+        private readonly ISendMailService _sendMailService;
 
         public PetOwnerService(IUnitOfWork unitOfWork, IMapper mapper, IAuthentication authentication,
                     IHttpContextAccessor httpContextAccessor, IHashing hashing,
                     IFirebaseConfiguration firebaseConfiguration, IJobScheduler jobScheduler,
-                    INotificationService notificationService)
+                    INotificationService notificationService, ISendMailService sendMailService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -51,6 +53,7 @@ namespace FluffyPaw_Application.ServiceImplements
             _firebaseConfiguration = firebaseConfiguration;
             _notificationService = notificationService;
             _hashing = hashing;
+            _sendMailService = sendMailService;
         }
 
         public async Task<PetOwnerResponse> GetPetOwnerDetail()
@@ -601,6 +604,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.StoreServiceRepository.Update(existingStoreService);
                 _unitOfWork.Save();
 
+                var sendMailRequest = new SendReceiptRequest
+                {
+                    Email = account.Email,
+                    CustomerName = po.FullName,
+                    bookingResponses = bookingResponses,
+                };
+                await _sendMailService.SendReceipt(sendMailRequest);
 
                 var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
                 bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
@@ -785,7 +795,18 @@ namespace FluffyPaw_Application.ServiceImplements
             };
             await _notificationService.CreateNotification(notificationRequest);
 
+            var listBooking = new List<BookingResponse>();
             var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
+            
+            listBooking.Add(bookingResponse);
+            var sendMailRequest = new SendReceiptRequest
+            {
+                Email = account.Email,
+                CustomerName = po.FullName,
+                bookingResponses = listBooking,
+            };
+            await _sendMailService.SendReceipt(sendMailRequest);
+
             return bookingResponse;
         }
 
