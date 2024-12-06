@@ -126,7 +126,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var pet = _mapper.Map<Pet>(petRequest);
             pet.PetOwnerId = po.Id;
             if (petRequest.PetImage != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.PetImage);
-            
+            pet.Dob = petRequest.Dob.AddHours(7);
             pet.Status = PetStatus.Available.ToString();
             _unitOfWork.PetRepository.Insert(pet);
             _unitOfWork.Save();
