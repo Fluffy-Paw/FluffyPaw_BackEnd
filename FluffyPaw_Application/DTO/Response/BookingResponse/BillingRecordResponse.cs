@@ -20,6 +20,8 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public double Amount { get; set; }
 
+        public string Type { get; set; }
+
         public string Description { get; set; }
 
         public DateTimeOffset CreateDate { get; set; }

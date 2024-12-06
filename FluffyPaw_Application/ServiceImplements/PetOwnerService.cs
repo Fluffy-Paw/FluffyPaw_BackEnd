@@ -788,7 +788,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponse;
         }
 
-        public async Task<bool> CancelBooking(long id)
+        public async Task<(bool, string)> CancelBooking(long id)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -799,47 +799,54 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
 
-            var pendingBooking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id
-                                            && pb.Status == BookingStatus.Pending.ToString(),
+            var booking = _unitOfWork.BookingRepository.Get(pb => pb.Id == id,
                                             includeProperties: "Pet").FirstOrDefault();
-            if (pendingBooking == null)
+            if (booking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
             }
 
-            if (!pets.Any(p => p.Id == pendingBooking.PetId))
+            if (!pets.Any(p => p.Id == booking.PetId))
             {
                 throw new CustomException.InvalidDataException("Thú cưng trong đặt lịch không thuộc quyền quản lý của bạn.");
             }
 
-            pendingBooking.Status = BookingStatus.Canceled.ToString();
+            booking.Status = BookingStatus.Canceled.ToString();
 
-            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == pendingBooking.StoreServiceId,
+            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == booking.StoreServiceId,
                                                     includeProperties: "Store,Service").FirstOrDefault();
             storeService.CurrentPetOwner -= 1;
 
 
             //Đợi thêm bussiness rule cho vde Cancel
             var currentTime = CoreHelper.SystemTimeNow;
-            var timeDifference = pendingBooking.StartTime - currentTime;
+            var timeDifference = booking.StartTime - currentTime;
+            string notice = "";
 
             if (timeDifference > TimeSpan.FromDays(1))
             {
                 var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == userId).FirstOrDefault();
-                wallet.Balance += pendingBooking.Cost;
+                wallet.Balance += booking.Cost;
                 _unitOfWork.WalletRepository.Update(wallet);
 
                 var billingRecord = new BillingRecord
                 {
                     WalletId = wallet.Id,
-                    BookingId = pendingBooking.Id,
-                    Amount = pendingBooking.Cost,
+                    BookingId = booking.Id,
+                    Amount = booking.Cost,
                     Type = BillingType.Add.ToString(),
                     Description = $"Huỷ Đặt lịch dịch vụ {storeService.Service.Name}.",
                     CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
                 };
 
                 _unitOfWork.BillingRecordRepository.Insert(billingRecord);
+            }
+            else
+            {
+                if (booking.StartTime.Date == currentTime.Date)
+                {
+                    notice = "Bạn sẽ không nhận được hoàn tiền vì hủy đặt lịch trong ngày sử dụng dịch vụ.";
+                }
             }
 
             await _unitOfWork.SaveAsync();
@@ -850,12 +857,12 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReceiverId = storeAccountId,
                 Name = "Huỷ đặt lịch",
                 Type = NotificationType.Booking.ToString(),
-                Description = $"Hủy đặt lịch cho dịch vụ {storeService.Service.Name} cho thú cưng {pendingBooking.Pet.Name}.",
-                ReferenceId = pendingBooking.Id
+                Description = $"Hủy đặt lịch cho dịch vụ {storeService.Service.Name} cho thú cưng {booking.Pet.Name}.",
+                ReferenceId = booking.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
 
-            return true;
+            return (true, notice);
         }
 
         public async Task<List<BillingRecordResponse>> GetAllBillingRecord()

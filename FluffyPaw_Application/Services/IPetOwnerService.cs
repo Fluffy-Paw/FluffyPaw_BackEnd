@@ -49,7 +49,7 @@ namespace FluffyPaw_Application.Services
 
         Task<BookingResponse> CreateBookingTimeSelection(TimeSelectionRequest timeSelectionRequest);
 
-        Task<bool> CancelBooking(long id);
+        Task<(bool, string)> CancelBooking(long id);
 
         Task<List<BillingRecordResponse>> GetAllBillingRecord();
 
