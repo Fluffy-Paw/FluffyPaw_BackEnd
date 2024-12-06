@@ -1,6 +1,8 @@
 ﻿using FluffyPaw_Application.Services;
+using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
 using Quartz;
 using System;
@@ -46,6 +48,18 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                     var wallet = _unitOfWork.WalletRepository.GetByID(po.AccountId);
                     wallet.Balance += booking.Cost;
                     _unitOfWork.WalletRepository.Update(wallet);
+
+                    var billingRecord = new BillingRecord
+                    {
+                        WalletId = wallet.Id,
+                        BookingId = booking.Id,
+                        Amount = booking.Cost,
+                        Type = BillingType.Add.ToString(),
+                        Description = $"Hoàn tiền đặt lịch dịch vụ {booking.StoreService.Service.Name}.",
+                        CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
+                    };
+
+                    _unitOfWork.BillingRecordRepository.Insert(billingRecord);
                 }
                 await _unitOfWork.SaveAsync();
                 

@@ -37,13 +37,17 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var triggerOneDay = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneDay)
-                .StartAt(booking.StartTime.AddMinutes(-5))
+                .StartAt(booking.StartTime.AddDays(-1))
                 .Build();
+
+            Console.WriteLine($"{booking.StartTime.AddDays(-1)} nhắc nhở trước lần đầu.");
 
             var triggerOneHour = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneHour)
-                .StartAt(booking.StartTime.AddMinutes(-1))
+                .StartAt(booking.StartTime.AddHours(-1))
                 .Build();
+
+            Console.WriteLine($"{booking.StartTime.AddHours(-1)} nhắc nhở trước lần hai.");
 
             await _scheduler.ScheduleJob(job, new HashSet<ITrigger> { triggerOneDay, triggerOneHour }, true);
         }
@@ -65,15 +69,17 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var triggerOneHour = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneHour)
-                .StartAt(booking.CreateDate.AddMinutes(-420.5))
+                .StartAt(booking.CreateDate.AddHours(-6))
                 .Build();
+
+            Console.WriteLine($"{booking.CreateDate.AddHours(-6)} sẽ chuyển thành quá hạn nếu không được chấp nhận.");
 
             await _scheduler.ScheduleJob(job, triggerOneHour);
         }
 
         public async Task ScheduleStoreServiceClose(StoreService storeService)
         {
-            var threeMinutesBeforeClose = storeService.StartTime.AddHours(-7.5);
+            var thirtyMinutesBeforeClose = storeService.StartTime.AddHours(-7.5);
 
             var jobKey = new JobKey($"StoreServiceCloseNotificationJob-{storeService.Id}");
             var triggerKey = new TriggerKey($"StoreServiceCloseNotificationJob-{storeService.Id}");
@@ -91,8 +97,10 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var trigger = TriggerBuilder.Create()
                 .WithIdentity(triggerKey)
-                .StartAt(threeMinutesBeforeClose)
+                .StartAt(thirtyMinutesBeforeClose)
                 .Build();
+
+            Console.WriteLine($"{thirtyMinutesBeforeClose} se hien thi thong bao nhac nho.");
 
             await _scheduler.ScheduleJob(job, trigger);
         }
