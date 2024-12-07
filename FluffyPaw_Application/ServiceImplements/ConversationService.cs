@@ -20,6 +20,7 @@ using System.Reflection.Metadata;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -433,6 +434,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 await _notiHub.MessageNotification(conversation.StaffAccountId, conversation.PoAccountId, notification, images,
                                     NotificationType.Message.ToString(), conversation.Id);
+
+                await _notiHub.SendNotification($"{store.Name} đã gửi tin nhắn", conversation.PoAccountId, NotificationType.Message.ToString(), conversation.Id);
             }
             else if (roleName == RoleName.PetOwner.ToString())
             {
@@ -440,6 +443,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 await _notiHub.MessageNotification(conversation.PoAccountId, conversation.StaffAccountId, notification, images,
                                     NotificationType.Message.ToString(), conversation.Id);
+
+                await _notiHub.SendNotification($"{po.FullName} đã gửi tin nhắn", conversation.StaffAccountId, NotificationType.Message.ToString(), conversation.Id);
             }
         }
 
