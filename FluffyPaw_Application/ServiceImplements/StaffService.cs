@@ -566,7 +566,7 @@ namespace FluffyPaw_Application.ServiceImplements
             booking.Status = BookingStatus.Canceled.ToString();
 
             var po = _unitOfWork.PetOwnerRepository.Get(po => po.Id == booking.Pet.PetOwnerId).FirstOrDefault();
-            var poWallet = _unitOfWork.WalletRepository.GetByID(po.AccountId);
+            var poWallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == po.AccountId).FirstOrDefault();
             poWallet.Balance += booking.StoreService.Service.Cost;
 
             var billingRecord = new BillingRecord
