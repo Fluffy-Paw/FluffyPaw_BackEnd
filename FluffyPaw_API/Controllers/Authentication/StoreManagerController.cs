@@ -53,6 +53,14 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Tải dữ liệu thành công.", revenue);
         }
 
+        [HttpGet("GetAllBookingByStore")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> GetAllBookingByStore(long? id)
+        {
+            var revenueStore = await _storeManagerService.GetAllBookingByStore(id);
+            return CustomResult("Tải dữ liệu thành công.", revenueStore);
+        }
+
 
         [HttpGet("GetAllBillingRecord")]
         [Authorize(Roles = "StoreManager")]

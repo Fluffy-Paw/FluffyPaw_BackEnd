@@ -1,4 +1,4 @@
-﻿ using AutoMapper;
+﻿using AutoMapper;
 using FluffyPaw_Application.DTO.Request.AuthRequest;
 using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
@@ -94,7 +94,7 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Thương hiệu này không có dịch vụ nào.");
             }
-            
+
             var totalService = services.Count();
 
             return totalService;
@@ -170,13 +170,88 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Vui lòng cung cấp thông tin thời gian hợp lệ (tuần hoặc tháng).");
             }
 
-            var revenue = _unitOfWork.BookingRepository.Get(b => storeServiceIds.Contains(b.StoreServiceId) 
-                                            && b.Status == BookingStatus.Ended.ToString() 
+            var revenue = _unitOfWork.BookingRepository.Get(b => storeServiceIds.Contains(b.StoreServiceId)
+                                            && b.Status == BookingStatus.Ended.ToString()
                                             && b.EndTime >= start && b.EndTime <= end)
                                             .Sum(b => b.Cost);
 
             return revenue;
         }
+
+        public async Task<List<RevenueBookingResponse>> GetAllBookingByStore(long? id)
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+
+            var brand = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == account.Id).FirstOrDefault();
+
+            List<RevenueBookingResponse> groupedBookings = new List<RevenueBookingResponse>();
+
+            if (id.HasValue)
+            {
+                var bookingsQuery = _unitOfWork.BookingRepository.Get(b => b.StoreService.StoreId == id.Value, includeProperties: "StoreService");
+
+                groupedBookings = bookingsQuery
+                    .GroupBy(b => b.StoreService.StoreId)
+                    .Select(group => new RevenueBookingResponse
+                    {
+                        StoreId = group.Key,
+                        StoreRevenue = group.Sum(b => b.Cost),
+                        Bookings = group.Select(b => new StBookingResponse
+                        {
+                            Id = b.Id,
+                            Code = b.Code,
+                            PaymentMethod = b.PaymentMethod,
+                            Cost = b.Cost,
+                            Description = b.Description,
+                            CreateDate = b.CreateDate,
+                            StartTime = b.StartTime,
+                            EndTime = b.EndTime,
+                            Status = b.Status
+                        }).ToList()
+                    }).ToList();
+            }
+            else
+            {
+                var stores = _unitOfWork.StoreRepository.Get(s => s.BrandId == brand.Id, includeProperties: "StoreServices");
+
+                foreach (var store in stores)
+                {
+                    var bookingsQuery = _unitOfWork.BookingRepository.Get(b => b.StoreService.StoreId == store.Id, includeProperties: "StoreService");
+
+                    var storeRevenueResponse = new RevenueBookingResponse
+                    {
+                        StoreId = store.Id,
+                        StoreRevenue = 0,
+                        Bookings = new List<StBookingResponse>()
+                    };
+
+                    foreach (var booking in bookingsQuery)
+                    {
+                        storeRevenueResponse.StoreRevenue += booking.Cost;
+
+                        storeRevenueResponse.Bookings.Add(new StBookingResponse
+                        {
+                            Id = booking.Id,
+                            Code = booking.Code,
+                            PaymentMethod = booking.PaymentMethod,
+                            Cost = booking.Cost,
+                            Description = booking.Description,
+                            CreateDate = booking.CreateDate,
+                            StartTime = booking.StartTime,
+                            EndTime = booking.EndTime,
+                            Status = booking.Status
+                        });
+                    }
+
+                    groupedBookings.Add(storeRevenueResponse);
+                }
+            }
+
+            return groupedBookings;
+        }
+
+
 
         public async Task<List<BillingRecordResponse>> GetAllBillingRecord()
         {
@@ -230,7 +305,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     staffResponses.Add(staffResponse);
                 }
 
-                
+
             }
 
             return staffResponses;
@@ -477,8 +552,8 @@ namespace FluffyPaw_Application.ServiceImplements
             var staff = _unitOfWork.AccountRepository.GetByID(store.AccountId);
 
             var storeFiles = _unitOfWork.StoreFileRepository.Get(f => f.StoreId == store.Id).ToList();
-            
-            foreach ( var storeFile in storeFiles)
+
+            foreach (var storeFile in storeFiles)
             {
                 var file = _unitOfWork.FilesRepository.GetByID(storeFile.FileId);
                 if (file != null)

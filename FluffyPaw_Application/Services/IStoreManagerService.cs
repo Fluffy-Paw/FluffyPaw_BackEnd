@@ -18,6 +18,7 @@ namespace FluffyPaw_Application.Services
         Task<int> GetTotalService();
         Task<int> GetTotalStore();
         Task<double> GetRevenue(RevenueRequest revenueRequest);
+        Task<List<RevenueBookingResponse>> GetAllBookingByStore(long? id);
         Task<List<BillingRecordResponse>> GetAllBillingRecord();
         Task<List<StaffResponse>> GetAllStaffBySM();
         Task<List<StoreResponse>> GetAllStoreBySM();
@@ -27,6 +28,5 @@ namespace FluffyPaw_Application.Services
         Task<StoreResponse> UpdateStore(long id, UpdateStoreRequest updateStoreRequest);
         Task<bool> DeleteStore(long id);
         Task<StaffResponse> UpdateStaff(long id, UpdateStaffRequest updateStaffRequest);
-        //Task<>
     }
 }
