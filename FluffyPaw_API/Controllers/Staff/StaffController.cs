@@ -126,7 +126,7 @@ namespace FluffyPaw_API.Controllers.Staff
         }
 
         [HttpGet("GetAllTrackingByBookingId/{id}")]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff,StoreManager")]
         public async Task<IActionResult> GetAllTrackingByBookingId(long id)
         {
             var trackings = await _staffService.GetAllTrackingByBookingId(id);
@@ -134,7 +134,7 @@ namespace FluffyPaw_API.Controllers.Staff
         }
 
         [HttpGet("GetTrackingById/{id}")]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff,StoreManager")]
         public async Task<IActionResult> GetTrackingById(long id)
         {
             var tracking = await _staffService.GetTrackingById(id);

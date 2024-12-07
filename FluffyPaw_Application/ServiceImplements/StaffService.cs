@@ -605,18 +605,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<TrackingResponse>> GetAllTrackingByBookingId(long id)
         {
-            var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
-            var account = _unitOfWork.AccountRepository.GetByID(staff);
-            var store = _unitOfWork.StoreRepository.Get(s => s.AccountId == account.Id && s.Status == true)
-                                            .FirstOrDefault();
-            if (store == null)
-            {
-                throw new CustomException.DataNotFoundException("Cửa hàng đang bị hạn chế. Hãy thử lại sau.");
-            }
-
-            var duringBooking = _unitOfWork.BookingRepository.Get(db => db.Id == id
-                                            //&& db.StoreService.Store.Id == store.Id
-                                            && db.Status == BookingStatus.Accepted.ToString(),
+            var duringBooking = _unitOfWork.BookingRepository.Get(db => db.Id == id,
                                             includeProperties: "StoreService,StoreService.Store").FirstOrDefault();
             if (duringBooking == null)
             {
