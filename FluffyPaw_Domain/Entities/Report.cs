@@ -25,8 +25,6 @@ namespace FluffyPaw_Domain.Entities
 
         public string? Description { get; set; }
 
-        public bool Status { get; set; }
-
         [ForeignKey("SenderId")]
         public virtual Account SenderAccount { get; set; }
         

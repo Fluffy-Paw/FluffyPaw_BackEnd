@@ -4,6 +4,7 @@ using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
@@ -412,8 +413,13 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào chưa được xác thực.");
             }
-
             var serviceResponses = _mapper.Map<List<SerResponse>>(services);
+            foreach (var ser in serviceResponses)
+            {
+                ser.Certificate = ser.Certificate.Select(certificate =>
+                    _mapper.Map<CertificatesResponse>(certificate)
+                ).ToList();
+            }
 
             return serviceResponses;
 

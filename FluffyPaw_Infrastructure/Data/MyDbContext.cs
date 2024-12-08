@@ -126,7 +126,7 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Report>().HasData(
-                new Report { Id = 1, SenderId = 7, TargetId = 4, ReportCategoryId = 9, CreateDate = CoreHelper.SystemTimeNow, Description = "None", Status = true}
+                new Report { Id = 1, SenderId = 7, TargetId = 4, ReportCategoryId = 9, CreateDate = CoreHelper.SystemTimeNow, Description = "None"}
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(
