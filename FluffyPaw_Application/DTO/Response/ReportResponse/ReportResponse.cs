@@ -30,8 +30,6 @@ namespace FluffyPaw_Application.DTO.Response.ReportResponse
 
         public string Description { get; set; }
 
-        public bool Status { get; set; }
-
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Report, ReportResponse>()

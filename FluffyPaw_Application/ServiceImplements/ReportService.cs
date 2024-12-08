@@ -250,8 +250,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 TargetId = targetAccount.Id,
                 ReportCategoryId = createReportRequest.ReportCategoryId,
                 CreateDate = CoreHelper.SystemTimeNow,
-                Description = createReportRequest.Description,
-                Status = true
+                Description = createReportRequest.Description
             };
             _unitOfWork.ReportRepository.Insert(newReport);
             _unitOfWork.Save();
@@ -275,7 +274,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 targetName = store?.Name ?? "Unknown Store";
             }
 
-            // Mapping ReportResponse và set thêm SenderName, TargetName
             var reportResponse = _mapper.Map<ReportResponse>(newReport);
             reportResponse.SenderName = senderName;
             reportResponse.TargetName = targetName;
