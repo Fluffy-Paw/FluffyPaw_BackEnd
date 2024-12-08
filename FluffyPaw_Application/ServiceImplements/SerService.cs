@@ -51,11 +51,17 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var serviceResponses = new List<SerResponse>();
+
             foreach (var service in services)
             {
                 var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(service.ServiceTypeId);
                 var serviceResponse = _mapper.Map<SerResponse>(service);
-                serviceResponse.ServiceTypeName = serviceType.Name;
+                serviceResponse.ServiceTypeName = serviceType?.Name;
+                
+                serviceResponse.Certificate = service.Certificates
+                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
+                    .ToList();
+
                 serviceResponses.Add(serviceResponse);
             }
 
