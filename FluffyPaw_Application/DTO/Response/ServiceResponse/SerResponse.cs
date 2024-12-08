@@ -22,6 +22,8 @@ namespace FluffyPaw_Application.DTO.Response.ServiceResponse
 
         public string Name { get; set; }
 
+        public double Revenue { get; set; }
+
         public string Image { get; set; }
 
         public TimeSpan Duration { get; set; }
