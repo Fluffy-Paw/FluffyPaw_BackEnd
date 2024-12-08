@@ -18,6 +18,7 @@ using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.NotificationResponse;
 using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.WalletRequest;
+using FluffyPaw_Application.DTO.Response.CertificateResponse;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -96,6 +97,35 @@ namespace FluffyPaw_Application.ServiceImplements
             return true;
         }
 
+        public async Task<List<SerResponse>> GetAllService()
+        {
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
+
+            if (services == null)
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ đợi xác thực.");
+            }
+
+            var serviceResponses = new List<SerResponse>();
+
+            foreach (var service in services)
+            {
+                var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(service.ServiceTypeId);
+
+                var serviceResponse = _mapper.Map<SerResponse>(service);
+
+                serviceResponse.ServiceTypeName = serviceType?.Name;
+
+                serviceResponse.Certificate = service.Certificates
+                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
+                    .ToList();
+
+                serviceResponses.Add(serviceResponse);
+            }
+
+            return serviceResponses;
+        }
+
         public async Task<List<SerResponse>> GetAllServiceFalse()
         {
             var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
@@ -105,8 +135,23 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ đợi xác thực.");
             }
 
-            var serviceResponse = _mapper.Map<List<SerResponse>>(services);
-            return serviceResponse;
+            var serviceResponses = new List<SerResponse>();
+
+            foreach (var service in services)
+            {
+                var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(service.ServiceTypeId);
+
+                var serviceResponse = _mapper.Map<SerResponse>(service);
+
+                serviceResponse.ServiceTypeName = serviceType?.Name;
+
+                serviceResponse.Certificate = service.Certificates
+                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
+                    .ToList();
+
+                serviceResponses.Add(serviceResponse);
+            }
+            return serviceResponses;
         }
 
         public async Task<List<SerResponse>> GetAllServiceFalseByBrandId(long id)
@@ -134,19 +179,18 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var service = _unitOfWork.ServiceRepository.Get(s => s.Id == id,
                                                 includeProperties: "Brand").FirstOrDefault();
-
-            service.Status = false;
-            await _unitOfWork.SaveAsync();
-
+            
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = service.Brand.AccountId,
                 Name = "Đăng kí dịch vụ đã bị từ chối",
                 Type = NotificationType.Service.ToString(),
-                Description = description,
-                ReferenceId = service.Id
+                Description = description
             };
             await _notificationService.CreateNotification(notificationRequest);
+
+            _unitOfWork.ServiceRepository.Delete(service);
+            await _unitOfWork.SaveAsync();
 
             return true;
         }
