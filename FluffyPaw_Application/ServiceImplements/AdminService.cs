@@ -222,6 +222,9 @@ namespace FluffyPaw_Application.ServiceImplements
             if (user.Status == (int)AccountStatus.Active)
             {
                 user.Status = (int)AccountStatus.Inactive;
+
+                var po = _unitOfWork.PetOwnerRepository.Get(p => p.AccountId.Equals(userId)).FirstOrDefault();
+                if(po != null) po.Reputation = AccountReputation.Ban.ToString();
             } else user.Status = (int)AccountStatus.Active;
             _unitOfWork.Save();
 
