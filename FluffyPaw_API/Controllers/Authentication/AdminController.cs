@@ -55,6 +55,14 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Xác thực hoàn tất.", brand);
         }
 
+        [HttpGet("GetAllService")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllService()
+        {
+            var services = await _adminService.GetAllService();
+            return CustomResult("Tải dữ liệu thành công.", services);
+        }
+
         [HttpGet("GetAllServiceFalse")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllServiceFalse()
