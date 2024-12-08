@@ -189,7 +189,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (id.HasValue)
             {
-                var bookingsQuery = _unitOfWork.BookingRepository.Get(b => b.StoreService.StoreId == id.Value, includeProperties: "StoreService");
+                var bookingsQuery = _unitOfWork.BookingRepository.Get(b => b.StoreService.StoreId == id.Value &&
+                                                    b.Status == BookingStatus.Ended.ToString(), includeProperties: "StoreService");
 
                 groupedBookings = bookingsQuery
                     .GroupBy(b => b.StoreService.StoreId)
