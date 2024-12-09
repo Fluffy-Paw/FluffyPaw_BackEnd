@@ -126,6 +126,49 @@ namespace FluffyPaw_Application.ServiceImplements
             return storeResponse;
         }
 
+        public async Task<FileResponse> GetStoreImageById(long id)
+        {
+            var file = _unitOfWork.FilesRepository.GetByID(id);
+            if (file != null)
+            {
+                throw new CustomException.DataNotFoundException("Ảnh không tồn tại.");
+            }
+
+            var fileResponse = _mapper.Map<FileResponse>(file);
+            return fileResponse;
+        }
+
+        public async Task<FileResponse> UpdateStoreImage(long id, IFormFile file)
+        {
+            var existingFile = _unitOfWork.FilesRepository.GetByID(id);
+            if (existingFile != null)
+            {
+                throw new CustomException.DataNotFoundException("Ảnh này không tồn tại.");
+            }
+
+            existingFile.File = await _firebaseConfiguration.UploadImage(file);
+            existingFile.CreateDate = CoreHelper.SystemTimeNow.AddHours(7);
+            _unitOfWork.FilesRepository.Update(existingFile);
+            await _unitOfWork.SaveAsync();
+
+            var fileResponse = _mapper.Map<FileResponse>(existingFile);
+            return fileResponse;
+        }
+
+        public async Task<bool> DeleteImage(long id)
+        {
+            var file = _unitOfWork.FilesRepository.GetByID(id);
+            if (file == null )
+            {
+                throw new CustomException.DataNotFoundException("Ảnh này không tồn tại.");
+            }
+
+            _unitOfWork.FilesRepository.Delete(file);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
         public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id)
         {
             var staff = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
