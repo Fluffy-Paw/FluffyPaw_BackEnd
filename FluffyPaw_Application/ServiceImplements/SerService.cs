@@ -40,7 +40,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var brand = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == brand.Id && ss.Status == true,
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == brand.Id,
                 includeProperties: "Certificates").ToList();
 
             if (!services.Any())
