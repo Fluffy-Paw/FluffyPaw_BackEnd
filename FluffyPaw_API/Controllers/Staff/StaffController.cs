@@ -39,6 +39,30 @@ namespace FluffyPaw_API.Controllers.Staff
             return CustomResult("Tải dữ liệu thành công.", store);
         }
 
+        [HttpGet("GetStoreImageById/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetStoreImageById(long id)
+        {
+            var image = await _staffService.GetStoreImageById(id);
+            return CustomResult("Tải dữ liệu thành công.", image);
+        }
+
+        [HttpPatch("UpdateStoreImage")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> UpdateStoreImage(long id, IFormFile file)
+        {
+            var fileResponse = await _staffService.UpdateStoreImage(id, file);
+            return CustomResult("Tải dữ liệu thành công.", fileResponse);
+        }
+
+        [HttpDelete("DeleteImage/{id}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> DeleteImage(long id)
+        {
+            var status = await _staffService.DeleteImage(id);
+            return CustomResult("Tải dữ liệu thành công.", status);
+        }
+
         [HttpGet("GetAllStoreServiceByServiceId/{id}")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetAllStoreServiceByServiceId(long id)
