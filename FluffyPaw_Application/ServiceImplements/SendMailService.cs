@@ -71,7 +71,7 @@ namespace FluffyPaw_Application.ServiceImplements
             }
         }
 
-        public async Task<ForgetPasswordResponse> SendOtpForgotPassword(SendMailPasswordRequest sendMailRequest)
+        public async Task<ForgetPasswordResponse> SendOtpForgotPassword(SendMailPasswordRequest sendMailRequest) 
         {
             var user = _unitOfWork.AccountRepository.Get(a => a.Email == sendMailRequest.Email).FirstOrDefault();
             if (user == null) throw new CustomException.DataNotFoundException("Không tìm thấy tài khoản này. Hãy kiểm tra lại email của bạn.");

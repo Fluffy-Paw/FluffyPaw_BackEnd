@@ -17,7 +17,7 @@ namespace FluffyPaw_Application.DTO.Request.PetOwnerRequest
         public string? Gender { get; set; }
 
         public string? Address { get; set; }
-
+        [EmailAddress(ErrorMessage = "Vui lòng nhập đúng định dạng email.")]
         public string? Email { get; set; }
 
         public DateTimeOffset? Dob {  get; set; }
