@@ -1022,11 +1022,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
             }
 
-            if (!serStoResponses.Any())
-            {
-                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
-            }
-            return serStoResponses.OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).ToList();
+            return serStoResponses.OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).ToList() ?? new List<SerStoResponse>();
         }
 
         public async Task<List<StoreServicePOResponse>> RecommendServicePO()
@@ -1237,12 +1233,8 @@ namespace FluffyPaw_Application.ServiceImplements
                     serStoResponses.Add(serStoResponse);
                 }
 
-                if (!serStoResponses.Any())
-                {
-                    throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào cho cửa hàng này.");
-                }
             }
-            return serStoResponses.OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).Take(6).ToList();
+            return serStoResponses.OrderByDescending(ob => ob.BookingCount).ThenByDescending(ob => ob.TotalRating).Take(6).ToList() ?? new List<SerStoResponse>();
         }
 
     }
