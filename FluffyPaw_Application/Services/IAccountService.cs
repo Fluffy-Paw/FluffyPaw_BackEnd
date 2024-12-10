@@ -17,6 +17,6 @@ namespace FluffyPaw_Application.Services
         Task<IEnumerable<AccountResponse>> GetStoresByBrandId(long id);
         //Task<IEnumerable<Account>> GetAllAccounts();
         Task<bool> ChangePassword(string oldPassword, string newPassword);
-        Task<bool> ForgotPassword(LoginRequest loginRequest);
+        Task<bool> ForgotPassword(ForgetPasswordRequest forgetRequest);
     }
 }

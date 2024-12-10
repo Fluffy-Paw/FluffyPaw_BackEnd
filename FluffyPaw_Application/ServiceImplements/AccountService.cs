@@ -141,21 +141,21 @@ namespace FluffyPaw_Application.ServiceImplements
             return result;
         }
 
-        public async Task<bool> ForgotPassword(LoginRequest loginRequest)
+        public async Task<bool> ForgotPassword(ForgetPasswordRequest forgotRequest)
         {
-            var user = _unitOfWork.AccountRepository.Get(u => u.Username.Equals(loginRequest.Username)).FirstOrDefault();
+            var user = _unitOfWork.AccountRepository.Get(u => u.Email.Equals(forgotRequest.Email)).FirstOrDefault();
 
             if (user == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
             }
 
-            if (loginRequest.Password.Length < 8)
+            if (forgotRequest.NewPassword.Length < 8)
             {
                 throw new CustomException.InvalidDataException("Vui lòng nhập mật khẩu tối thiểu 8 ký tự.");
             }
 
-            user.Password = _hashing.SHA512Hash(loginRequest.Password);
+            user.Password = _hashing.SHA512Hash(forgotRequest.NewPassword);
             _unitOfWork.Save();
 
             return true;    
