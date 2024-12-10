@@ -198,5 +198,50 @@ namespace FluffyPaw_Application.ServiceImplements
                 return false;
             }
         }
+
+        public async Task<bool> SendBanMessage(SendMailRequest sendMailRequest)
+        {
+            try
+            {
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress("Fluffy Paw <fluffypaw4u@gmail.com>");
+                    mail.To.Add(sendMailRequest.Email.Trim());
+                    mail.Subject = "Fluffy Paw Account Verification";
+                    mail.Body = "<body style=\"font-family: Arial, sans-serif; background-color: #f8e5f6; margin: 0; padding: 0;\">" +
+                                    "<div style=\" max-width: 600px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); \">" +
+                                        "<div style=\" background-color: #ffffff; color: white; text-align: center; padding: 20px; border-radius: 8px 8px 0 0; \">" +
+                                            "<img src=\"https://firebasestorage.googleapis.com/v0/b/fluffy-paw-8e7c1.appspot.com/o/images%2FLogo.png?alt=media&token=44e03e8f-2630-4bbb-8f30-948ce9e5d7ce\" alt=\"Logo\" style=\"width: 280px; margin-bottom: 10px\"/>" +
+                                        "</div>" +
+                                        "<div style=\"padding: 20px; text-align: center; border-top: 1px solid #ddd\">" +
+                                            "<p style=\"font-size: 16px; color: #333; text-align: left\">Xin chào,</p>" +
+                                            "<p style=\"font-size: 16px; color: #333; text-align: left\">Sau khi xem xét, bạn đã bị hệ thống vô hiệu hóa tài khoản.</p>" +
+                                            "<div style=\" background-color: red; color: white; font-size: 36px; font-weight: bold; padding: 20px; border-radius: 8px; margin: 20px 0; \">" + "Đã bị cấm" + "</div>" +
+                                                "<p style=\"font-size: 16px; color: #333; text-align: left\">Nếu có khiếu nại, hãy liên hệ qua gmail: <strong>khoandse161173@fpt.edu.vn</strong></p>" +
+                                            "</div>" +
+                                            "<div style=\" font-size: 14px; color: #666; text-align: center; padding: 10px; border-top: 1px solid #ddd;\">" +
+                                            "<p style=\" margin: 0; text-align: left; padding-bottom: 10px; font-weight: 600; \"> Trân trọng, Fluffy Team </p>" +
+                                            "<p style= margin: 0; text-align: left; font-weight: 600; color: rgb(182, 180, 180); \"> Đây là email được tạo tự động, vui lòng không trả lời. </p>" +
+                                        "</div>" +
+                                    "</div>" +
+                                "</body>";
+                    mail.IsBodyHtml = true;
+
+                    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                    {
+                        smtp.UseDefaultCredentials = false;
+                        smtp.Credentials = new System.Net.NetworkCredential("fluffypaw4u@gmail.com", "itwc ugdw oivd dsnd");
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                throw new Exception();
+            }
+        }
     }
 }
