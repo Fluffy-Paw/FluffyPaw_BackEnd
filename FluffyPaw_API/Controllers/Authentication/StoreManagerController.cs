@@ -21,6 +21,22 @@ namespace FluffyPaw_API.Controllers.Authentication
             _storeManagerService = storeManagerService;
         }
 
+        [HttpGet("GetInfo")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> GetInfo()
+        {
+            var profile = await _storeManagerService.GetInfo();
+            return CustomResult("Tải dữ liệu thành công.", profile);
+        }
+
+        [HttpPatch("UpdateProfile")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> UpdateProfile([FromForm] SMAccountRequest smAccountRequest)
+        {
+            var account = await _storeManagerService.UpdateProfile(smAccountRequest);
+            return CustomResult("Cập nhật dữ liệu thành công.", account);
+        }
+
         [HttpGet("GetTotalBooking")]
         [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> GetTotalBooking()

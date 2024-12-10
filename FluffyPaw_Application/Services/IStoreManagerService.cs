@@ -2,6 +2,7 @@
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using System;
@@ -14,6 +15,8 @@ namespace FluffyPaw_Application.Services
 {
     public interface IStoreManagerService
     {
+        Task<BrandResponse> GetInfo();
+        Task<SMAccountResponse> UpdateProfile(SMAccountRequest smAccountRequest);
         Task<int> GetTotalBooking();
         Task<int> GetTotalService();
         Task<int> GetTotalStore();

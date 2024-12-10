@@ -39,15 +39,13 @@ namespace FluffyPaw_Application.ServiceImplements
         public async Task<List<SerResponse>> GetAllServiceBySM()
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
-
-            var BrandId = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
-
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == BrandId.Id && ss.Status  == true,
+            var brand = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == brand.Id,
                 includeProperties: "Certificates").ToList();
 
             if (!services.Any())
             {
-                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp.");
             }
 
             var serviceResponses = new List<SerResponse>();
@@ -57,11 +55,23 @@ namespace FluffyPaw_Application.ServiceImplements
                 var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(service.ServiceTypeId);
                 var serviceResponse = _mapper.Map<SerResponse>(service);
                 serviceResponse.ServiceTypeName = serviceType?.Name;
-                
+
                 serviceResponse.Certificate = service.Certificates
                     .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
                     .ToList();
 
+                var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == service.Id).ToList();
+                double totalRevenue = 0;
+
+                foreach (var storeService in storeServices)
+                {
+                    var bookings = _unitOfWork.BookingRepository.Get(b => b.StoreServiceId == storeService.Id &&
+                                                        b.Status == BookingStatus.Ended.ToString()).ToList();
+
+                    totalRevenue += bookings.Count * service.Cost;
+                }
+
+                serviceResponse.Revenue = totalRevenue;
                 serviceResponses.Add(serviceResponse);
             }
 

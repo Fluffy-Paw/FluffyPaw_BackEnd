@@ -4,6 +4,7 @@ using FluffyPaw_Application.DTO.Request.ServiceRequest;
 using FluffyPaw_Application.DTO.Request.StoreManagerRequest;
 using FluffyPaw_Application.DTO.Response;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.BrandResponse;
 using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
@@ -42,6 +43,62 @@ namespace FluffyPaw_Application.ServiceImplements
             _contextAccessor = httpContextAccessor;
             _firebaseConfiguration = firebaseConfiguration;
             _hashing = hashing;
+        }
+
+        public async Task<BrandResponse> GetInfo()
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            var brand = _unitOfWork.BrandRepository.Get(b => b.AccountId == account.Id).FirstOrDefault();
+            var identification = _unitOfWork.IdentificationRepository.Get(i => i.AccountId == userId).FirstOrDefault();
+
+            var brandResponse = _mapper.Map<BrandResponse>(brand);
+            brandResponse.FullName = identification.FullName;
+            brandResponse.Front = identification.Front;
+            brandResponse.Back = identification.Back;
+            return brandResponse;
+        }
+
+        public async Task<SMAccountResponse> UpdateProfile(SMAccountRequest smAccountRequest)
+        {
+            var userId = _authentication.GetUserIdFromHttpContext(_contextAccessor.HttpContext);
+            var account = _unitOfWork.AccountRepository.GetByID(userId);
+            var identification = _unitOfWork.IdentificationRepository.Get(i => i.AccountId == userId).FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(smAccountRequest.FullName))
+            {
+                identification.FullName = smAccountRequest.FullName;
+            }
+
+            if (!string.IsNullOrEmpty(smAccountRequest.Username))
+            {
+                account.Username = smAccountRequest.Username;
+            }
+
+            if (!string.IsNullOrEmpty(smAccountRequest.Email))
+            {
+                account.Email = smAccountRequest.Email;
+            }
+
+            if (!string.IsNullOrEmpty(smAccountRequest.Password))
+            {
+                account.Password = _hashing.SHA512Hash(smAccountRequest.Password);
+            }
+
+            if (smAccountRequest.Avatar != null)
+            {
+                account.Avatar = await _firebaseConfiguration.UploadImage(smAccountRequest.Avatar);
+
+            }
+
+            _unitOfWork.AccountRepository.Update(account);
+            _unitOfWork.IdentificationRepository.Update(identification);
+            await _unitOfWork.SaveAsync();
+
+            var smAccountResponse = _mapper.Map<SMAccountResponse>(account);
+            smAccountResponse.FullName = identification.FullName;
+
+            return smAccountResponse;
         }
 
         public async Task<int> GetTotalBooking()
