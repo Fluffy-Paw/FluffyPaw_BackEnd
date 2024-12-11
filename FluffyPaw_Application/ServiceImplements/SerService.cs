@@ -235,7 +235,10 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             _mapper.Map(updateServiceRequest, existingService);
-            existingService.Image = await _firebaseConfiguration.UploadImage(updateServiceRequest.Image);
+            if (updateServiceRequest.Image != null)
+            {
+                existingService.Image = await _firebaseConfiguration.UploadImage(updateServiceRequest.Image);
+            }
             existingService.Status = false;
             _unitOfWork.Save();
 
@@ -259,7 +262,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataExistException($"Dịch vụ {service.Name} vẫn còn lịch trình khả dụng từ các cửa hàng.");
             }
 
-            foreach ( var storeService in storeServices ) 
+            foreach (var storeService in storeServices)
             {
                 var bookings = _unitOfWork.BookingRepository.Get(b => b.StoreServiceId == storeService.Id
                                                 && b.Status == BookingStatus.Pending.ToString()
