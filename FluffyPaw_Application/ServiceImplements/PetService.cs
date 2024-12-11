@@ -289,6 +289,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (petRequest.PetImage != null) pet.Image = await _firebaseConfiguration.UploadImage(petRequest.PetImage);
             _mapper.Map(petRequest, pet);
+            pet.Dob = petRequest.Dob.AddHours(7);
             _unitOfWork.Save();
 
             return await GetPet(petId);
