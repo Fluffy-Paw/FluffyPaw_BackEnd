@@ -133,7 +133,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
 
-            if (services == null)
+            if (services == null || !services.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ đợi xác thực.");
             }
@@ -148,9 +148,16 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 serviceResponse.ServiceTypeName = serviceType?.Name;
 
-                serviceResponse.Certificate = service.Certificates
-                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
-                    .ToList();
+                if (service.Certificates != null)
+                {
+                    serviceResponse.Certificate = service.Certificates
+                        .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
+                        .ToList();
+                }
+                else
+                {
+                    serviceResponse.Certificate = new List<CertificatesResponse>();
+                }
 
                 serviceResponses.Add(serviceResponse);
             }
