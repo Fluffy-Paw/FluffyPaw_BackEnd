@@ -143,8 +143,13 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> ForgotPassword(ForgetPasswordRequest forgotRequest)
         {
-            var user = _unitOfWork.AccountRepository.Get(u => u.Email.Equals(forgotRequest.Email)).FirstOrDefault();
-
+            Account? user = null;
+            if (forgotRequest.Email != null) user = _unitOfWork.AccountRepository.Get(u => u.Email.Equals(forgotRequest.Email)).FirstOrDefault();
+            else
+            {
+                if (forgotRequest.PhoneNumber != null) user = _unitOfWork.PetOwnerRepository.Get(u => u.Phone.Equals(forgotRequest.PhoneNumber), includeProperties: "Account").FirstOrDefault()?.Account;
+                if (user == null) user = _unitOfWork.BrandRepository.Get(u => u.Hotline.Equals(forgotRequest.PhoneNumber), includeProperties: "Account").FirstOrDefault()?.Account;
+            }
             if (user == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
