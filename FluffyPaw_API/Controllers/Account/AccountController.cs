@@ -67,7 +67,7 @@ namespace FluffyPaw_API.Controllers.Account
         }
 
         [HttpPatch("ForgotPassword")]
-        public async Task<IActionResult> ForgotPassword([FromBody] LoginRequest ForgotPasswordRequest)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgetPasswordRequest ForgotPasswordRequest)
         {
             await _accountService.ForgotPassword(ForgotPasswordRequest);
             return CustomResult("Cập nhật mật khẩu thành công.");

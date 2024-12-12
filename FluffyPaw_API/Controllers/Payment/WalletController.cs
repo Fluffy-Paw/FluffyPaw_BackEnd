@@ -70,7 +70,7 @@ namespace FluffyPaw_API.Controllers.Payment
             await _notificationService.CreateNotification(new NotificationRequest
             {
                 Name = wallet.Id.ToString(),
-                Type = NotificationType.WithDraw.ToString(),
+                Type = NotificationType.WithDrawRequest.ToString(),
                 ReceiverId = 1,
                 Description = $"{wallet.Account.Username}/{amount}",
                 ReferenceId = wallet.Id

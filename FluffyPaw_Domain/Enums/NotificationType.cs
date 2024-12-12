@@ -15,6 +15,8 @@ namespace FluffyPaw_Domain.Enums
         Checkin,
         Checkout,
         WithDraw,
-        Message
+        Message,
+        Warning,
+        WithDrawRequest
     }
 }

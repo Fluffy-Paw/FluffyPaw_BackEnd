@@ -18,6 +18,7 @@ using FluffyPaw_Application.DTO.Response.StoreManagerResponse;
 using FluffyPaw_Application.DTO.Response.NotificationResponse;
 using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.WalletRequest;
+using FluffyPaw_Application.DTO.Request.EmailRequest;
 using FluffyPaw_Application.DTO.Response.CertificateResponse;
 
 namespace FluffyPaw_Application.ServiceImplements
@@ -29,13 +30,15 @@ namespace FluffyPaw_Application.ServiceImplements
         private readonly IHashing _hashing;
         private readonly INotificationService _notificationService;
         private readonly IWalletService _walletService;
+        private readonly ISendMailService _sendMailService;
 
-        public AdminService(IUnitOfWork unitOfWork, IMapper mapper, IHashing hashing, INotificationService notificationService)
+        public AdminService(IUnitOfWork unitOfWork, IMapper mapper, IHashing hashing, INotificationService notificationService, ISendMailService sendMailService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _hashing = hashing;
             _notificationService = notificationService;
+            _sendMailService = sendMailService;
         }
 
         public async Task<bool> CreateAdmin(AdminRequest adminRequest)
@@ -285,7 +288,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<string> DowngradeReputation(long userId)
         {
-            var user = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == userId).FirstOrDefault();
+            var user = _unitOfWork.PetOwnerRepository.Get(po => po.AccountId == userId, includeProperties: "Account").FirstOrDefault();
             if(user == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy user.");
@@ -308,10 +311,21 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 default:
                     user.Reputation = AccountReputation.Bad.ToString();
+                    await _sendMailService.SendBanMessage(new SendMailRequest { Email = user.Account.Email });
                     await ActiveInactiveAccount(userId); 
                     break;
                 
             }
+
+            await _notificationService.CreateNotification(new NotificationRequest
+            {
+                ReceiverId = userId,
+                Description = $"Bạn đã vi phạm chính sách của hệ thống nên đã bị hạ uy tín thành {user.Reputation}.",
+                Type = NotificationType.Warning.ToString(),
+                Name = "Warning",
+                ReferenceId = 0
+            });
+
             _unitOfWork.Save();
 
             return user.Reputation;
@@ -319,7 +333,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<WithdrawNotificationResponse>> GetWithdrawRequest()
         {
-            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals("Rút tiền") && n.ReceiverId == 1).ToList();
+            var list = _unitOfWork.NotificationRepository.Get(n => n.Type.Equals(NotificationType.WithDrawRequest.ToString()) && n.ReceiverId == 1).ToList();
             if (!list.Any()) throw new CustomException.DataNotFoundException("Không có yêu cầu rút tiền nào");
 
             List<WithdrawNotificationResponse> result = new List<WithdrawNotificationResponse>();
