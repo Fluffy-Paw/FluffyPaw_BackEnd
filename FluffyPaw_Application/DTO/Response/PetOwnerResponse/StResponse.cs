@@ -20,6 +20,8 @@ namespace FluffyPaw_Application.DTO.Response.PetOwnerResponse
 
         public string Name { get; set; }
 
+        public long AccountId { get; set; }
+
         public string OperatingLicense { get; set; }
 
         public string Address { get; set; }
