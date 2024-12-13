@@ -102,18 +102,29 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> DeniedBrand(long id, string description)
         {
-            var brand = _unitOfWork.BrandRepository.GetByID(id);
+            var brand = _unitOfWork.BrandRepository.Get(b => b.Id == id, includeProperties: "Account").FirstOrDefault();
+
+            var mailDenyRequest = new SendMailDenyRequest 
+            {
+                Email = brand.Account.Email,
+                Reason = description
+            };
+            await _sendMailService.SendDenyAccountMessage(mailDenyRequest);
+
+            var account = _unitOfWork.AccountRepository.GetByID(brand.AccountId);
+            _unitOfWork.AccountRepository.Delete(account);
+            await _unitOfWork.SaveAsync();
 
             return true;
         }
 
         public async Task<List<SerResponse>> GetAllService()
         {
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == true, includeProperties: "ServiceType,Brand,Certificates").ToList();
 
             if (!services.Any())
             {
-                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ đợi xác thực.");
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào.");
             }
 
             var serviceResponses = new List<SerResponse>();
@@ -138,7 +149,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<SerResponse>> GetAllServiceFalse()
         {
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand,Certificates").ToList();
 
             if (services == null || !services.Any())
             {
