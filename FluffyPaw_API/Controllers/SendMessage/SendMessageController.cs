@@ -27,7 +27,7 @@ namespace FluffyPaw_API.Controllers.SendMessage
         }
 
         [HttpPost("SendOtpForgotPassword")]
-        public async Task<IActionResult> SendOtpForgotPassword([FromBody] SendMailPasswordRequest sendMailRequest)
+        public async Task<IActionResult> SendOtpForgotPassword([FromBody] SendMailRequest sendMailRequest)
         {
             var otp = await _sendMailService.SendOtpForgotPassword(sendMailRequest);
             return CustomResult("Gửi mail thành công, otp: ", otp);
@@ -37,6 +37,14 @@ namespace FluffyPaw_API.Controllers.SendMessage
         public async Task<IActionResult> SendReceipt([FromBody] SendReceiptRequest sendMailRequest)
         {
             var result = await _sendMailService.SendReceipt(sendMailRequest);
+            if (result) return CustomResult("Gửi mail thành công.");
+            else return CustomResult("Gửi mail thất bại.");
+        }
+
+        [HttpPost("SendDenyAccount")]
+        public async Task<IActionResult> SendDenyAccount([FromBody] SendMailDenyRequest sendMailRequest)
+        {
+            var result = await _sendMailService.SendDenyAccountMessage(sendMailRequest);
             if (result) return CustomResult("Gửi mail thành công.");
             else return CustomResult("Gửi mail thất bại.");
         }
