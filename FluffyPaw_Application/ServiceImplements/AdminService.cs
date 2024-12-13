@@ -94,19 +94,37 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> AcceptBrand(long id)
         {
-            var Brand = _unitOfWork.BrandRepository.GetByID(id);
-            Brand.Status = true;
+            var brand = _unitOfWork.BrandRepository.GetByID(id);
+            brand.Status = true;
             _unitOfWork.Save();
+            return true;
+        }
+
+        public async Task<bool> DeniedBrand(long id, string description)
+        {
+            var brand = _unitOfWork.BrandRepository.Get(b => b.Id == id, includeProperties: "Account").FirstOrDefault();
+
+            var mailDenyRequest = new SendMailDenyRequest 
+            {
+                Email = brand.Account.Email,
+                Reason = description
+            };
+            await _sendMailService.SendDenyAccountMessage(mailDenyRequest);
+
+            var account = _unitOfWork.AccountRepository.GetByID(brand.AccountId);
+            _unitOfWork.AccountRepository.Delete(account);
+            await _unitOfWork.SaveAsync();
+
             return true;
         }
 
         public async Task<List<SerResponse>> GetAllService()
         {
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == true, includeProperties: "ServiceType,Brand,Certificates").ToList();
 
-            if (services == null)
+            if (!services.Any())
             {
-                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ đợi xác thực.");
+                throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ nào.");
             }
 
             var serviceResponses = new List<SerResponse>();
@@ -119,9 +137,9 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 serviceResponse.ServiceTypeName = serviceType?.Name;
 
-                serviceResponse.Certificate = service.Certificates
-                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
-                    .ToList();
+                serviceResponse.Certificate = service.Certificates != null
+                                ? service.Certificates.Select(certificate => _mapper.Map<CertificatesResponse>(certificate)).ToList()
+                                : new List<CertificatesResponse>();
 
                 serviceResponses.Add(serviceResponse);
             }
@@ -131,7 +149,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<SerResponse>> GetAllServiceFalse()
         {
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand,Certificates").ToList();
 
             if (services == null || !services.Any())
             {
@@ -187,9 +205,13 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> DeniedBrandService(long id, string description)
         {
-            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == id,
+            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == id && s.Status == false,
                                                 includeProperties: "Brand").FirstOrDefault();
-            
+            if (service == null)
+            {
+                throw new CustomException.DataNotFoundException("Dịch vụ này không tồn tại hoặc đã được xác thực.");
+            }
+
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = service.Brand.AccountId,
@@ -306,12 +328,12 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 case "Bad":
                     user.Reputation = AccountReputation.Ban.ToString();
+                    await _sendMailService.SendBanMessage(new SendMailRequest { Email = user.Account.Email });
                     await ActiveInactiveAccount(userId);
                     break;
 
                 default:
                     user.Reputation = AccountReputation.Bad.ToString();
-                    await _sendMailService.SendBanMessage(new SendMailRequest { Email = user.Account.Email });
                     await ActiveInactiveAccount(userId); 
                     break;
                 
