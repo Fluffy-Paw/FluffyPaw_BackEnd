@@ -94,9 +94,16 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> AcceptBrand(long id)
         {
-            var Brand = _unitOfWork.BrandRepository.GetByID(id);
-            Brand.Status = true;
+            var brand = _unitOfWork.BrandRepository.GetByID(id);
+            brand.Status = true;
             _unitOfWork.Save();
+            return true;
+        }
+
+        public async Task<bool> DeniedBrand(long id, string description)
+        {
+            var brand = _unitOfWork.BrandRepository.GetByID(id);
+
             return true;
         }
 
@@ -104,7 +111,7 @@ namespace FluffyPaw_Application.ServiceImplements
         {
             var services = _unitOfWork.ServiceRepository.Get(ss => ss.Status == false, includeProperties: "ServiceType,Brand").ToList();
 
-            if (services == null)
+            if (!services.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ đợi xác thực.");
             }
@@ -119,9 +126,9 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 serviceResponse.ServiceTypeName = serviceType?.Name;
 
-                serviceResponse.Certificate = service.Certificates
-                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
-                    .ToList();
+                serviceResponse.Certificate = service.Certificates != null
+                                ? service.Certificates.Select(certificate => _mapper.Map<CertificatesResponse>(certificate)).ToList()
+                                : new List<CertificatesResponse>();
 
                 serviceResponses.Add(serviceResponse);
             }
@@ -187,9 +194,13 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> DeniedBrandService(long id, string description)
         {
-            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == id,
+            var service = _unitOfWork.ServiceRepository.Get(s => s.Id == id && s.Status == false,
                                                 includeProperties: "Brand").FirstOrDefault();
-            
+            if (service == null)
+            {
+                throw new CustomException.DataNotFoundException("Dịch vụ này không tồn tại hoặc đã được xác thực.");
+            }
+
             var notificationRequest = new NotificationRequest
             {
                 ReceiverId = service.Brand.AccountId,
