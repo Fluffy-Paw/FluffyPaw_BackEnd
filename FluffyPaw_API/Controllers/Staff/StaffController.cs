@@ -91,7 +91,7 @@ namespace FluffyPaw_API.Controllers.Staff
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> UpdateStoreService(long id, [FromBody] UpdateStoreServiceRequest updateStoreServiceRequest)
         {
-            var storeService = await _staffService.UpdateStoreService(id, updateStoreServiceRequest);
+            await _staffService.UpdateStoreService(id, updateStoreServiceRequest);
             return CustomResult("Cập nhật lịch trình thành công.");
         }
 
