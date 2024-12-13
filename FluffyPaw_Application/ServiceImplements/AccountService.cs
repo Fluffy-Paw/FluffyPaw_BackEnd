@@ -109,6 +109,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 temp.Username = brand.Account.Username;
                 temp.Email = brand.Account.Email;
                 temp.Phone = brand.Hotline;
+                temp.Status = brand.Account.Status;
 
                 result.Add(temp);
             }
