@@ -329,12 +329,12 @@ namespace FluffyPaw_Application.ServiceImplements
                 case "Bad":
                     user.Reputation = AccountReputation.Ban.ToString();
                     await _sendMailService.SendBanMessage(new SendMailRequest { Email = user.Account.Email });
-                    await ActiveInactiveAccount(userId);
+                    user.Account.Status = (int)AccountStatus.Inactive;
                     break;
 
                 default:
                     user.Reputation = AccountReputation.Bad.ToString();
-                    await ActiveInactiveAccount(userId); 
+                    user.Account.Status = (int)AccountStatus.Active; 
                     break;
                 
             }
