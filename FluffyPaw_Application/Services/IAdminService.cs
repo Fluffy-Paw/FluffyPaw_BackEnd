@@ -20,6 +20,7 @@ namespace FluffyPaw_Application.Services
         Task<bool> CreateAdmin(AdminRequest adminRequest);
         Task<List<BrandResponse>> GetAllBrandFalse();
         Task<bool> AcceptBrand(long id);
+        Task<bool> DeniedBrand(long id, string description);
         Task<List<SerResponse>> GetAllService();
         Task<List<SerResponse>> GetAllServiceFalse();
         Task<List<SerResponse>> GetAllServiceFalseByBrandId(long id);
