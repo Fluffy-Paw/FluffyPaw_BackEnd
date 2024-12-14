@@ -4,6 +4,7 @@ using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.StoreServiceRequest;
 using FluffyPaw_Application.DTO.Request.TrackingRequest;
 using FluffyPaw_Application.DTO.Response.BookingResponse;
+using FluffyPaw_Application.DTO.Response.CertificateResponse;
 using FluffyPaw_Application.DTO.Response.FilesResponse;
 using FluffyPaw_Application.DTO.Response.ServiceResponse;
 using FluffyPaw_Application.DTO.Response.StaffResponse;
@@ -70,18 +71,22 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Bạn không có truy cập vào thương hiệu này.");
             }
 
-            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id, includeProperties: "ServiceType").ToList();
-            if (services == null)
+            var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == id && ss.Status == true, includeProperties: "ServiceType,Certificates").ToList();
+            if (!services.Any())
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy dịch vụ của doanh nghiệp");
             }
 
-            var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(services.First().ServiceTypeId);
-
-            var serviceResponses = _mapper.Map<List<SerResponse>>(services);
-            foreach (SerResponse serviceResponse in serviceResponses)
+            var serviceResponses = new List<SerResponse>();
+            foreach (var service in services)
             {
-                serviceResponse.ServiceTypeName = serviceType.Name;
+                var serviceResponse = _mapper.Map<SerResponse>(service);
+                
+                serviceResponse.Certificate = service.Certificates != null
+                                ? service.Certificates.Select(certificate => _mapper.Map<CertificatesResponse>(certificate)).ToList()
+                                : new List<CertificatesResponse>();
+
+                serviceResponses.Add(serviceResponse);
             }
 
             return serviceResponses;
