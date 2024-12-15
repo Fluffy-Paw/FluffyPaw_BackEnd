@@ -64,100 +64,12 @@ namespace FluffyPaw_Infrastructure.Migrations
                         {
                             Id = 1L,
                             Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8505), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 15, 14, 41, 35, 155, DateTimeKind.Unspecified).AddTicks(7152), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "test@gmail.com",
                             Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176",
                             RoleName = "Admin",
                             Status = 1,
                             Username = "FluffyPaw"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8520), new TimeSpan(0, 7, 0, 0, 0)),
-                            Email = "test@gmail.com",
-                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
-                            RoleName = "StoreManager",
-                            Status = 1,
-                            Username = "test1"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8524), new TimeSpan(0, 7, 0, 0, 0)),
-                            Email = "test@gmail.com",
-                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
-                            RoleName = "StoreManager",
-                            Status = 1,
-                            Username = "test2"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8528), new TimeSpan(0, 7, 0, 0, 0)),
-                            Email = "test@gmail.com",
-                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
-                            RoleName = "Staff",
-                            Status = 1,
-                            Username = "test3"
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8531), new TimeSpan(0, 7, 0, 0, 0)),
-                            Email = "test@gmail.com",
-                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
-                            RoleName = "Staff",
-                            Status = 1,
-                            Username = "test4"
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8534), new TimeSpan(0, 7, 0, 0, 0)),
-                            Email = "test@gmail.com",
-                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
-                            RoleName = "PetOwner",
-                            Status = 1,
-                            Username = "test5"
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8538), new TimeSpan(0, 7, 0, 0, 0)),
-                            Email = "test@gmail.com",
-                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
-                            RoleName = "PetOwner",
-                            Status = 1,
-                            Username = "test6"
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8541), new TimeSpan(0, 7, 0, 0, 0)),
-                            Email = "test@gmail.com",
-                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
-                            RoleName = "Staff",
-                            Status = 1,
-                            Username = "test7"
-                        },
-                        new
-                        {
-                            Id = 9L,
-                            Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg",
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8544), new TimeSpan(0, 7, 0, 0, 0)),
-                            Email = "test@gmail.com",
-                            Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87",
-                            RoleName = "Staff",
-                            Status = 1,
-                            Username = "test8"
                         });
                 });
 
@@ -400,34 +312,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("Brands");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            AccountId = 2L,
-                            Address = "A đường AA tổ AAA",
-                            BrandEmail = "test1@gmail.com",
-                            BusinessLicense = "https://gray-wnem-prod.gtv-cdn.com/resizer/v2/ZRIYMJKRXFG4NGEORU4Z7MVE4U.png?auth=ca7b7f352a656d265f22b46ca0a9b36c6ecdb78546fc48e2cb1f260980998bd4&width=980&height=690&smart=true",
-                            Hotline = "0123456789",
-                            Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s",
-                            MST = "AAAAAAAAAAAA",
-                            Name = "BrandA",
-                            Status = true
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            AccountId = 3L,
-                            Address = "B đường BB tổ BBB",
-                            BrandEmail = "test1@gmail.com",
-                            BusinessLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85",
-                            Hotline = "0123456788",
-                            Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s",
-                            MST = "BBBBBBBBBBBB",
-                            Name = "BrandB",
-                            Status = true
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Certificate", b =>
@@ -457,56 +341,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("Certificates");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Chăm sóc & Làm đẹp",
-                            ServiceId = 1L
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Chăm sóc & Làm đẹp",
-                            ServiceId = 1L
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Tiêm chủng",
-                            ServiceId = 2L
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Khách sạn",
-                            ServiceId = 3L
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Khách sạn",
-                            ServiceId = 3L
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Khách sạn",
-                            ServiceId = 3L
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Conversation", b =>
@@ -604,43 +438,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("Files");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9782), new TimeSpan(0, 7, 0, 0, 0)),
-                            File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687",
-                            Status = true
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9786), new TimeSpan(0, 7, 0, 0, 0)),
-                            File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687",
-                            Status = true
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9790), new TimeSpan(0, 7, 0, 0, 0)),
-                            File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687",
-                            Status = true
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9794), new TimeSpan(0, 7, 0, 0, 0)),
-                            File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687",
-                            Status = true
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9797), new TimeSpan(0, 7, 0, 0, 0)),
-                            File = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687",
-                            Status = true
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Identification", b =>
@@ -798,40 +595,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("PetTypeId");
 
                     b.ToTable("Pets");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Allergy = "none",
-                            BehaviorCategoryId = 1L,
-                            Decription = "test",
-                            Dob = new DateTimeOffset(new DateTime(2022, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
-                            IsNeuter = true,
-                            MicrochipNumber = "none",
-                            Name = "LuLu",
-                            PetOwnerId = 1L,
-                            PetTypeId = 1L,
-                            Sex = "Nam",
-                            Status = "Available",
-                            Weight = 6.5f
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Allergy = "none",
-                            BehaviorCategoryId = 2L,
-                            Decription = "test1",
-                            Dob = new DateTimeOffset(new DateTime(2022, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
-                            IsNeuter = false,
-                            MicrochipNumber = "none",
-                            Name = "MeowMeow",
-                            PetOwnerId = 2L,
-                            PetTypeId = 18L,
-                            Sex = "Nữ",
-                            Status = "Available",
-                            Weight = 5f
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.PetCategory", b =>
@@ -901,30 +664,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("PetOwners");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            AccountId = 6L,
-                            Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam",
-                            Dob = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8862), new TimeSpan(0, 7, 0, 0, 0)),
-                            FullName = "Test",
-                            Gender = "Male",
-                            Phone = "1234567890",
-                            Reputation = "Good"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            AccountId = 7L,
-                            Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam",
-                            Dob = new DateTimeOffset(new DateTime(2024, 12, 9, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8866), new TimeSpan(0, 7, 0, 0, 0)),
-                            FullName = "Test",
-                            Gender = "Male",
-                            Phone = "0123456789",
-                            Reputation = "Good"
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.PetType", b =>
@@ -1239,17 +978,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("TargetId");
 
                     b.ToTable("Reports");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreateDate = new DateTimeOffset(new DateTime(2024, 12, 8, 17, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(8832), new TimeSpan(0, 7, 0, 0, 0)),
-                            Description = "None",
-                            ReportCategoryId = 9L,
-                            SenderId = 7L,
-                            TargetId = 4L
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.ReportCategory", b =>
@@ -1399,50 +1127,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("ServiceTypeId");
 
                     b.ToTable("Services");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            BookingCount = 1,
-                            BrandId = 1L,
-                            Cost = 100000.0,
-                            Description = "test",
-                            Duration = new TimeSpan(0, 0, 30, 0, 0),
-                            Image = "https://phongkhamthuythithipet.com/wp-content/uploads/2024/07/dich-vu-cham-soc-lam-dep-cho-thu-cung.jpg",
-                            Name = "Chăm sóc cho Boss",
-                            ServiceTypeId = 1L,
-                            Status = true,
-                            TotalRating = 0f
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            BookingCount = 0,
-                            BrandId = 1L,
-                            Cost = 200000.0,
-                            Description = "test",
-                            Duration = new TimeSpan(0, 1, 0, 0, 0),
-                            Image = "https://hillcrestvets.co.za/wp-content/uploads/2020/10/Pet-Vaccinations.jpg",
-                            Name = "Tiêm chủng A",
-                            ServiceTypeId = 2L,
-                            Status = true,
-                            TotalRating = 0f
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            BookingCount = 0,
-                            BrandId = 2L,
-                            Cost = 100000.0,
-                            Description = "test",
-                            Duration = new TimeSpan(0, 23, 0, 0, 0),
-                            Image = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687",
-                            Name = "Ngôi nhà thân thiện",
-                            ServiceTypeId = 3L,
-                            Status = true,
-                            TotalRating = 0f
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.ServiceType", b =>
@@ -1528,56 +1212,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("BrandId");
 
                     b.ToTable("Stores");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            AccountId = 4L,
-                            Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam",
-                            BrandId = 1L,
-                            Name = "Chi nhánh A",
-                            OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85",
-                            Phone = "0123456789",
-                            Status = true,
-                            TotalRating = 0f
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            AccountId = 5L,
-                            Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam",
-                            BrandId = 1L,
-                            Name = "Chi nhánh B",
-                            OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85",
-                            Phone = "0123456789",
-                            Status = true,
-                            TotalRating = 0f
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            AccountId = 8L,
-                            Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam",
-                            BrandId = 2L,
-                            Name = "Chi nhánh C",
-                            OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85",
-                            Phone = "0123456789",
-                            Status = true,
-                            TotalRating = 0f
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            AccountId = 9L,
-                            Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam",
-                            BrandId = 2L,
-                            Name = "Chi nhánh D",
-                            OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85",
-                            Phone = "0123456789",
-                            Status = true,
-                            TotalRating = 0f
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreFile", b =>
@@ -1601,38 +1235,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("StoreFiles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            FileId = 1L,
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            FileId = 2L,
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            FileId = 3L,
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            FileId = 4L,
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            FileId = 5L,
-                            StoreId = 3L
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreService", b =>
@@ -1669,208 +1271,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("StoreServices");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9597), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 3, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9607), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 7, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9611), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 50,
-                            ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9615), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 2L
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 50,
-                            ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9619), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 2L
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 50,
-                            ServiceId = 1L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9623), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 2L
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 50,
-                            ServiceId = 2L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9627), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 50,
-                            ServiceId = 2L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9631), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 9L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 50,
-                            ServiceId = 2L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 14, 0, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9634), new TimeSpan(0, 7, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 10L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 0,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 29, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 11L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 11, 30, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 12L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 1, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 13L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 2, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 14L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 3, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 15L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 4, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 16L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 5, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 17L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 6, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 4L
-                        },
-                        new
-                        {
-                            Id = 18L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 7, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 4L
-                        },
-                        new
-                        {
-                            Id = 19L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 8, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 4L
-                        },
-                        new
-                        {
-                            Id = 20L,
-                            CurrentPetOwner = 0,
-                            LimitPetOwner = 100,
-                            ServiceId = 3L,
-                            StartTime = new DateTimeOffset(new DateTime(2024, 12, 9, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Status = "Available",
-                            StoreId = 4L
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Tracking", b =>
@@ -1999,32 +1399,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("PetId");
 
                     b.ToTable("VaccineHistories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Description = "Vaccine test",
-                            Image = "none",
-                            Name = "Loại 1",
-                            NextVaccineDate = new DateTimeOffset(new DateTime(2024, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
-                            PetCurrentWeight = 4f,
-                            PetId = 1L,
-                            Status = "Incomplete",
-                            VaccineDate = new DateTimeOffset(new DateTime(2024, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0))
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Description = "Vaccine test",
-                            Image = "none",
-                            Name = "Loại 2",
-                            NextVaccineDate = new DateTimeOffset(new DateTime(2024, 12, 8, 17, 35, 39, 295, DateTimeKind.Unspecified).AddTicks(9228), new TimeSpan(0, 7, 0, 0, 0)),
-                            PetCurrentWeight = 4f,
-                            PetId = 2L,
-                            Status = "Complete",
-                            VaccineDate = new DateTimeOffset(new DateTime(2024, 9, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0))
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Wallet", b =>
@@ -2055,38 +1429,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("Wallets");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            AccountId = 1L,
-                            Balance = 1000000.0
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            AccountId = 2L,
-                            Balance = 0.0
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            AccountId = 3L,
-                            Balance = 0.0
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            AccountId = 6L,
-                            Balance = 100000000000.0
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            AccountId = 7L,
-                            Balance = 100000000000.0
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.BillingRecord", b =>
