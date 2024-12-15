@@ -835,11 +835,12 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             booking.Status = BookingStatus.Canceled.ToString();
-
             var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.Id == booking.StoreServiceId,
                                                     includeProperties: "Store,Service").FirstOrDefault();
             storeService.CurrentPetOwner -= 1;
 
+            var service = _unitOfWork.ServiceRepository.GetByID(storeService.ServiceId);
+            service.BookingCount--;
 
             //Đợi thêm bussiness rule cho vde Cancel
             var currentTime = CoreHelper.SystemTimeNow;
@@ -872,6 +873,9 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
             }
 
+
+            _unitOfWork.StoreServiceRepository.Update(storeService);
+            _unitOfWork.ServiceRepository.Update(service);
             await _unitOfWork.SaveAsync();
 
             var storeAccountId = storeService.Store.AccountId;
