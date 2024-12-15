@@ -85,8 +85,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             exitstingPo.Account.Email = petOwnerRequest.Email;
             if (petOwnerRequest.Avatar != null) exitstingPo.Account.Avatar = await _firebaseConfiguration.UploadImage(petOwnerRequest.Avatar);
-            exitstingPo.Dob = petOwnerRequest.Dob.Value.AddHours(7);
             var po = _mapper.Map(petOwnerRequest, exitstingPo);
+            exitstingPo.Dob = petOwnerRequest.Dob.Value.AddHours(7);
             _unitOfWork.Save();
 
             var result = _mapper.Map<PetOwnerResponse>(po);
