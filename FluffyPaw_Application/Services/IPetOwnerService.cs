@@ -37,7 +37,7 @@ namespace FluffyPaw_Application.Services
 
         Task<List<SerResponse>> GetAllServiceByServiceTypeIdDateTime(long serviceTypeId, DateTimeOffset? startTime, DateTimeOffset? endTime, double? cost);
 
-        Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? startTime, DateTimeOffset? endTime);
+        Task<List<StStoreServiceResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? startTime, DateTimeOffset? endTime);
 
         Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id);
 

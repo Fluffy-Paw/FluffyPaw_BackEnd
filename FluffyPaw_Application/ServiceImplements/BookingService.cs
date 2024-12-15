@@ -87,6 +87,12 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
             }
 
+            var allowedCheckInTime = storeService.StartTime.AddMinutes(-30);
+            if (CoreHelper.SystemTimeNow < allowedCheckInTime)
+            {
+                throw new CustomException.InvalidDataException("Chỉ được phép check-in trước 30 phút.");
+            }
+
             booking.Checkin = true;
             booking.CheckinTime = CoreHelper.SystemTimeNow.AddHours(7);
             booking.CheckinImage = await _firebaseConfiguration.UploadImage(checkinRequest.CheckinImagge);
