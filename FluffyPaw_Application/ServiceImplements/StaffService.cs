@@ -496,7 +496,12 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             pendingBooking.Status = BookingStatus.Accepted.ToString();
-            _unitOfWork.Save();
+
+
+            var service = _unitOfWork.ServiceRepository.GetByID(storeService.ServiceId);
+            service.BookingCount++;
+            _unitOfWork.ServiceRepository.Update(service);
+            await _unitOfWork.SaveAsync();
 
             var pet = _unitOfWork.PetRepository.GetByID(pendingBooking.PetId);
 
