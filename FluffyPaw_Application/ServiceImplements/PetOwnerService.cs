@@ -361,28 +361,34 @@ namespace FluffyPaw_Application.ServiceImplements
         }
 
 
-        public async Task<List<StResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? startTime, DateTimeOffset? endTime)
+        public async Task<List<StStoreServiceResponse>> GetAllStoreByServiceIdDateTime(long serviceId, DateTimeOffset? startTime, DateTimeOffset? endTime)
         {
-            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == serviceId,
-                                                    includeProperties: "Store");
+            // Lấy danh sách StoreServices theo ServiceId
+            var storeServices = _unitOfWork.StoreServiceRepository.Get(
+                ss => ss.ServiceId == serviceId,
+                includeProperties: "Store,Store.Brand"
+            );
 
             if (startTime.HasValue && endTime.HasValue)
             {
-                DateTimeOffset localStartTime = startTime.Value.ToLocalTime();
-                DateTimeOffset localEndTime = endTime.Value.ToLocalTime();
+                // Chỉ lấy phần DateTime bỏ qua múi giờ
+                var localStartTime = startTime.Value.DateTime;
+                var localEndTime = endTime.Value.DateTime;
 
-                // Lọc storeServices dựa trên khoảng thời gian từ startTime đến endTime
-                storeServices = storeServices.Where(ss =>
-                    ss.StartTime >= localStartTime && ss.StartTime <= localEndTime
-                );
+                storeServices = storeServices.Where(ss => ss.StartTime.DateTime >= localStartTime &&
+                                                    ss.StartTime.DateTime <= localEndTime);
+
+                var currentTime = CoreHelper.SystemTimeNow.DateTime;
+                storeServices = storeServices.Where(ss => ss.StartTime.DateTime >= currentTime);
 
                 if (!storeServices.Any())
                 {
                     throw new CustomException.DataNotFoundException($"Không tìm thấy cửa hàng nào có lịch trình" +
-                        $" trong khoảng thời gian từ {startTime.Value.ToString("HH:mm:ss")} đến {endTime.Value.ToString("HH:mm:ss")}.");
+                        $" trong khoảng thời gian từ {startTime.Value:HH:mm:ss} đến {endTime.Value:HH:mm:ss}.");
                 }
             }
 
+            // Lấy danh sách các cửa hàng từ StoreService
             var stores = storeServices.Select(ss => ss.Store)
                                     .Distinct()
                                     .OrderByDescending(s => s.TotalRating)
@@ -390,17 +396,26 @@ namespace FluffyPaw_Application.ServiceImplements
 
             foreach (var store in stores)
             {
-                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id)
-                    .Select(sf => sf.Files)
-                    .ToList();
+                // Lấy danh sách file của từng cửa hàng
+                var storeFiles = _unitOfWork.StoreFileRepository.Get(sf => sf.StoreId == store.Id, includeProperties: "Files")
+                                    .Select(sf => sf.Files)
+                                    .ToList();
 
                 store.Files = storeFiles.ToList();
+
+                // Gán các StoreServices có thời gian nằm trong khoảng đã lọc và sắp xếp theo StartTime tăng dần
+                store.StoreServices = storeServices
+                    .Where(ss => ss.StoreId == store.Id)
+                    .OrderBy(ss => ss.StartTime) // Sort theo StartTime tăng dần
+                    .ToList();
             }
 
-            var stResponses = _mapper.Map<List<StResponse>>(stores);
+            // Ánh xạ sang StStoreServiceResponse
+            var stResponses = _mapper.Map<List<StStoreServiceResponse>>(stores);
 
             return stResponses;
         }
+
 
         public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceId(long id)
         {

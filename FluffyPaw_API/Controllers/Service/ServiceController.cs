@@ -36,7 +36,6 @@ namespace FluffyPaw_API.Controllers.Service
         }
 
         [HttpGet("GetAllServiceByStoreId/{id}")]
-        [Authorize(Roles = "Staff,PetOwner")]
         public async Task<IActionResult> GetAllServiceByStoreId(long id)
         {
             var services = await _serService.GetAllServiceByStoreId(id);
