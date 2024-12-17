@@ -204,13 +204,6 @@ namespace FluffyPaw_Infrastructure.Data
                 new Pet { Id = 4, PetOwnerId = 4, PetTypeId = 18, BehaviorCategoryId = 12, Name = "Miu", Sex = "Female", Weight = 3F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "543734156", Decription = "Một thú cưng tuyệt vời", IsNeuter = false, Status = "Available" }
                 );
 
-            modelBuilder.Entity<VaccineHistory>().HasData(
-                new VaccineHistory { Id = 1, PetId = 1, Name = "Loại 1", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.ParseExact("08/10/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), NextVaccineDate = (DateTimeOffset.Parse("13-10-2024")).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString() },
-                new VaccineHistory { Id = 2, PetId = 2, Name = "Loại 2", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.ParseExact("08/10/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() },
-                new VaccineHistory { Id = 3, PetId = 3, Name = "Loại 3", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.ParseExact("08/10/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), NextVaccineDate = (DateTimeOffset.Parse("13-10-2024")).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString() },
-                new VaccineHistory { Id = 4, PetId = 4, Name = "Loại 4", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.ParseExact("08/10/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() }
-                );
-
             modelBuilder.Entity<ServiceType>().HasData(
                 new ServiceType { Id = 1, Name = "Chăm sóc & Làm đẹp", Image = "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/11/dich-vu-cham-soc-thu-cung-tai-nha-1.jpg" },
                 new ServiceType { Id = 2, Name = "Tiêm chủng", Image = "https://www.vietdvm.com/images/content/2015/05/CNTY/tiem-vaccine-cho-cho.jpg" },
