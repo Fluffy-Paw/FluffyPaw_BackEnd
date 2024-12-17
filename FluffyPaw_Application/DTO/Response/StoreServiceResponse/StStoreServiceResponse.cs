@@ -19,6 +19,8 @@ namespace FluffyPaw_Application.DTO.Response.StoreServiceResponse
 
         public string BrandName { get; set; }
 
+        public string BrandLogo { get; set; }
+
         public string Name { get; set; }
 
         public long AccountId { get; set; }
@@ -42,6 +44,7 @@ namespace FluffyPaw_Application.DTO.Response.StoreServiceResponse
             profile.CreateMap<Store, StStoreServiceResponse>()
                 .ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files))
                 .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.Name))
+                .ForMember(dest => dest.BrandLogo, opt => opt.MapFrom(src => src.Brand.Logo))
                 .ForMember(dest => dest.StoreServices, opt => opt.MapFrom(src => src.StoreServices));
         }
     }
