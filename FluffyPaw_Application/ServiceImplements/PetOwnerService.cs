@@ -589,6 +589,11 @@ namespace FluffyPaw_Application.ServiceImplements
                     Status = BookingStatus.Pending.ToString()
                 };
 
+                var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
+                if (wallet == null || wallet.Balance < newBooking.Cost)
+                {
+                    throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                }
 
                 _unitOfWork.BookingRepository.Insert(newBooking);
                 await _unitOfWork.SaveAsync();
@@ -596,11 +601,6 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 if (createBookingRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
                 {
-                    var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
-                    if (wallet == null || wallet.Balance < newBooking.Cost)
-                    {
-                        throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
-                    }
                     wallet.Balance -= newBooking.Cost;
 
                     var billingRecord = new BillingRecord
@@ -770,16 +770,17 @@ namespace FluffyPaw_Application.ServiceImplements
                 Status = BookingStatus.Pending.ToString()
             };
 
+            var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
+            if (wallet == null || wallet.Balance < newBooking.Cost)
+            {
+                throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+            }
+
             _unitOfWork.BookingRepository.Insert(newBooking);
             await _unitOfWork.SaveAsync();
 
             if (timeSelectionRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
             {
-                var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
-                if (wallet == null || wallet.Balance < newBooking.Cost)
-                {
-                    throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
-                }
                 wallet.Balance -= newBooking.Cost;
 
                 var billingRecord = new BillingRecord
