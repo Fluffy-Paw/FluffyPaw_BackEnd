@@ -6,6 +6,7 @@ using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -112,7 +113,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Bạn chỉ được lưu tối đa 5 thú cưng.");
             }
 
-            if(petRequest.MicrochipNumber != "none")
+            if(petRequest.MicrochipNumber != null)
             {
                 var duplicatePet = _unitOfWork.PetRepository.Get(m => m.MicrochipNumber == petRequest.MicrochipNumber).FirstOrDefault();
                 if(duplicatePet != null)
@@ -121,7 +122,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 }
             }
 
-            if (petRequest.Dob > DateTimeOffset.UtcNow) throw new CustomException.InvalidDataException("Ngày sinh không hợp lệ.");
+            if (petRequest.Dob > CoreHelper.SystemTimeNow) throw new CustomException.InvalidDataException("Ngày sinh không được lớn hơn ngày hiện tại.");
 
             var pet = _mapper.Map<Pet>(petRequest);
             pet.PetOwnerId = po.Id;
