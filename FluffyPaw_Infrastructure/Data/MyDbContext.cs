@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
@@ -146,10 +147,10 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<PetOwner>().HasData(
-                new PetOwner { Id = 1, AccountId = 6, FullName = "Khoa", Gender = "Male", Dob = (DateTimeOffset.Parse("21-12-2002")).AddHours(7), Phone = "0912345678", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
-                new PetOwner { Id = 2, AccountId = 7, FullName = "Đạt", Gender = "Male", Dob = (DateTimeOffset.Parse("21-12-2002")).AddHours(7), Phone = "0912456789", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
-                new PetOwner { Id = 3, AccountId = 8, FullName = "Hoàng", Gender = "Male", Dob = (DateTimeOffset.Parse("21-12-2002")).AddHours(7), Phone = "0912567890", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
-                new PetOwner { Id = 4, AccountId = 9, FullName = "Duy", Gender = "Male", Dob = (DateTimeOffset.Parse("21-12-2002")).AddHours(7), Phone = "0912678901", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" }
+                new PetOwner { Id = 1, AccountId = 6, FullName = "Khoa", Gender = "Male", Dob = (DateTimeOffset.ParseExact("21/12/2002", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Phone = "0912345678", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
+                new PetOwner { Id = 2, AccountId = 7, FullName = "Đạt", Gender = "Male", Dob = (DateTimeOffset.ParseExact("21/12/2002", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Phone = "0912456789", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
+                new PetOwner { Id = 3, AccountId = 8, FullName = "Hoàng", Gender = "Male", Dob = (DateTimeOffset.ParseExact("21/12/2002", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Phone = "0912567890", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
+                new PetOwner { Id = 4, AccountId = 9, FullName = "Duy", Gender = "Male", Dob = (DateTimeOffset.ParseExact("21/12/2002", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Phone = "0912678901", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" }
                 );
 
             modelBuilder.Entity<PetCategory>().HasData(
@@ -197,17 +198,17 @@ namespace FluffyPaw_Infrastructure.Data
                 );
 
             modelBuilder.Entity<Pet>().HasData(
-                new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTimeOffset.Parse("23-08-2023"), Allergy = "none", MicrochipNumber = "none", Decription = "Một thú cưng tuyệt vời", IsNeuter = true, Status = "Available" },
-                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 4, BehaviorCategoryId = 5, Name = "Milo", Sex = "Female", Weight = 5F, Dob = DateTimeOffset.Parse("23-08-2023"), Allergy = "none", MicrochipNumber = "0123456789", Decription = "Một thú cưng tuyệt vời", IsNeuter = false, Status = "Available" },
-                new Pet { Id = 3, PetOwnerId = 3, PetTypeId = 20, BehaviorCategoryId = 7, Name = "Mei", Sex = "Male", Weight = 4.5F, Dob = DateTimeOffset.Parse("23-08-2023"), Allergy = "none", MicrochipNumber = "098765434", Decription = "Một thú cưng tuyệt vời", IsNeuter = true, Status = "Available" },
-                new Pet { Id = 4, PetOwnerId = 4, PetTypeId = 18, BehaviorCategoryId = 12, Name = "Miu", Sex = "Female", Weight = 3F, Dob = DateTimeOffset.Parse("23-08-2023"), Allergy = "none", MicrochipNumber = "543734156", Decription = "Một thú cưng tuyệt vời", IsNeuter = false, Status = "Available" }
+                new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "none", Decription = "Một thú cưng tuyệt vời", IsNeuter = true, Status = "Available" },
+                new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 4, BehaviorCategoryId = 5, Name = "Milo", Sex = "Female", Weight = 5F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "0123456789", Decription = "Một thú cưng tuyệt vời", IsNeuter = false, Status = "Available" },
+                new Pet { Id = 3, PetOwnerId = 3, PetTypeId = 20, BehaviorCategoryId = 7, Name = "Mei", Sex = "Male", Weight = 4.5F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "098765434", Decription = "Một thú cưng tuyệt vời", IsNeuter = true, Status = "Available" },
+                new Pet { Id = 4, PetOwnerId = 4, PetTypeId = 18, BehaviorCategoryId = 12, Name = "Miu", Sex = "Female", Weight = 3F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "543734156", Decription = "Một thú cưng tuyệt vời", IsNeuter = false, Status = "Available" }
                 );
 
             modelBuilder.Entity<VaccineHistory>().HasData(
-                new VaccineHistory { Id = 1, PetId = 1, Name = "Loại 1", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.Parse("08-10-2024")).AddHours(7), NextVaccineDate = (DateTimeOffset.Parse("13-10-2024")).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString() },
-                new VaccineHistory { Id = 2, PetId = 2, Name = "Loại 2", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.Parse("08-10-2024")).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() },
-                new VaccineHistory { Id = 3, PetId = 3, Name = "Loại 3", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.Parse("08-10-2024")).AddHours(7), NextVaccineDate = (DateTimeOffset.Parse("13-10-2024")).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString() },
-                new VaccineHistory { Id = 4, PetId = 4, Name = "Loại 4", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.Parse("08-10-2024")).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() }
+                new VaccineHistory { Id = 1, PetId = 1, Name = "Loại 1", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.ParseExact("08/10/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), NextVaccineDate = (DateTimeOffset.Parse("13-10-2024")).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString() },
+                new VaccineHistory { Id = 2, PetId = 2, Name = "Loại 2", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.ParseExact("08/10/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() },
+                new VaccineHistory { Id = 3, PetId = 3, Name = "Loại 3", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.ParseExact("08/10/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), NextVaccineDate = (DateTimeOffset.Parse("13-10-2024")).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Incomplete.ToString() },
+                new VaccineHistory { Id = 4, PetId = 4, Name = "Loại 4", PetCurrentWeight = 4, VaccineDate = (DateTimeOffset.ParseExact("08/10/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Description = "Vaccine test", Status = VaccineStatus.Complete.ToString() }
                 );
 
             modelBuilder.Entity<ServiceType>().HasData(
