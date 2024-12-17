@@ -55,6 +55,14 @@ namespace FluffyPaw_API.Controllers.Authentication
             return CustomResult("Xác thực hoàn tất.", brand);
         }
 
+        [HttpPatch("DeniedBrand/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeniedBrand(long id, string description)
+        {
+            var brand = await _adminService.DeniedBrand(id, description);
+            return CustomResult("Từ chối hoàn tất.", brand);
+        }
+
         [HttpGet("GetAllService")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllService()

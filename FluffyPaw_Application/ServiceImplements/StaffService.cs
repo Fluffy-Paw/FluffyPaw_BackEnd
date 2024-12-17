@@ -496,7 +496,12 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             pendingBooking.Status = BookingStatus.Accepted.ToString();
-            _unitOfWork.Save();
+
+
+            var service = _unitOfWork.ServiceRepository.GetByID(storeService.ServiceId);
+            service.BookingCount++;
+            _unitOfWork.ServiceRepository.Update(service);
+            await _unitOfWork.SaveAsync();
 
             var pet = _unitOfWork.PetRepository.GetByID(pendingBooking.PetId);
 
@@ -590,8 +595,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Cửa hàng đang bị hạn chế hoặc không tồn tại.");
             }
 
-            var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id);
-
             var booking = _unitOfWork.BookingRepository.Get(b => b.Id == id
                                             && b.Status == BookingStatus.Accepted.ToString(),
                                             includeProperties: "Pet,Pet.PetOwner,StoreService,StoreService.Service,StoreService.Store")
@@ -601,7 +604,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
             }
 
-            if (!storeServices.Any(ss => ss.Id == booking.StoreServiceId))
+            var storeService = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id && ss.Id == booking.StoreServiceId).FirstOrDefault();
+            if (storeService == null)
             {
                 throw new CustomException.InvalidDataException("Đặt lịch này không thuộc quyền quản lý của bạn.");
             }
@@ -612,6 +616,9 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             booking.Status = BookingStatus.Canceled.ToString();
+            var service = _unitOfWork.ServiceRepository.GetByID(storeService.ServiceId);
+            service.BookingCount--;
+            storeService.CurrentPetOwner--;
 
             var po = _unitOfWork.PetOwnerRepository.Get(po => po.Id == booking.Pet.PetOwnerId).FirstOrDefault();
             var poWallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == po.AccountId).FirstOrDefault();
@@ -646,6 +653,8 @@ namespace FluffyPaw_Application.ServiceImplements
             await _notificationService.CreateNotification(notificationRequest);
 
             _unitOfWork.BookingRepository.Update(booking);
+            _unitOfWork.ServiceRepository.Update(service);
+            _unitOfWork.StoreServiceRepository.Update(storeService);
             await _unitOfWork.SaveAsync();
 
             return (true, notice);

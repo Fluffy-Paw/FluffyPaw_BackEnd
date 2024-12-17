@@ -517,56 +517,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("Certificates");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Chăm sóc & Làm đẹp",
-                            ServiceId = 1L
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Chăm sóc & Làm đẹp",
-                            ServiceId = 1L
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Tiêm chủng",
-                            ServiceId = 2L
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Khách sạn",
-                            ServiceId = 3L
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Khách sạn",
-                            ServiceId = 3L
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            Description = "none",
-                            File = "test",
-                            Name = "Bằng chuyên gia về Khách sạn",
-                            ServiceId = 3L
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.Conversation", b =>
@@ -1792,38 +1742,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("StoreFiles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            FileId = 1L,
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            FileId = 2L,
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            FileId = 3L,
-                            StoreId = 1L
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            FileId = 4L,
-                            StoreId = 3L
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            FileId = 5L,
-                            StoreId = 3L
-                        });
                 });
 
             modelBuilder.Entity("FluffyPaw_Domain.Entities.StoreService", b =>
