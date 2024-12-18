@@ -624,6 +624,10 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.StoreServiceRepository.Update(existingStoreService);
                 _unitOfWork.Save();
 
+                var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
+                bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
+                bookingResponses.Add(bookingResponse);
+
                 var sendMailRequest = new SendReceiptRequest
                 {
                     Email = account.Email,
@@ -631,11 +635,6 @@ namespace FluffyPaw_Application.ServiceImplements
                     bookingResponses = bookingResponses,
                 };
                 await _sendMailService.SendReceipt(sendMailRequest);
-
-                var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
-                bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
-                bookingResponses.Add(bookingResponse);
-
 
                 await _jobScheduler.ScheduleBookingNotification(newBooking);
                 await _jobScheduler.ScheduleOverTimeRefund(newBooking);
