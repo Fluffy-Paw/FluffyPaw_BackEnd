@@ -589,10 +589,14 @@ namespace FluffyPaw_Application.ServiceImplements
                     Status = BookingStatus.Pending.ToString()
                 };
 
+
                 var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
-                if (wallet == null || wallet.Balance < newBooking.Cost)
+                if (createBookingRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
                 {
-                    throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                    if (wallet == null || wallet.Balance < newBooking.Cost)
+                    {
+                        throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                    }
                 }
 
                 _unitOfWork.BookingRepository.Insert(newBooking);
@@ -771,11 +775,13 @@ namespace FluffyPaw_Application.ServiceImplements
             };
 
             var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
-            if (wallet == null || wallet.Balance < newBooking.Cost)
+            if (timeSelectionRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
             {
-                throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                if (wallet == null || wallet.Balance < newBooking.Cost)
+                {
+                    throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                }
             }
-
             _unitOfWork.BookingRepository.Insert(newBooking);
             await _unitOfWork.SaveAsync();
 
