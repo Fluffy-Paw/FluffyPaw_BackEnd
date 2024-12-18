@@ -819,8 +819,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var listBooking = new List<BookingResponse>();
             var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
-
             listBooking.Add(bookingResponse);
+            
             var sendMailRequest = new SendReceiptRequest
             {
                 Email = account.Email,
