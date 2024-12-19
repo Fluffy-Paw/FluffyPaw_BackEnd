@@ -98,6 +98,7 @@ namespace FluffyPaw_Application.ServiceImplements
             account.RoleName = RoleName.StoreManager.ToString();
             account.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             account.Password = _hashing.SHA512Hash(registerAccountSMRequest.Password);
+            account.CreateDate = CoreHelper.SystemTimeNow.AddHours(7);
             account.Status = (int)AccountStatus.Active;
             _unitOfWork.AccountRepository.Insert(account);
             _unitOfWork.Save();

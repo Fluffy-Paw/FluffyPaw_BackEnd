@@ -312,7 +312,7 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 if (existingStoreServiceTimes.Contains(createScheduleRequest.StartTime))
                 {
-                    throw new CustomException.InvalidDataException($"Thời gian bắt đầu {createScheduleRequest.StartTime} đã tồn tại.");
+                    throw new CustomException.InvalidDataException($"Thời gian bắt đầu {createScheduleRequest.StartTime.ToString("yyyy-MM-dd HH:mm:ss")} đã tồn tại.");
                 }
 
                 if (createScheduleRequest.StartTime <= CoreHelper.SystemTimeNow)
@@ -515,7 +515,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReferenceId = pendingBooking.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
-
+            await _jobScheduler.ScheduleBookingNotification(pendingBooking);
             return true;
         }
 
