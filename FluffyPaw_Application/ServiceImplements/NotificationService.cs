@@ -118,6 +118,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Bạn không có thông báo.");
             }
 
+            foreach (var notification in noti)
+            {
+                notification.IsSeen = true;
+                _unitOfWork.NotificationRepository.Update(notification);
+                await _unitOfWork.SaveAsync();
+            }
+
             var result = await _unitOfWork.NotificationRepository.GetPagging(noti, 1, numberNoti * 5);
             return result;
         }
