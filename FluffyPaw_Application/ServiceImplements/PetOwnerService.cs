@@ -1006,8 +1006,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id).ToList();
 
-                    var groupedServices = storeServices
+                    var groupedStoreServices = storeServices
                         .GroupBy(ss => ss.ServiceId)
+                        .Select(g => g.First())
+                        .ToList();
+
+                    var groupedServices = groupedStoreServices
+                        .GroupBy(ss => ss.StoreId)
                         .Select(g => g.First())
                         .ToList();
 
@@ -1029,6 +1034,7 @@ namespace FluffyPaw_Application.ServiceImplements
                             serStoResponse.StoreId = store.Id;
                             serStoResponse.StoreName = store.Name;
                             serStoResponse.StoreAddress = store.Address;
+                            serStoResponse.AccountId = store.AccountId;
 
                             serStoResponses.Add(serStoResponse);
                         }
@@ -1193,13 +1199,17 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 foreach (var store in stores)
                 {
-                    var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id).ToList();
-                    var groupedServices = storeServices
+                    var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id && ss.CurrentPetOwner < ss.LimitPetOwner && ss.StartTime > CoreHelper.SystemTimeNow).ToList();
+                    var groupedStoreServices = storeServices
                         .GroupBy(ss => ss.ServiceId)
                         .Select(g => g.First())
                         .ToList();
+                    var groupedService = groupedStoreServices
+                        .GroupBy(ss => ss.StoreId )
+                        .Select(g => g.First())
+                        .ToList();
 
-                    foreach (var storeService in groupedServices)
+                    foreach (var storeService in groupedService)
                     {
                         var serviceId = storeService.ServiceId;
 
@@ -1216,10 +1226,10 @@ namespace FluffyPaw_Application.ServiceImplements
                             serStoResponse.StoreId = store.Id;
                             serStoResponse.StoreName = store.Name;
                             serStoResponse.StoreAddress = store.Address;
+                            serStoResponse.AccountId = store.AccountId;
 
                             serStoResponses.Add(serStoResponse);
                         }
-
                     }
                 }
             }

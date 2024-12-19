@@ -14,6 +14,8 @@ namespace FluffyPaw_Application.DTO.Response.ServiceResponse
     {
         public long Id { get; set; }
 
+        public long? AccountId { get; set; }
+
         public long ServiceTypeId { get; set; }
 
         public long BrandId { get; set; }
