@@ -15,5 +15,6 @@ namespace FluffyPaw_Application.Services
         Task<bool> SendReceipt(SendReceiptRequest sendMailRequest);
         Task<bool> SendBanMessage(SendMailRequest sendMailRequest);
         Task<bool> SendDenyAccountMessage(SendMailDenyRequest sendMailRequest);
+        Task<bool> SendAccountMessage(SendMailRequest sendMailRequest);
     }
 }

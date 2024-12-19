@@ -97,6 +97,13 @@ namespace FluffyPaw_Application.ServiceImplements
             var brand = _unitOfWork.BrandRepository.GetByID(id);
             brand.Status = true;
             _unitOfWork.Save();
+
+            var mailRequest = new SendMailRequest
+            {
+                Email = brand.Account.Email
+            };
+            await _sendMailService.SendAccountMessage(mailRequest);
+
             return true;
         }
 
