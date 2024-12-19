@@ -58,7 +58,7 @@ namespace FluffyPaw_API.Controllers.Dashboard
         }
 
         [HttpPost("GetMonthlyRevenueSM")]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "StoreManager")]
         public async Task<IActionResult> GetMonthlyRevenueSM([FromBody] MonthlyRevenueRequest monthlyRevenueRequest)
         {
             var result = await _dashboardService.GetMonthlyRevenueSM(monthlyRevenueRequest);
