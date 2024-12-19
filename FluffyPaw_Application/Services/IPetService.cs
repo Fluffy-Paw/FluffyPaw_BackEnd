@@ -25,5 +25,6 @@ namespace FluffyPaw_Application.Services
         Task<long> AddBehavior(string Action);
         Task<bool> DeleteBehavior(long id);
         Task<bool> ChangeOwnerOfPet(ChangePORequest changePORequest);
+        Task<long> AddPetType(PetTypeRequest petTypeRequest);
     }
 }

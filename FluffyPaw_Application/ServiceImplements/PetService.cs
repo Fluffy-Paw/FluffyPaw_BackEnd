@@ -75,6 +75,20 @@ namespace FluffyPaw_Application.ServiceImplements
             return _unitOfWork.BehaviorCategoryRepository.Get(b => b.Name.ToLower() == Action.ToLower()).FirstOrDefault().Id;
         }
 
+        public async Task<long> AddPetType(PetTypeRequest petTypeRequest)
+        {
+            var petTypes = _unitOfWork.PetTypeRepository.Get().ToList();
+            var existing = petTypes.Where(t => t.Name.Equals(petTypeRequest.Name)).FirstOrDefault();
+            if (existing != null)
+            {
+                return existing.Id;
+            }
+            var newPetType = _mapper.Map<PetType>(petTypeRequest);
+            newPetType.Image = "";
+            _unitOfWork.PetTypeRepository.Insert(newPetType);
+            return petTypes.Count + 1;
+        }
+
         public async Task<bool> ChangeOwnerOfPet(ChangePORequest changePORequest)
         {
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
