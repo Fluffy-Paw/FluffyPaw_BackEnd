@@ -306,7 +306,7 @@ namespace FluffyPaw_Application.ServiceImplements
                                         "<div style=\"padding: 20px; text-align: center; border-top: 1px solid #ddd\">" +
                                             "<p style=\"font-size: 16px; color: #333; text-align: left\">Xin chào,</p>" +
                                             $"<p style=\"font-size: 16px; color: #333; text-align: left\">Sau khi xem xét, thương hiệu của bạn đã được hệ thống xác nhận và chấp thuận.</p>" +
-                                            "<div style=\" background-color: red; color: white; font-size: 36px; font-weight: bold; padding: 20px; border-radius: 8px; margin: 20px 0; \">" + "Thất bại !" + "</div>" +
+                                            "<div style=\" background-color: Green; color: white; font-size: 36px; font-weight: bold; padding: 20px; border-radius: 8px; margin: 20px 0; \">" + "Thành công" + "</div>" +
                                                 "<p style=\"font-size: 16px; color: #333; text-align: left\">Mọi thắc mắc xin vui lòng liên hệ qua gmail: <strong>fluffypaw4u@gmail.com</strong></p>" +
                                             "</div>" +
                                             "<div style=\" font-size: 14px; color: #666; text-align: center; padding: 10px; border-top: 1px solid #ddd;\">" +
