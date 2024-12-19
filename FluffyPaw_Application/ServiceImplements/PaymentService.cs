@@ -91,10 +91,10 @@ namespace FluffyPaw_Application.ServiceImplements
                 createPaymentRequest.Amount,
                 "Nap tien vao Fluffy Paw",
                 items,
-                //$"{baseUrl}/wallet",
-                //$"{baseUrl}/wallet"
-                $"http://localhost:3000/wallet",
-                $"http://localhost:3000/wallet"
+                $"{baseUrl}/wallet",
+                $"{baseUrl}/wallet"
+                //$"http://localhost:3000/wallet",
+                //$"http://localhost:3000/wallet"
             );
 
             CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
