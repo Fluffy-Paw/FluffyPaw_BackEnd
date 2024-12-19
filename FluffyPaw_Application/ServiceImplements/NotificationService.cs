@@ -121,6 +121,7 @@ namespace FluffyPaw_Application.ServiceImplements
             foreach (var notification in noti)
             {
                 notification.IsSeen = true;
+                notification.Status = NotificationStatus.Readed.ToString();
                 _unitOfWork.NotificationRepository.Update(notification);
                 await _unitOfWork.SaveAsync();
             }
