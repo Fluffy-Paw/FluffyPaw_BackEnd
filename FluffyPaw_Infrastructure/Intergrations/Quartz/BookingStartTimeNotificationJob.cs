@@ -2,6 +2,7 @@
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Utils;
+using FluffyPaw_Repository.Enum;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,8 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
         public async Task Execute(IJobExecutionContext context)
         {
             var bookingId = context.JobDetail.JobDataMap.GetLong("BookingId");
-            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == bookingId,
+            var booking = _unitOfWork.BookingRepository.Get(b => b.Id == bookingId
+                                && b.Status == BookingStatus.Accepted.ToString(),
                                 includeProperties: "Pet,Pet.PetOwner,Pet.PetOwner.Account," +
                                 "StoreService,StoreService.Service,StoreService.Service.ServiceType").FirstOrDefault();
 

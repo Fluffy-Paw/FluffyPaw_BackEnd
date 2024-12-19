@@ -13,6 +13,8 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
     {
         public long Id { get; set; }
 
+        public string Code { get; set; }
+
         public long PetId { get; set; } 
 
         public string FullName { get; set; }
