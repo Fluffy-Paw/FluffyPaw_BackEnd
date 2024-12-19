@@ -216,7 +216,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReceiverId = brand.AccountId,
                 Name = "Đăng kí thành công",
                 Type = NotificationType.Store.ToString(),
-                Description = $"Dịch vụ của bạn đã được hệ thống xác nhận.",
+                Description = $"Dịch vụ {service.Name} của bạn đã được hệ thống xác nhận.",
                 ReferenceId = service.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
@@ -237,7 +237,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReceiverId = service.Brand.AccountId,
                 Name = "Đăng kí dịch vụ đã bị từ chối",
                 Type = NotificationType.Service.ToString(),
-                Description = description
+                Description = $"Dịch vụ {service.Name} của bạn đã bị từ chối vì {description}."
             };
             await _notificationService.CreateNotification(notificationRequest);
 
