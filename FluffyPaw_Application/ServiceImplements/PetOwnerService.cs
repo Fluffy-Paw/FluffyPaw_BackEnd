@@ -294,11 +294,13 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId)
         {
+            var currentTime = CoreHelper.SystemTimeNow;
             var service = _unitOfWork.ServiceRepository.GetByID(serviceId);
 
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == serviceId
                                                     && ss.StoreId == storeId
-                                                    && ss.Status == StoreServiceStatus.Available.ToString(),
+                                                    && ss.Status == StoreServiceStatus.Available.ToString()
+                                                    && ss.StartTime >= currentTime,
                                                     includeProperties: "Service,Service.Brand");
             if (!storeServices.Any())
             {
