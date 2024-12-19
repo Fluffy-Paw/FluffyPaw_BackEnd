@@ -75,6 +75,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var po = _mapper.Map<PetOwner>(registerAccountPORequest);
             po.AccountId = account.Id;
+            po.Dob = registerAccountPORequest.Dob.AddHours(7);
             po.Reputation = AccountReputation.Good.ToString();
             _unitOfWork.PetOwnerRepository.Insert(po);
 

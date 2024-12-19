@@ -1,4 +1,5 @@
 ﻿using CoreApiResponse;
+using FluffyPaw_Application.DTO.Request.DashboardRequest;
 using FluffyPaw_Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,11 +49,19 @@ namespace FluffyPaw_API.Controllers.Dashboard
             return CustomResult(result);
         }
 
-        [HttpGet("GetMonthStaticsSM/{month}")]
-        [Authorize(Roles = "StoreManager")]
-        public async Task<IActionResult> GetMonthStaticsSM(int month)
+        [HttpPost("GetMonthlyRevenueStaff")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetMonthlyRevenueStaff([FromBody]MonthlyRevenueRequest monthlyRevenueRequest)
         {
-            var result = await _dashboardService.GetMonthStaticsSM(month);
+            var result = await _dashboardService.GetMonthlyRevenueStaff(monthlyRevenueRequest);
+            return CustomResult(result);
+        }
+
+        [HttpPost("GetMonthlyRevenueSM")]
+        [Authorize(Roles = "StoreManager")]
+        public async Task<IActionResult> GetMonthlyRevenueSM([FromBody] MonthlyRevenueRequest monthlyRevenueRequest)
+        {
+            var result = await _dashboardService.GetMonthlyRevenueSM(monthlyRevenueRequest);
             return CustomResult(result);
         }
     }

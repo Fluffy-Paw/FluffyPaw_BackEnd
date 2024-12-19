@@ -13,6 +13,7 @@ using FluffyPaw_Domain.Interfaces;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Application.DTO.Request.TransactionRequest;
 using FluffyPaw_Application.DTO.Response.PaymentResponse;
+using static System.Net.WebRequestMethods;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -84,17 +85,18 @@ namespace FluffyPaw_Application.ServiceImplements
 
             // Get the current request's base URL
             var request = _httpContextAccessor.HttpContext.Request;
-            var baseUrl = $"{request.Scheme}://{request.Host}";
+            //var baseUrl = $"{request.Scheme}://{request.Host}";
+            var baseUrl = "https://fluffy-paw.vercel.app";
 
             PaymentData paymentData = new PaymentData(
                 orderCode,
                 createPaymentRequest.Amount,
                 "Nap tien vao Fluffy Paw",
                 items,
-                //$"{baseUrl}/wallet",
-                //$"{baseUrl}/wallet"
-                $"http://localhost:3000/wallet",
-                $"http://localhost:3000/wallet"
+                $"{baseUrl}/wallet",
+                $"{baseUrl}/wallet"
+                //$"http://localhost:3000/wallet",
+                //$"http://localhost:3000/wallet"
             );
 
             CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
