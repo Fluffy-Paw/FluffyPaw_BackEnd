@@ -25,5 +25,14 @@ namespace FluffyPaw_Application.DTO.Response.DasboardResponse
 
         public List<StoreServiceResponse> TopServices { get; set; }
 
+        public List<string> ServicesNames { get; set; }
+
+        public int NumOfCOD { get; set; }
+
+        public double AmountCOD { get; set; }
+
+        public int NumOfFluffyPay {  get; set; }
+
+        public double AmountFluffyPay { get; set; }
     }
 }

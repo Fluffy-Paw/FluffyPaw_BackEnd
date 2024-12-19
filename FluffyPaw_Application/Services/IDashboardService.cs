@@ -1,4 +1,5 @@
-﻿using FluffyPaw_Application.DTO.Response.DasboardResponse;
+﻿using FluffyPaw_Application.DTO.Request.DashboardRequest;
+using FluffyPaw_Application.DTO.Response.DasboardResponse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,9 @@ namespace FluffyPaw_Application.Services
         Task<AdminDashboardResponse> GetAllStaticsAdmin();
 
         Task<SMDashboardResponse> GetAllStaticsStaff();
+
+        Task<double> GetMonthlyRevenueStaff(MonthlyRevenueRequest monthlyRevenueRequest);
+
+        Task<double> GetMonthlyRevenueSM(MonthlyRevenueRequest monthlyRevenueRequest);
     }
 }
