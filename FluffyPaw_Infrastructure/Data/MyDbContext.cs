@@ -82,29 +82,11 @@ namespace FluffyPaw_Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Account>().HasData(
-                new Account { Id = 1, Username = "FluffyPaw", Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", RoleName = "Admin", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 2, Username = "userSM1", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 3, Username = "UserSM2", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "StoreManager", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 4, Username = "UserSt1", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 5, Username = "UserSt2", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 6, Username = "UserPO1", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 7, Username = "UserPO2", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 8, Username = "UserPO3", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 9, Username = "UserPO4", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "PetOwner", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 10, Username = "UserSt3", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active },
-                new Account { Id = 11, Username = "UserSt4", Password = "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", RoleName = "Staff", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active }
+                new Account { Id = 1, Username = "FluffyPaw", Password = "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", RoleName = "Admin", Email = "test@gmail.com", CreateDate = CoreHelper.SystemTimeNow.AddHours(7), Avatar = "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", Status = (int)AccountStatus.Active }
                 );
 
             modelBuilder.Entity<Wallet>().HasData(
-                new Wallet { Id = 1, AccountId = 1, Balance = 1000000000000 },
-                new Wallet { Id = 2, AccountId = 2, Balance = 0 },
-                new Wallet { Id = 3, AccountId = 3, Balance = 0 },
-                new Wallet { Id = 4, AccountId = 4, Balance = 0 },
-                new Wallet { Id = 5, AccountId = 5, Balance = 0 },
-                new Wallet { Id = 6, AccountId = 6, Balance = 1000000000 },
-                new Wallet { Id = 7, AccountId = 7, Balance = 0 },
-                new Wallet { Id = 8, AccountId = 8, Balance = 0 },
-                new Wallet { Id = 9, AccountId = 9, Balance = 0 }
+                new Wallet { Id = 1, AccountId = 1, Balance = 1000000000000 }
                 );
 
             modelBuilder.Entity<BehaviorCategory>().HasData(
@@ -139,19 +121,19 @@ namespace FluffyPaw_Infrastructure.Data
                 new ReportCategory { Id = 13, Type = RoleName.PetOwner.ToString(), Name = "Khác" }
                 );
 
-            modelBuilder.Entity<Report>().HasData(
+            /*modelBuilder.Entity<Report>().HasData(
                 new Report { Id = 1, SenderId = 4, TargetId = 7, ReportCategoryId = 2, CreateDate = CoreHelper.SystemTimeNow, Description = "None" },
                 new Report { Id = 2, SenderId = 5, TargetId = 7, ReportCategoryId = 1, CreateDate = CoreHelper.SystemTimeNow, Description = "None" },
                 new Report { Id = 3, SenderId = 7, TargetId = 4, ReportCategoryId = 8, CreateDate = CoreHelper.SystemTimeNow, Description = "None" },
                 new Report { Id = 4, SenderId = 7, TargetId = 4, ReportCategoryId = 9, CreateDate = CoreHelper.SystemTimeNow, Description = "None" }
-                );
+                );*/
 
-            modelBuilder.Entity<PetOwner>().HasData(
+            /*modelBuilder.Entity<PetOwner>().HasData(
                 new PetOwner { Id = 1, AccountId = 6, FullName = "Khoa", Gender = "Male", Dob = (DateTimeOffset.ParseExact("21/12/2002", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Phone = "0912345678", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
                 new PetOwner { Id = 2, AccountId = 7, FullName = "Đạt", Gender = "Male", Dob = (DateTimeOffset.ParseExact("21/12/2002", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Phone = "0912456789", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
                 new PetOwner { Id = 3, AccountId = 8, FullName = "Hoàng", Gender = "Male", Dob = (DateTimeOffset.ParseExact("21/12/2002", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Phone = "0912567890", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" },
                 new PetOwner { Id = 4, AccountId = 9, FullName = "Duy", Gender = "Male", Dob = (DateTimeOffset.ParseExact("21/12/2002", "dd/MM/yyyy", CultureInfo.InvariantCulture)).AddHours(7), Phone = "0912678901", Address = "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", Reputation = "Good" }
-                );
+                );*/
 
             modelBuilder.Entity<PetCategory>().HasData(
                 new PetCategory { Id = 1, Name = "Chó" },
@@ -197,12 +179,12 @@ namespace FluffyPaw_Infrastructure.Data
                 new PetType { Id = 36, PetCategoryId = 2, Name = "Mèo Exotic", Image = "none" }
                 );
 
-            modelBuilder.Entity<Pet>().HasData(
+            /*modelBuilder.Entity<Pet>().HasData(
                 new Pet { Id = 1, PetOwnerId = 1, PetTypeId = 1, BehaviorCategoryId = 1, Name = "LuLu", Sex = "Male", Weight = 6.5F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "none", Decription = "Một thú cưng tuyệt vời", IsNeuter = true, Status = "Available" },
                 new Pet { Id = 2, PetOwnerId = 2, PetTypeId = 4, BehaviorCategoryId = 5, Name = "Milo", Sex = "Female", Weight = 5F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "0123456789", Decription = "Một thú cưng tuyệt vời", IsNeuter = false, Status = "Available" },
                 new Pet { Id = 3, PetOwnerId = 3, PetTypeId = 20, BehaviorCategoryId = 7, Name = "Mei", Sex = "Male", Weight = 4.5F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "098765434", Decription = "Một thú cưng tuyệt vời", IsNeuter = true, Status = "Available" },
                 new Pet { Id = 4, PetOwnerId = 4, PetTypeId = 18, BehaviorCategoryId = 12, Name = "Miu", Sex = "Female", Weight = 3F, Dob = DateTimeOffset.ParseExact("23/08/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture), Allergy = "none", MicrochipNumber = "543734156", Decription = "Một thú cưng tuyệt vời", IsNeuter = false, Status = "Available" }
-                );
+                );*/
 
             modelBuilder.Entity<ServiceType>().HasData(
                 new ServiceType { Id = 1, Name = "Chăm sóc & Làm đẹp", Image = "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/11/dich-vu-cham-soc-thu-cung-tai-nha-1.jpg" },
@@ -210,34 +192,34 @@ namespace FluffyPaw_Infrastructure.Data
                 new ServiceType { Id = 3, Name = "Khách sạn", Image = "https://vethospital.vnua.edu.vn/wp-content/uploads/2019/12/61c4036d5df6a4a8fde7-1024x768.jpg" }
                 );
 
-            modelBuilder.Entity<Brand>().HasData(
+            /*modelBuilder.Entity<Brand>().HasData(
                 new Brand { Id = 1, AccountId = 2, Name = "Pet Yêu", BrandEmail = "BrandA@gmail.com", BusinessLicense = "https://gray-wnem-prod.gtv-cdn.com/resizer/v2/ZRIYMJKRXFG4NGEORU4Z7MVE4U.png?auth=ca7b7f352a656d265f22b46ca0a9b36c6ecdb78546fc48e2cb1f260980998bd4&width=980&height=690&smart=true", Hotline = "0912345679", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", MST = "AAAAAAAAAAAA", Address = "643 Điện Biên Phủ, Phường 1, Quận 3, TPHCM", Status = true },
                 new Brand { Id = 2, AccountId = 3, Name = "Pet Paradise", BrandEmail = "BrandB@gmail.com", BusinessLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Hotline = "0912345678", Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", MST = "BBBBBBBBBBBB", Address = " 60 Võ Văn Ngân, Phường Bình Thọ, Quận Thủ Đức, TP Thủ Đức", Status = true }
-                );
+                );*/
 
-            modelBuilder.Entity<Store>().HasData(
+            /*modelBuilder.Entity<Store>().HasData(
                 new Store { Id = 1, BrandId = 1, AccountId = 4, Name = "Pet Yêu 1", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 4f, Status = true },
                 new Store { Id = 2, BrandId = 1, AccountId = 5, Name = "Pet Yêu 2", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3.5f, Status = true },
                 new Store { Id = 3, BrandId = 2, AccountId = 10, Name = "Pet Paradise 1", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 1.5f, Status = true },
                 new Store { Id = 4, BrandId = 2, AccountId = 11, Name = "Pet Paradise 2", OperatingLicense = "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", Address = "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", Phone = "0123456789", TotalRating = 3f, Status = true }
-                );
+                );*/
 
-            modelBuilder.Entity<Service>().HasData(
+            /*modelBuilder.Entity<Service>().HasData(
                 new Service { Id = 1, ServiceTypeId = 1, BrandId = 1, Name = "Chăm sóc cho Boss", Image = "https://phongkhamthuythithipet.com/wp-content/uploads/2024/07/dich-vu-cham-soc-lam-dep-cho-thu-cung.jpg", Duration = TimeSpan.FromMinutes(30), Cost = 100000, Description = "test", BookingCount = 2, TotalRating = 4F, Status = true },
                 new Service { Id = 2, ServiceTypeId = 2, BrandId = 1, Name = "Tiêm chủng A", Image = "https://hillcrestvets.co.za/wp-content/uploads/2020/10/Pet-Vaccinations.jpg", Duration = TimeSpan.FromMinutes(60), Cost = 200000, Description = "test", BookingCount = 4, TotalRating = 3F, Status = true },
                 new Service { Id = 3, ServiceTypeId = 3, BrandId = 2, Name = "Ngôi nhà thân thiện", Image = "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", Duration = TimeSpan.FromHours(23), Cost = 100000, Description = "test", BookingCount = 5, TotalRating = 2.5F, Status = true }
-                );
+                );*/
 
-            modelBuilder.Entity<Certificate>().HasData(
+            /*modelBuilder.Entity<Certificate>().HasData(
                 new Certificate { Id = 1, ServiceId = 1, Name = "Bằng chuyên gia về Chăm sóc & Làm đẹp", File = "test", Description = "none" },
                 new Certificate { Id = 2, ServiceId = 1, Name = "Bằng chuyên gia về Chăm sóc & Làm đẹp", File = "test", Description = "none" },
                 new Certificate { Id = 3, ServiceId = 2, Name = "Bằng chuyên gia về Tiêm chủng", File = "test", Description = "none" },
                 new Certificate { Id = 4, ServiceId = 3, Name = "Bằng chuyên gia về Khách sạn", File = "test", Description = "none" },
                 new Certificate { Id = 5, ServiceId = 3, Name = "Bằng chuyên gia về Khách sạn", File = "test", Description = "none" },
                 new Certificate { Id = 6, ServiceId = 3, Name = "Bằng chuyên gia về Khách sạn", File = "test", Description = "none" }
-                );
+                );*/
 
-            modelBuilder.Entity<StoreService>().HasData(
+           /* modelBuilder.Entity<StoreService>().HasData(
                 new StoreService { Id = 1, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(7), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 2, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(10), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
                 new StoreService { Id = 3, StoreId = 1, ServiceId = 1, StartTime = CoreHelper.SystemTimeNow.AddDays(5).AddHours(14), LimitPetOwner = 100, CurrentPetOwner = 0, Status = StoreServiceStatus.Available.ToString() },
@@ -282,7 +264,7 @@ namespace FluffyPaw_Infrastructure.Data
                 new Identification { Id = 4, AccountId = 7, FullName = "Phạm Quốc Đạt", Front = "front.png", Back = "back.png" },
                 new Identification { Id = 5, AccountId = 8, FullName = "Đinh Nhật Hoàng", Front = "front.png", Back = "back.png" },
                 new Identification { Id = 6, AccountId = 9, FullName = "Khương Trần Khang Duy", Front = "front.png", Back = "back.png" }
-                );
+                );*/
             
         }
     }

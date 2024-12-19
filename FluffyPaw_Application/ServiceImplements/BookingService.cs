@@ -152,7 +152,39 @@ namespace FluffyPaw_Application.ServiceImplements
             }
 
             var serviceTypeName = storeService.Service.ServiceType.Name;
-            storeService.Service.BookingCount++;
+            if (serviceTypeName == "Khách sạn")
+            {
+                var currentDate = CoreHelper.SystemTimeNow.Date;
+                var noonToday = currentDate.AddHours(12);
+
+                if (CoreHelper.SystemTimeNow < noonToday)
+                {
+                    // Nếu hủy trước 12 giờ trưa, giảm CurrentPetOwner cho các ngày từ ngày hiện tại đến ngày kết thúc
+                    var endDate = booking.EndTime.Date;
+
+                    // Lấy tất cả StoreService tương ứng với các ngày cần giảm
+                    var affectedStoreServices = _unitOfWork.StoreServiceRepository.Get(ss =>
+                        ss.ServiceId == storeService.ServiceId &&
+                        ss.StoreId == storeService.StoreId &&
+                        ss.StartTime.Date >= currentDate &&
+                        ss.StartTime.Date <= endDate
+                    );
+
+                    foreach (var affectedStoreService in affectedStoreServices)
+                    {
+                        if (affectedStoreService.CurrentPetOwner > 0)
+                        {
+                            affectedStoreService.CurrentPetOwner--;
+                            _unitOfWork.StoreServiceRepository.Update(affectedStoreService);
+                        }
+                    }
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+
+            var service = _unitOfWork.ServiceRepository.GetByID(storeService.ServiceId);
+            service.BookingCount++;
+            _unitOfWork.ServiceRepository.Update(service);
 
             booking.CheckOut = true;
             booking.CheckOutTime = CoreHelper.SystemTimeNow.AddHours(7);

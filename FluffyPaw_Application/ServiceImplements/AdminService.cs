@@ -20,6 +20,7 @@ using FluffyPaw_Application.DTO.Request.NotificationRequest;
 using FluffyPaw_Application.DTO.Request.WalletRequest;
 using FluffyPaw_Application.DTO.Request.EmailRequest;
 using FluffyPaw_Application.DTO.Response.CertificateResponse;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FluffyPaw_Application.ServiceImplements
 {
@@ -97,6 +98,13 @@ namespace FluffyPaw_Application.ServiceImplements
             var brand = _unitOfWork.BrandRepository.GetByID(id);
             brand.Status = true;
             _unitOfWork.Save();
+
+            var mailRequest = new SendMailRequest
+            {
+                Email = brand.Account.Email
+            };
+            await _sendMailService.SendAccountMessage(mailRequest);
+
             return true;
         }
 
@@ -200,6 +208,18 @@ namespace FluffyPaw_Application.ServiceImplements
             var service = _unitOfWork.ServiceRepository.GetByID(id);
             service.Status = true;
             _unitOfWork.Save();
+
+            var brand = _unitOfWork.BrandRepository.GetByID(service.BrandId);
+
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = brand.AccountId,
+                Name = "Đăng kí thành công",
+                Type = NotificationType.Store.ToString(),
+                Description = $"Dịch vụ {service.Name} của bạn đã được hệ thống xác nhận.",
+                ReferenceId = service.Id
+            };
+            await _notificationService.CreateNotification(notificationRequest);
             return true;
         }
 
@@ -217,7 +237,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReceiverId = service.Brand.AccountId,
                 Name = "Đăng kí dịch vụ đã bị từ chối",
                 Type = NotificationType.Service.ToString(),
-                Description = description
+                Description = $"Dịch vụ {service.Name} của bạn đã bị từ chối vì {description}."
             };
             await _notificationService.CreateNotification(notificationRequest);
 
@@ -258,6 +278,18 @@ namespace FluffyPaw_Application.ServiceImplements
             var store = _unitOfWork.StoreRepository.GetByID(id);
             store.Status = true;
             _unitOfWork.Save();
+
+            var brand = _unitOfWork.BrandRepository.GetByID(store.BrandId);
+
+            var notificationRequest = new NotificationRequest
+            {
+                ReceiverId = brand.AccountId,
+                Name = "Đăng kí thành công",
+                Type = NotificationType.Store.ToString(),
+                Description = $"Cửa hàng của bạn đã được hệ thống xác nhận.",
+                ReferenceId = store.Id
+            };
+            await _notificationService.CreateNotification(notificationRequest);
             return true;
         }
 

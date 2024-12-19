@@ -48,5 +48,13 @@ namespace FluffyPaw_API.Controllers.SendMessage
             if (result) return CustomResult("Gửi mail thành công.");
             else return CustomResult("Gửi mail thất bại.");
         }
+
+        [HttpPost("SendAccountMessage")]
+        public async Task<IActionResult> SendAccountMessage([FromBody] SendMailRequest sendMailRequest)
+        {
+            var result = await _sendMailService.SendAccountMessage(sendMailRequest);
+            if (result) return CustomResult("Gửi mail thành công.");
+            else return CustomResult("Gửi mail thất bại.");
+        }
     }
 }

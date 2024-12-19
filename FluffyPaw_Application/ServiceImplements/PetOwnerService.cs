@@ -294,11 +294,13 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<List<StoreSerResponse>> GetAllStoreServiceByServiceIdStoreId(long serviceId, long storeId)
         {
+            var currentTime = CoreHelper.SystemTimeNow;
             var service = _unitOfWork.ServiceRepository.GetByID(serviceId);
 
             var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == serviceId
                                                     && ss.StoreId == storeId
-                                                    && ss.Status == StoreServiceStatus.Available.ToString(),
+                                                    && ss.Status == StoreServiceStatus.Available.ToString()
+                                                    && ss.StartTime >= currentTime,
                                                     includeProperties: "Service,Service.Brand");
             if (!storeServices.Any())
             {
@@ -589,10 +591,14 @@ namespace FluffyPaw_Application.ServiceImplements
                     Status = BookingStatus.Pending.ToString()
                 };
 
+
                 var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
-                if (wallet == null || wallet.Balance < newBooking.Cost)
+                if (createBookingRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
                 {
-                    throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                    if (wallet == null || wallet.Balance < newBooking.Cost)
+                    {
+                        throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                    }
                 }
 
                 _unitOfWork.BookingRepository.Insert(newBooking);
@@ -620,6 +626,10 @@ namespace FluffyPaw_Application.ServiceImplements
                 _unitOfWork.StoreServiceRepository.Update(existingStoreService);
                 _unitOfWork.Save();
 
+                var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
+                bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
+                bookingResponses.Add(bookingResponse);
+
                 var sendMailRequest = new SendReceiptRequest
                 {
                     Email = account.Email,
@@ -627,11 +637,6 @@ namespace FluffyPaw_Application.ServiceImplements
                     bookingResponses = bookingResponses,
                 };
                 await _sendMailService.SendReceipt(sendMailRequest);
-
-                var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
-                bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
-                bookingResponses.Add(bookingResponse);
-
 
                 await _jobScheduler.ScheduleBookingNotification(newBooking);
                 await _jobScheduler.ScheduleOverTimeRefund(newBooking);
@@ -771,11 +776,13 @@ namespace FluffyPaw_Application.ServiceImplements
             };
 
             var wallet = _unitOfWork.WalletRepository.Get(w => w.AccountId == account.Id).FirstOrDefault();
-            if (wallet == null || wallet.Balance < newBooking.Cost)
+            if (timeSelectionRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
             {
-                throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                if (wallet == null || wallet.Balance < newBooking.Cost)
+                {
+                    throw new CustomException.InvalidDataException($"Số dư ví không đủ để thực hiện đặt lịch cho thú cưng {pet.Name}.");
+                }
             }
-
             _unitOfWork.BookingRepository.Insert(newBooking);
             await _unitOfWork.SaveAsync();
 
@@ -814,8 +821,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var listBooking = new List<BookingResponse>();
             var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
-
             listBooking.Add(bookingResponse);
+            
             var sendMailRequest = new SendReceiptRequest
             {
                 Email = account.Email,

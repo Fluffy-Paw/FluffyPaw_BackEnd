@@ -873,20 +873,7 @@ namespace FluffyPaw_Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Accounts",
                 columns: new[] { "Id", "Avatar", "CreateDate", "Email", "Password", "RoleName", "Status", "Username" },
-                values: new object[,]
-                {
-                    { 1L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2761), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", "Admin", 1, "FluffyPaw" },
-                    { 2L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2778), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "userSM1" },
-                    { 3L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2782), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "StoreManager", 1, "UserSM2" },
-                    { 4L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2785), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "UserSt1" },
-                    { 5L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2789), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "UserSt2" },
-                    { 6L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2792), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "UserPO1" },
-                    { 7L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2795), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "UserPO2" },
-                    { 8L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2798), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "UserPO3" },
-                    { 9L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2802), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "PetOwner", 1, "UserPO4" },
-                    { 10L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2805), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "UserSt3" },
-                    { 11L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 18, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(2809), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "2757CB3CAFC39AF451ABB2697BE79B4AB61D63D74D85B0418629DE8C26811B529F3F3780D0150063FF55A2BEEE74C4EC102A2A2731A1F1F7F10D473AD18A6A87", "Staff", 1, "UserSt4" }
-                });
+                values: new object[] { 1L, "https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045.jpg", new DateTimeOffset(new DateTime(2024, 12, 20, 2, 54, 7, 463, DateTimeKind.Unspecified).AddTicks(264), new TimeSpan(0, 7, 0, 0, 0)), "test@gmail.com", "4CC311E68571B9DB7EE9811B2D0215C97B48824469D3BF110875C97F63A90071CE2358E142222190D91A1D7C5E7DA6E4816052D5DF41B050CA01C7112BB48176", "Admin", 1, "FluffyPaw" });
 
             migrationBuilder.InsertData(
                 table: "BehaviorCategories",
@@ -906,18 +893,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     { 11L, "Cào móng để đánh dấu lãnh thổ" },
                     { 12L, "Hay kêu hoặc phát ra âm thanh" },
                     { 13L, "Khác" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Files",
-                columns: new[] { "Id", "CreateDate", "File", "Status", "StoreId" },
-                values: new object[,]
-                {
-                    { 1L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5645), new TimeSpan(0, 7, 0, 0, 0)), "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", true, null },
-                    { 2L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5649), new TimeSpan(0, 7, 0, 0, 0)), "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", true, null },
-                    { 3L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5653), new TimeSpan(0, 7, 0, 0, 0)), "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", true, null },
-                    { 4L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5656), new TimeSpan(0, 7, 0, 0, 0)), "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", true, null },
-                    { 5L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5659), new TimeSpan(0, 7, 0, 0, 0)), "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", true, null }
                 });
 
             migrationBuilder.InsertData(
@@ -957,39 +932,6 @@ namespace FluffyPaw_Infrastructure.Migrations
                     { 1L, "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/11/dich-vu-cham-soc-thu-cung-tai-nha-1.jpg", "Chăm sóc & Làm đẹp" },
                     { 2L, "https://www.vietdvm.com/images/content/2015/05/CNTY/tiem-vaccine-cho-cho.jpg", "Tiêm chủng" },
                     { 3L, "https://vethospital.vnua.edu.vn/wp-content/uploads/2019/12/61c4036d5df6a4a8fde7-1024x768.jpg", "Khách sạn" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Brands",
-                columns: new[] { "Id", "AccountId", "Address", "BrandEmail", "BusinessLicense", "Hotline", "Logo", "MST", "Name", "Status" },
-                values: new object[,]
-                {
-                    { 1L, 2L, "643 Điện Biên Phủ, Phường 1, Quận 3, TPHCM", "BrandA@gmail.com", "https://gray-wnem-prod.gtv-cdn.com/resizer/v2/ZRIYMJKRXFG4NGEORU4Z7MVE4U.png?auth=ca7b7f352a656d265f22b46ca0a9b36c6ecdb78546fc48e2cb1f260980998bd4&width=980&height=690&smart=true", "0912345679", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsGufmy584u5_GDdLQaFiguxn8Qc5ILIZ7yA&s", "AAAAAAAAAAAA", "Pet Yêu", true },
-                    { 2L, 3L, " 60 Võ Văn Ngân, Phường Bình Thọ, Quận Thủ Đức, TP Thủ Đức", "BrandB@gmail.com", "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", "0912345678", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxTepBxTlZftnBKdB6N4gQdZLF0W8ISlHdkA&s", "BBBBBBBBBBBB", "Pet Paradise", true }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Identifications",
-                columns: new[] { "Id", "AccountId", "Back", "Front", "FullName" },
-                values: new object[,]
-                {
-                    { 1L, 2L, "back.png", "front.png", "Nguyễn Văn An" },
-                    { 2L, 3L, "back.png", "front.png", "Trần Thị Mai" },
-                    { 3L, 6L, "back.png", "front.png", "Nguyễn Đăng Khoa" },
-                    { 4L, 7L, "back.png", "front.png", "Phạm Quốc Đạt" },
-                    { 5L, 8L, "back.png", "front.png", "Đinh Nhật Hoàng" },
-                    { 6L, 9L, "back.png", "front.png", "Khương Trần Khang Duy" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "PetOwners",
-                columns: new[] { "Id", "AccountId", "Address", "Dob", "FullName", "Gender", "Phone", "Reputation" },
-                values: new object[,]
-                {
-                    { 1L, 6L, "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", new DateTimeOffset(new DateTime(2002, 12, 21, 7, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), "Khoa", "Male", "0912345678", "Good" },
-                    { 2L, 7L, "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", new DateTimeOffset(new DateTime(2002, 12, 21, 7, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), "Đạt", "Male", "0912456789", "Good" },
-                    { 3L, 8L, "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", new DateTimeOffset(new DateTime(2002, 12, 21, 7, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), "Hoàng", "Male", "0912567890", "Good" },
-                    { 4L, 9L, "243/5 Đ. Nguyễn Tri Phương, Chánh Nghĩa, Thủ Dầu Một, Bình Dương, Việt Nam", new DateTimeOffset(new DateTime(2002, 12, 21, 7, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), "Duy", "Male", "0912678901", "Good" }
                 });
 
             migrationBuilder.InsertData(
@@ -1036,115 +978,9 @@ namespace FluffyPaw_Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Reports",
-                columns: new[] { "Id", "CreateDate", "Description", "ReportCategoryId", "SenderId", "TargetId" },
-                values: new object[,]
-                {
-                    { 1L, new DateTimeOffset(new DateTime(2024, 12, 18, 3, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(3121), new TimeSpan(0, 7, 0, 0, 0)), "None", 2L, 4L, 7L },
-                    { 2L, new DateTimeOffset(new DateTime(2024, 12, 18, 3, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(3124), new TimeSpan(0, 7, 0, 0, 0)), "None", 1L, 5L, 7L },
-                    { 3L, new DateTimeOffset(new DateTime(2024, 12, 18, 3, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(3127), new TimeSpan(0, 7, 0, 0, 0)), "None", 8L, 7L, 4L },
-                    { 4L, new DateTimeOffset(new DateTime(2024, 12, 18, 3, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(3130), new TimeSpan(0, 7, 0, 0, 0)), "None", 9L, 7L, 4L }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Wallets",
                 columns: new[] { "Id", "AccountId", "Balance", "BankName", "Number", "QR" },
-                values: new object[,]
-                {
-                    { 1L, 1L, 1000000000000.0, null, null, null },
-                    { 2L, 2L, 0.0, null, null, null },
-                    { 3L, 3L, 0.0, null, null, null },
-                    { 4L, 4L, 0.0, null, null, null },
-                    { 5L, 5L, 0.0, null, null, null },
-                    { 6L, 6L, 1000000000.0, null, null, null },
-                    { 7L, 7L, 0.0, null, null, null },
-                    { 8L, 8L, 0.0, null, null, null },
-                    { 9L, 9L, 0.0, null, null, null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Pets",
-                columns: new[] { "Id", "Allergy", "BehaviorCategoryId", "Decription", "Dob", "Image", "IsNeuter", "MicrochipNumber", "Name", "PetOwnerId", "PetTypeId", "Sex", "Status", "Weight" },
-                values: new object[,]
-                {
-                    { 1L, "none", 1L, "Một thú cưng tuyệt vời", new DateTimeOffset(new DateTime(2023, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, true, "none", "LuLu", 1L, 1L, "Male", "Available", 6.5f },
-                    { 2L, "none", 5L, "Một thú cưng tuyệt vời", new DateTimeOffset(new DateTime(2023, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, false, "0123456789", "Milo", 2L, 4L, "Female", "Available", 5f },
-                    { 3L, "none", 7L, "Một thú cưng tuyệt vời", new DateTimeOffset(new DateTime(2023, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, true, "098765434", "Mei", 3L, 20L, "Male", "Available", 4.5f },
-                    { 4L, "none", 12L, "Một thú cưng tuyệt vời", new DateTimeOffset(new DateTime(2023, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)), null, false, "543734156", "Miu", 4L, 18L, "Female", "Available", 3f }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Services",
-                columns: new[] { "Id", "BookingCount", "BrandId", "Cost", "Description", "Duration", "Image", "Name", "ServiceTypeId", "Status", "TotalRating" },
-                values: new object[,]
-                {
-                    { 1L, 2, 1L, 100000.0, "test", new TimeSpan(0, 0, 30, 0, 0), "https://phongkhamthuythithipet.com/wp-content/uploads/2024/07/dich-vu-cham-soc-lam-dep-cho-thu-cung.jpg", "Chăm sóc cho Boss", 1L, true, 4f },
-                    { 2L, 4, 1L, 200000.0, "test", new TimeSpan(0, 1, 0, 0, 0), "https://hillcrestvets.co.za/wp-content/uploads/2020/10/Pet-Vaccinations.jpg", "Tiêm chủng A", 2L, true, 3f },
-                    { 3L, 5, 2L, 100000.0, "test", new TimeSpan(0, 23, 0, 0, 0), "https://bizweb.dktcdn.net/thumb/1024x1024/100/092/840/products/14b275e8-4ef4-4f5e-b5fb-c11243dbae1a.jpg?v=1677488701687", "Ngôi nhà thân thiện", 3L, true, 2.5f }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Stores",
-                columns: new[] { "Id", "AccountId", "Address", "BrandId", "Name", "OperatingLicense", "Phone", "Status", "TotalRating" },
-                values: new object[,]
-                {
-                    { 1L, 4L, "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", 1L, "Pet Yêu 1", "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", "0123456789", true, 4f },
-                    { 2L, 5L, "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", 1L, "Pet Yêu 2", "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", "0123456789", true, 3.5f },
-                    { 3L, 10L, "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", 2L, "Pet Paradise 1", "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", "0123456789", true, 1.5f },
-                    { 4L, 11L, "157a Chòm Sao, Hưng Định, Thuận An, Bình Dương 098300, Việt Nam", 2L, "Pet Paradise 2", "https://homeontherangepetsit.com/____impro/1/onewebmedia/2023%20Business%20License.jpg?etag=%22133c38-63fb9a14%22&sourceContentType=image%2Fjpeg&ignoreAspectRatio&resize=2000,1256&quality=85", "0123456789", true, 3f }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Certificates",
-                columns: new[] { "Id", "Description", "File", "Name", "ServiceId" },
-                values: new object[,]
-                {
-                    { 1L, "none", "test", "Bằng chuyên gia về Chăm sóc & Làm đẹp", 1L },
-                    { 2L, "none", "test", "Bằng chuyên gia về Chăm sóc & Làm đẹp", 1L },
-                    { 3L, "none", "test", "Bằng chuyên gia về Tiêm chủng", 2L },
-                    { 4L, "none", "test", "Bằng chuyên gia về Khách sạn", 3L },
-                    { 5L, "none", "test", "Bằng chuyên gia về Khách sạn", 3L },
-                    { 6L, "none", "test", "Bằng chuyên gia về Khách sạn", 3L }
-                });
-
-            migrationBuilder.InsertData(
-                table: "StoreFiles",
-                columns: new[] { "Id", "FileId", "StoreId" },
-                values: new object[,]
-                {
-                    { 1L, 1L, 1L },
-                    { 2L, 2L, 1L },
-                    { 3L, 3L, 1L },
-                    { 4L, 4L, 3L },
-                    { 5L, 5L, 3L }
-                });
-
-            migrationBuilder.InsertData(
-                table: "StoreServices",
-                columns: new[] { "Id", "CurrentPetOwner", "LimitPetOwner", "ServiceId", "StartTime", "Status", "StoreId" },
-                values: new object[,]
-                {
-                    { 1L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5529), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
-                    { 2L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 12, 23, 13, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5543), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
-                    { 3L, 0, 100, 1L, new DateTimeOffset(new DateTime(2024, 12, 23, 17, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5547), new TimeSpan(0, 7, 0, 0, 0)), "Available", 1L },
-                    { 4L, 0, 50, 1L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5552), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
-                    { 5L, 0, 50, 1L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5556), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
-                    { 6L, 0, 50, 1L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5560), new TimeSpan(0, 7, 0, 0, 0)), "Available", 2L },
-                    { 7L, 0, 50, 2L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5564), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 8L, 0, 50, 2L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5568), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 9L, 0, 50, 2L, new DateTimeOffset(new DateTime(2024, 12, 23, 10, 48, 8, 238, DateTimeKind.Unspecified).AddTicks(5571), new TimeSpan(0, 7, 0, 0, 0)), "Available", 3L },
-                    { 10L, 0, 0, 3L, new DateTimeOffset(new DateTime(2024, 11, 29, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 3L },
-                    { 11L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 11, 30, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 3L },
-                    { 12L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 1, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 3L },
-                    { 13L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 2, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 3L },
-                    { 14L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 3, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 3L },
-                    { 15L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 4, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 3L },
-                    { 16L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 5, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 3L },
-                    { 17L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 6, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 4L },
-                    { 18L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 7, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 4L },
-                    { 19L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 8, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 4L },
-                    { 20L, 0, 100, 3L, new DateTimeOffset(new DateTime(2024, 12, 9, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Available", 4L }
-                });
+                values: new object[] { 1L, 1L, 1000000000000.0, null, null, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_billingRecords_BookingId",
