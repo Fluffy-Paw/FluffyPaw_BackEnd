@@ -29,8 +29,19 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                                 includeProperties: "Pet,Pet.PetOwner,Pet.PetOwner.Account," +
                                 "StoreService,StoreService.Service,StoreService.Service.ServiceType").FirstOrDefault();
 
+            var localBookingStartTime = booking.StartTime.AddHours(7);
+
+            // Tính khoảng thời gian còn lại
+            var timeRemaining = localBookingStartTime - CoreHelper.SystemTimeNow;
+
+            // Lấy số giờ, phút, giây từ TimeSpan
+            var hours = timeRemaining.Hours;
+            var minutes = timeRemaining.Minutes;
+            var seconds = timeRemaining.Seconds;
+
+            // Format chuỗi mô tả
             var description = $"Thông báo dịch vụ {booking.StoreService.Service.Name} " +
-                                            $"còn {CoreHelper.SystemTimeNow - booking.StartTime.AddHours(7)} sẽ bắt đầu.";
+                              $"còn {hours} giờ {minutes} phút {seconds} giây sẽ bắt đầu.";
             await _notificationService.ScheduleCreateNotification(booking.Pet.PetOwner.Account.Id,
                                             booking.StoreService.Service.Name, booking.StoreService.Service.ServiceType.Name,
                                             description, booking.Id);
