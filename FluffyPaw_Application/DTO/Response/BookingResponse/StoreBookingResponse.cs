@@ -17,6 +17,8 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public long PetId { get; set; } 
 
+        public long PetOwnerAccountId { get; set; }
+
         public string FullName { get; set; }
 
         public string Phone { get; set; }
@@ -43,6 +45,7 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
         {
             profile.CreateMap<Booking, StoreBookingResponse>()
                    .ForMember(dest => dest.PetId, opt => opt.MapFrom(src => src.PetId))
+                   .ForMember(dest => dest.PetOwnerAccountId, opt => opt.MapFrom(src => src.Pet.PetOwner.AccountId))
                    .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Pet.PetOwner.FullName))
                    .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Pet.PetOwner.Phone))
                    .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.StoreService.Service.Name))
