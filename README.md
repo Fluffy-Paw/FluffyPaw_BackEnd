@@ -1,4 +1,4 @@
-# FluffyPaw_BackEnd_CleanArchitecture
+# FluffyPaw_BackEnd
 ### You will find a new thing in here
 
 * Coming soon...
