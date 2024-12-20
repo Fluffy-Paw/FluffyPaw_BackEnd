@@ -15,9 +15,9 @@ namespace FluffyPaw_Application.DTO.Request.BookingRequest
 
         public IFormFile CheckoutImage { get; set; }
 
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public float? PetCurrentWeight { get; set; }
 
