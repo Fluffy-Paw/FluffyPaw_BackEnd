@@ -31,7 +31,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                                 includeProperties: "Pet,Pet.PetOwner,Pet.PetOwner.Account," +
                                 "StoreService,StoreService.Service,StoreService.Service.ServiceType").FirstOrDefault();
 
-            var localBookingStartTime = booking.StartTime.AddHours(7);
+            var localBookingStartTime = booking.StartTime;
             Console.WriteLine($"Local Booking Start Time: {localBookingStartTime.ToString("yyyy-MM-dd HH:mm:ss")}");
 
             // Tính khoảng thời gian còn lại
