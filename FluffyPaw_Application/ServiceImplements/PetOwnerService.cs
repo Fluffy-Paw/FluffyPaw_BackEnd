@@ -1013,13 +1013,13 @@ namespace FluffyPaw_Application.ServiceImplements
                 {
                     var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id).ToList();
 
-                    var groupedStoreServices = storeServices
-                        .GroupBy(ss => ss.ServiceId)
-                        .Select(g => g.First())
-                        .ToList();
+                    //var groupedStoreServices = storeServices
+                    //    .GroupBy(ss => ss.StoreId)
+                    //    .Select(g => g.First())
+                    //    .ToList();
 
-                    var groupedServices = groupedStoreServices
-                        .GroupBy(ss => ss.StoreId)
+                    var groupedServices = storeServices
+                        .GroupBy(ss => ss.ServiceId)
                         .Select(g => g.First())
                         .ToList();
 
@@ -1207,12 +1207,12 @@ namespace FluffyPaw_Application.ServiceImplements
                 foreach (var store in stores)
                 {
                     var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.StoreId == store.Id && ss.CurrentPetOwner < ss.LimitPetOwner && ss.StartTime > CoreHelper.SystemTimeNow).ToList();
-                    var groupedStoreServices = storeServices
-                        .GroupBy(ss => ss.ServiceId)
-                        .Select(g => g.First())
-                        .ToList();
-                    var groupedService = groupedStoreServices
-                        .GroupBy(ss => ss.StoreId )
+                    //var groupedStoreServices = storeServices
+                    //    .GroupBy(ss => ss.ServiceId)
+                    //    .Select(g => g.First())
+                    //    .ToList();
+                    var groupedService = storeServices
+                        .GroupBy(ss => ss.ServiceId )
                         .Select(g => g.First())
                         .ToList();
 
