@@ -630,15 +630,18 @@ namespace FluffyPaw_Application.ServiceImplements
                 bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
                 bookingResponses.Add(bookingResponse);
 
-                var sendMailRequest = new SendReceiptRequest
+                if (createBookingRequest.PaymentMethod == BookingPaymentMethod.FluffyPay.ToString())
                 {
-                    Email = account.Email,
-                    CustomerName = po.FullName,
-                    bookingResponses = bookingResponses,
-                };
-                await _sendMailService.SendReceipt(sendMailRequest);
+                    var sendMailRequest = new SendReceiptRequest
+                    {
+                        Email = account.Email,
+                        CustomerName = po.FullName,
+                        bookingResponses = bookingResponses,
+                    };
+                    await _sendMailService.SendReceipt(sendMailRequest);
+                }
 
-                await _jobScheduler.ScheduleBookingNotification(newBooking);
+                    await _jobScheduler.ScheduleBookingNotification(newBooking);
                 await _jobScheduler.ScheduleOverTimeRefund(newBooking);
 
                 var storeAccountId = existingStoreService.Store.Account.Id;
