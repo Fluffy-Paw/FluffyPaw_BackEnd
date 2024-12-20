@@ -32,10 +32,15 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                                 "StoreService,StoreService.Service,StoreService.Service.ServiceType").FirstOrDefault();
 
             var localBookingStartTime = booking.StartTime;
-            Console.WriteLine($"Local Booking Start Time: {localBookingStartTime.ToString("yyyy-MM-dd HH:mm:ss")}");
+            var localCurrentTime = CoreHelper.SystemTimeNow;
+            
 
             // Tính khoảng thời gian còn lại
             var timeRemaining = localBookingStartTime - CoreHelper.SystemTimeNow;
+            if (timeRemaining.TotalSeconds < 0)
+            {
+                timeRemaining = timeRemaining.Negate(); // Đảo dấu TimeSpan
+            }
 
             // Lấy tổng số giờ, phút, giây từ TimeSpan
             var totalHours = (int)timeRemaining.TotalHours; // Lấy tổng số giờ (làm tròn xuống)
