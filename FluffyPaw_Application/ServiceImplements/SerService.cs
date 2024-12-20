@@ -41,7 +41,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var accountId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var brand = _unitOfWork.BrandRepository.Get(sm => sm.AccountId == accountId).FirstOrDefault();
             var services = _unitOfWork.ServiceRepository.Get(ss => ss.BrandId == brand.Id,
-                includeProperties: "Certificates").ToList();
+                includeProperties: "Certificates,ServiceType").ToList();
 
             if (!services.Any())
             {
@@ -52,23 +52,29 @@ namespace FluffyPaw_Application.ServiceImplements
 
             foreach (var service in services)
             {
-                var serviceType = _unitOfWork.ServiceTypeRepository.GetByID(service.ServiceTypeId);
                 var serviceResponse = _mapper.Map<SerResponse>(service);
-                serviceResponse.ServiceTypeName = serviceType?.Name;
+                serviceResponse.ServiceTypeName = service.ServiceType.Name;
 
-                serviceResponse.Certificate = service.Certificates
-                    .Select(certificate => _mapper.Map<CertificatesResponse>(certificate))
-                    .ToList();
+                var certificates = _unitOfWork.CertificateRepository.Get(c => c.ServiceId == service.Id).ToList();
+                var certificateResponse = _mapper.Map<List<CertificatesResponse>>(certificates);
 
-                var storeServices = _unitOfWork.StoreServiceRepository.Get(ss => ss.ServiceId == service.Id).ToList();
+                serviceResponse.Certificate = certificateResponse;
+
+                var storeServiceIds = _unitOfWork.StoreServiceRepository
+                                .Get(ss => ss.ServiceId == service.Id && ss.Status == StoreServiceStatus.NotAvailable.ToString())
+                                .Select(ss => ss.Id)
+                                .ToList();
+
+                // Tính tổng Revenue từ Booking đã Ended
                 double totalRevenue = 0;
-
-                foreach (var storeService in storeServices)
+                if (storeServiceIds.Any())
                 {
-                    var bookings = _unitOfWork.BookingRepository.Get(b => b.StoreServiceId == storeService.Id &&
-                                                        b.Status == BookingStatus.Ended.ToString()).ToList();
+                    var bookings = _unitOfWork.BookingRepository
+                                    .Get(b => storeServiceIds.Contains(b.StoreServiceId) &&
+                                              b.Status == BookingStatus.Ended.ToString())
+                                    .ToList();
 
-                    totalRevenue += bookings.Count * service.Cost;
+                    totalRevenue = bookings.Sum(b => b.Cost);
                 }
 
                 serviceResponse.Revenue = totalRevenue;

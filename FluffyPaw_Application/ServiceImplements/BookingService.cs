@@ -87,7 +87,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
             }
 
-            var allowedCheckInTime = storeService.StartTime.AddMinutes(-30);
+            var allowedCheckInTime = storeService.StartTime.AddHours(-7.5);
             if (CoreHelper.SystemTimeNow < allowedCheckInTime)
             {
                 throw new CustomException.InvalidDataException("Chỉ được phép check-in trước 30 phút.");
