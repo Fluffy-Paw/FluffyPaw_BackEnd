@@ -295,7 +295,8 @@ namespace FluffyPaw_Application.ServiceImplements
             }*/
 
             var existingStoreServiceTimes = _unitOfWork.StoreServiceRepository.Get(
-                            ss => ss.ServiceId == createStoreServiceRequest.ServiceId)
+                            ss => ss.ServiceId == createStoreServiceRequest.ServiceId
+                            && ss.StoreId == store.Id)
                             .Select(ss => ss.StartTime)
                             .ToList();
 
