@@ -57,7 +57,7 @@ namespace FluffyPaw_Application.ServiceImplements
             return bookingResponse;
         }
 
-        public async Task<List<BookingResponse>> Checkin(CheckinRequest checkinRequest)
+        public async Task<BookingResponse> Checkin(CheckinRequest checkinRequest)
         {
             var userId = _authentication.GetUserIdFromHttpContext(_httpContextAccessor.HttpContext);
             var account = _unitOfWork.AccountRepository.GetByID(userId);
@@ -72,10 +72,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.DataNotFoundException("Không tìm thấy cửa hàng.");
             }
 
-            var bookingResponses = new List<BookingResponse>();
-
             var booking = _unitOfWork.BookingRepository.Get(b => b.Id == checkinRequest.Id && b.Status == BookingStatus.Accepted.ToString(),
-                                            includeProperties: "StoreService,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
+                                            includeProperties: "StoreService,StoreService.Store,StoreService.Service,Pet,Pet.PetOwner").FirstOrDefault();
             if (booking == null)
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch này.");
@@ -87,8 +85,8 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Đặt lịch này không thuộc lịch trình của cửa hàng.");
             }
 
-            var allowedCheckInTime = storeService.StartTime.AddHours(-7.5);
-            if (CoreHelper.SystemTimeNow < allowedCheckInTime)
+            var allowedCheckInTime = booking.StartTime.AddHours(-7.5);
+            if (CoreHelper.SystemTimeNow <= allowedCheckInTime)
             {
                 throw new CustomException.InvalidDataException("Chỉ được phép check-in trước 30 phút.");
             }
@@ -97,6 +95,7 @@ namespace FluffyPaw_Application.ServiceImplements
             booking.CheckinTime = CoreHelper.SystemTimeNow.AddHours(7);
             booking.CheckinImage = await _firebaseConfiguration.UploadImage(checkinRequest.CheckinImagge);
             _unitOfWork.BookingRepository.Update(booking);
+            await _unitOfWork.SaveAsync();
 
             var notificationRequest = new NotificationRequest
             {
@@ -111,11 +110,8 @@ namespace FluffyPaw_Application.ServiceImplements
 
             var bookingResponse = _mapper.Map<BookingResponse>(booking);
             bookingResponse.CheckinTime = CoreHelper.SystemTimeNow;
-            bookingResponses.Add(bookingResponse);
 
-            await _unitOfWork.SaveAsync();
-
-            return bookingResponses;
+            return bookingResponse;
         }
 
         public async Task<List<BookingResponse>> Checkout(CheckOutRequest checkOutRequest)
