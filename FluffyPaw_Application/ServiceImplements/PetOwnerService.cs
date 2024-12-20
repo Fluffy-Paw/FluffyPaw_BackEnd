@@ -641,7 +641,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     await _sendMailService.SendReceipt(sendMailRequest);
                 }
 
-                    await _jobScheduler.ScheduleBookingNotification(newBooking);
+                await _jobScheduler.ScheduleBookingNotification(newBooking);
                 await _jobScheduler.ScheduleOverTimeRefund(newBooking);
 
                 var storeAccountId = existingStoreService.Store.Account.Id;
@@ -825,7 +825,7 @@ namespace FluffyPaw_Application.ServiceImplements
             var listBooking = new List<BookingResponse>();
             var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
             listBooking.Add(bookingResponse);
-            
+
             var sendMailRequest = new SendReceiptRequest
             {
                 Email = account.Email,
@@ -1215,7 +1215,7 @@ namespace FluffyPaw_Application.ServiceImplements
                     //    .Select(g => g.First())
                     //    .ToList();
                     var groupedService = storeServices
-                        .GroupBy(ss => ss.ServiceId )
+                        .GroupBy(ss => ss.ServiceId)
                         .Select(g => g.First())
                         .ToList();
 
