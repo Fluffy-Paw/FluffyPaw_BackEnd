@@ -32,10 +32,8 @@ namespace FluffyPaw_Application.DTO.Request.PetRequest
         [Required(ErrorMessage = "Vui lòng nhập ngày sinh.")]
         public DateTimeOffset Dob { get; set; }
 
-        [RegularExpression(@"^[a-zA-Z0-9 ]*$", ErrorMessage = "Dị ứng không thể nhập kí tự đặc biệt.")]
         public string? Allergy { get; set; }
 
-        [RegularExpression(@"^[a-zA-Z0-9]{9,15}$", ErrorMessage = "Microchip phải có 9 đến 15 kí tự và không được chứa khoảng trắng hoặc kí tự đặc biệt.")]
         public string? MicrochipNumber { get; set; }
 
         public string? Decription { get; set; }
