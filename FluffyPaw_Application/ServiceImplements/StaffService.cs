@@ -239,6 +239,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
                 var overlappingService = _unitOfWork.StoreServiceRepository.Get(s =>
                                             s.StoreId == existingStoreService.StoreId &&
+                                            s.ServiceId == existingStoreService.ServiceId &&
                                             ((s.StartTime < newEndTime && (s.StartTime + s.Service.Duration) > newStartTime) ||
                                             s.StartTime == newStartTime)).FirstOrDefault(); // Kiểm tra chồng chéo thời gian
                 if (overlappingService != null)
