@@ -11,7 +11,7 @@ namespace FluffyPaw_Application.Services
     public interface IBookingService
     {
         Task<BookingResponse> GetBookingById(long id);
-        Task<List<BookingResponse>> Checkin(CheckinRequest checkinRequest);
+        Task<BookingResponse> Checkin(CheckinRequest checkinRequest);
         Task<List<BookingResponse>> Checkout(CheckOutRequest checkRequest);
         Task<List<BookingRatingResponse>> GetAllBookingRatingByServiceId(long id);
         Task<List<BookingRatingResponse>> GetAllBookingRatingByStoreId(long id);
