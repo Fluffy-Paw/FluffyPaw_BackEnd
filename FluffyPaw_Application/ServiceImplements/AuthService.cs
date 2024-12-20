@@ -141,17 +141,11 @@ namespace FluffyPaw_Application.ServiceImplements
                 throw new CustomException.InvalidDataException("Tài khoản hoặc mật khẩu không đúng.");
             }
 
-            if (check)
-
             Account account = check.First();
             if (account.Status == (int)AccountStatus.Inactive)
             {
                 throw new CustomException.InvalidDataException("Tài khoản chưa được kích hoạt.");
             }
-            /*else if (account.RoleName == RoleName.Admin.ToString())
-            {
-                throw new CustomException.InvalidDataException("Tài khoản không được đăng nhập vào FluffyPaw theo cách này.");
-            }*/
 
             string token = _authentication.GenerateJWTToken(account);
             return token;
