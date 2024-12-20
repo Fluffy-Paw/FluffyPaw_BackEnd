@@ -134,12 +134,14 @@ namespace FluffyPaw_Application.ServiceImplements
             IEnumerable<Account> check = _unitOfWork.AccountRepository.Get(x =>
                 x.Username.Equals(loginRequest.Username)
                 && x.Password.Equals(hashedPass)
-                && !x.RoleName.Equals(RoleName.Admin.ToString())
-            );
+                && !x.RoleName.Equals(RoleName.Admin.ToString()));
+
             if (!check.Any())
             {
                 throw new CustomException.InvalidDataException("Tài khoản hoặc mật khẩu không đúng.");
             }
+
+            if (check)
 
             Account account = check.First();
             if (account.Status == (int)AccountStatus.Inactive)
