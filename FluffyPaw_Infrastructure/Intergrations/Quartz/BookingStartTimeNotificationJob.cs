@@ -31,7 +31,7 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
                                 includeProperties: "Pet,Pet.PetOwner,Pet.PetOwner.Account," +
                                 "StoreService,StoreService.Service,StoreService.Service.ServiceType").FirstOrDefault();
 
-            var localBookingStartTime = booking.StartTime;
+            var localBookingStartTime = booking.StartTime.AddHours(-7);
             var localCurrentTime = CoreHelper.SystemTimeNow;
             
 

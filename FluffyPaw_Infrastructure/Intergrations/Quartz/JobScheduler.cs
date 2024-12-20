@@ -37,14 +37,14 @@ namespace FluffyPaw_Infrastructure.Intergrations.Quartz
 
             var triggerOneDay = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneDay)
-                .StartAt(booking.StartTime.AddDays(-1))
+                .StartAt(booking.StartTime.AddHours(-31))
                 .Build();
 
             Console.WriteLine($"{booking.StartTime.AddDays(-1)} nhắc nhở trước lần đầu.");
 
             var triggerOneHour = TriggerBuilder.Create()
                 .WithIdentity(triggerKeyOneHour)
-                .StartAt(booking.StartTime.AddHours(-1))
+                .StartAt(booking.StartTime.AddHours(-8))
                 .Build();
 
             Console.WriteLine($"{booking.StartTime.AddHours(-1)} nhắc nhở trước lần hai.");
