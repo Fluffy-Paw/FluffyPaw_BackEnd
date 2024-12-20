@@ -14,6 +14,7 @@ using FluffyPaw_Domain.CustomException;
 using FluffyPaw_Domain.Entities;
 using FluffyPaw_Domain.Enums;
 using FluffyPaw_Domain.Interfaces;
+using FluffyPaw_Domain.Utils;
 using FluffyPaw_Repository.Enum;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -512,6 +513,7 @@ namespace FluffyPaw_Application.ServiceImplements
             newStaff.Password = _hashing.SHA512Hash(storeRequest.Password);
             newStaff.Avatar = "https://cdn-icons-png.flaticon.com/512/10892/10892514.png";
             newStaff.RoleName = RoleName.Staff.ToString();
+            newStaff.CreateDate = CoreHelper.SystemTimeNow.AddHours(7);
             newStaff.Status = (int)AccountStatus.Active;
             _unitOfWork.AccountRepository.Insert(newStaff);
             await _unitOfWork.SaveAsync();
