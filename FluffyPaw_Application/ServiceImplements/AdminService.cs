@@ -286,7 +286,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 ReceiverId = brand.AccountId,
                 Name = "Đăng kí thành công",
                 Type = NotificationType.Store.ToString(),
-                Description = $"Cửa hàng của bạn đã được hệ thống xác nhận.",
+                Description = $"Cửa hàng {store.Name} của bạn đã được hệ thống xác nhận.",
                 ReferenceId = store.Id
             };
             await _notificationService.CreateNotification(notificationRequest);
