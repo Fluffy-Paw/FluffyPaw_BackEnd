@@ -23,6 +23,8 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
 
         public string Phone { get; set; }
 
+        public long ServiceTypeId { get; set; }
+
         public string ServiceName { get; set; }
 
         public string PaymentMethod { get; set; }
@@ -48,6 +50,7 @@ namespace FluffyPaw_Application.DTO.Response.BookingResponse
                    .ForMember(dest => dest.PetOwnerAccountId, opt => opt.MapFrom(src => src.Pet.PetOwner.AccountId))
                    .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Pet.PetOwner.FullName))
                    .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Pet.PetOwner.Phone))
+                   .ForMember(dest => dest.ServiceTypeId, opt => opt.MapFrom(src => src.StoreService.Service.ServiceTypeId))
                    .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.StoreService.Service.Name))
                    .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.StoreService.Service.Cost))
                    .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => src.CreateDate))
