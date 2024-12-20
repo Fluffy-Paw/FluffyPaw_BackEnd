@@ -96,15 +96,17 @@ namespace FluffyPaw_Application.ServiceImplements
             var po = _unitOfWork.PetOwnerRepository.Get(u => u.AccountId.Equals(accountId), includeProperties: "Account").FirstOrDefault();
             var pet = _unitOfWork.PetRepository.GetByID(changePORequest.PetId);
             var petList = _unitOfWork.PetRepository.Get(p => p.PetOwnerId.Equals(user));
+            var booking = _unitOfWork.BookingRepository.Get(b => b.PetId.Equals(pet.Id) && b.Checkin == false && b.CheckOut == false).ToList();
 
-            if (user == null) throw new CustomException.DataNotFoundException($"Không tìm thấy user với Username: {changePORequest.NewOwnerUsername}");
+            if (user == null) throw new CustomException.DataNotFoundException($"Không tìm thấy người dùng với tài khoản: {changePORequest.NewOwnerUsername}");
             if (user.Account.RoleName != RoleName.PetOwner.ToString()) throw new CustomException.ForbbidenException("User không phải Pet Owner.");
             if (pet == null) throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng");
-            if (user.Id.Equals(po.Id)) throw new CustomException.InvalidDataException("Bạn đang chuyển quyền nuôi dưỡng cho chính bản thân, hãy nhập Username của đối tượng cần chuyển.");
+            if (user.Id.Equals(po.Id)) throw new CustomException.InvalidDataException("Bạn đang chuyển quyền nuôi dưỡng cho chính bản thân, hãy nhập Tên Tài Khoản của đối tượng cần chuyển.");
             if (pet.PetOwnerId != po.Id) throw new CustomException.ForbbidenException("Bạn không thể chuyển quyền nuôi dưỡng vì đây không phải thú cưng của bạn.");
-            if (petList.Count() == 5) throw new CustomException.DataExistException($"Tài khoản có Username {changePORequest.NewOwnerUsername} đã đạt số lượng tối đa 5 thú cưng.");
+            if (petList.Count() == 5) throw new CustomException.DataExistException($"Tài khoản {changePORequest.NewOwnerUsername} đã đạt số lượng tối đa 5 thú cưng.");
             if (_hashing.SHA512Hash(changePORequest.YourPassword) != po.Account.Password) throw new CustomException.ForbbidenException("Bạn đã nhập sai mật khẩu.");
-            if (user.Account.Status == (int)AccountStatus.Inactive) throw new CustomException.ForbbidenException($"Tài khoản có Username {changePORequest.NewOwnerUsername} đã bị cấm.");
+            if (user.Account.Status == (int)AccountStatus.Inactive) throw new CustomException.ForbbidenException($"Tài khoản {changePORequest.NewOwnerUsername} đã bị cấm.");
+            if (booking.Any()) throw new CustomException.ForbbidenException("Thú cưng này đang có lịch đặt, không thể chuyển chủ nhân !");
 
             pet.PetOwnerId = user.Id;
             _unitOfWork.Save();
@@ -177,6 +179,9 @@ namespace FluffyPaw_Application.ServiceImplements
             {
                 throw new CustomException.DataNotFoundException("Không tìm thấy thú cưng.");
             }
+            var booking = _unitOfWork.BookingRepository.Get(b => b.PetId.Equals(petId) && b.Checkin == false && b.CheckOut == false).ToList();
+            if (booking.Any()) throw new CustomException.ForbbidenException("Thú cưng này đang có lịch đặt, không thể xóa !");
+
             existingPet.Status = PetStatus.Deleted.ToString();
             await _unitOfWork.SaveAsync();
 
