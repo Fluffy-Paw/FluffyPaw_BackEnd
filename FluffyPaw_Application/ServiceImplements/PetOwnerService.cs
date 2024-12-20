@@ -620,6 +620,14 @@ namespace FluffyPaw_Application.ServiceImplements
                     };
 
                     _unitOfWork.BillingRecordRepository.Insert(billingRecord);
+
+                    var sendMailRequest = new SendReceiptRequest
+                    {
+                        Email = account.Email,
+                        CustomerName = po.FullName,
+                        bookingResponses = bookingResponses,
+                    };
+                    await _sendMailService.SendReceipt(sendMailRequest);
                 }
 
                 existingStoreService.CurrentPetOwner++;
@@ -629,14 +637,6 @@ namespace FluffyPaw_Application.ServiceImplements
                 var bookingResponse = _mapper.Map<BookingResponse>(newBooking);
                 bookingResponse.CreateDate = newBooking.CreateDate.AddHours(-7);
                 bookingResponses.Add(bookingResponse);
-
-                var sendMailRequest = new SendReceiptRequest
-                {
-                    Email = account.Email,
-                    CustomerName = po.FullName,
-                    bookingResponses = bookingResponses,
-                };
-                await _sendMailService.SendReceipt(sendMailRequest);
 
                 await _jobScheduler.ScheduleBookingNotification(newBooking);
                 await _jobScheduler.ScheduleOverTimeRefund(newBooking);
