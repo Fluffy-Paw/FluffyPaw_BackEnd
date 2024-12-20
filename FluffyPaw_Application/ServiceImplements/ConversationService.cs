@@ -115,6 +115,7 @@ namespace FluffyPaw_Application.ServiceImplements
                 .OrderByDescending(c => c.LastMessage)
                 .ToList();
 
+            conversationResponses.Reverse();
             return conversationResponses;
         }
 
