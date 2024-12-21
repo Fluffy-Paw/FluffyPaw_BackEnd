@@ -95,7 +95,7 @@ namespace FluffyPaw_Application.ServiceImplements
 
         public async Task<bool> AcceptBrand(long id)
         {
-            var brand = _unitOfWork.BrandRepository.GetByID(id);
+            var brand = _unitOfWork.BrandRepository.Get(b => b.Id == id, includeProperties: "Account").FirstOrDefault();
             brand.Status = true;
             _unitOfWork.Save();
 
