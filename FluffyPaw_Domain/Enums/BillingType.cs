@@ -9,6 +9,7 @@ namespace FluffyPaw_Domain.Enums
     public enum BillingType
     {
         Add,
-        Subtract
+        Subtract,
+        COD
     }
 }

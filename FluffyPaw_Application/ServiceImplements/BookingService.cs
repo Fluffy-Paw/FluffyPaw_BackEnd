@@ -265,8 +265,9 @@ namespace FluffyPaw_Application.ServiceImplements
                 var newBillingRecord = new BillingRecord
                 {
                     WalletId = brandWallet.Id,
-                    BookingId = booking.Id,
+                    BookingId = booking.Id, 
                     Amount = booking.Cost,
+                    Type = BillingType.COD.ToString(),
                     Description = $"Khách đã thanh toán trực tiếp tại cửa hàng cho dịch vụ {storeService.Service.Name} từ cửa hàng {store.Name}.",
                     CreateDate = CoreHelper.SystemTimeNow.AddHours(7)
                 };
