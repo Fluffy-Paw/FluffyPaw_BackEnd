@@ -195,20 +195,30 @@ namespace FluffyPaw_Application.ServiceImplements
 
             if (serviceTypeName == "Tiêm chủng")
             {
-                var pet = _unitOfWork.PetRepository.Get(p => p.Id == booking.Id).FirstOrDefault();
+                var pet = _unitOfWork.PetRepository.Get(p => p.Id == booking.PetId).FirstOrDefault();
                 var imageUrl = await _firebaseConfiguration.UploadImage(checkOutRequest.Image);
+
+                float weight = pet.Weight;
+                if (checkOutRequest.PetCurrentWeight != null)
+                {
+                    weight = checkOutRequest.PetCurrentWeight.Value;
+                }
+                // Tạo lịch sử tiêm chủng mới
                 var vaccineHistory = new VaccineHistory
                 {
+                    PetId = pet.Id,
                     Image = imageUrl,
                     Name = checkOutRequest.Name,
-                    PetCurrentWeight = checkOutRequest.PetCurrentWeight ?? pet.Weight,
+                    PetCurrentWeight = weight,
                     VaccineDate = (DateTimeOffset)booking.CheckOutTime,
                     NextVaccineDate = checkOutRequest.NextVaccineDate,
                     Description = checkOutRequest.Description,
-                    Status = VaccineStatus.Complete.ToString()
+                    Status = checkOutRequest.NextVaccineDate.HasValue ? VaccineStatus.Incomplete.ToString() : VaccineStatus.Complete.ToString()
                 };
 
                 _unitOfWork.VaccineHistoryRepository.Insert(vaccineHistory);
+                pet.Weight = weight;
+                _unitOfWork.PetRepository.Update(pet);
                 await _unitOfWork.SaveAsync();
             }
 
