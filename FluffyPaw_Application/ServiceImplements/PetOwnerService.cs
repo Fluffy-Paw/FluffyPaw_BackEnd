@@ -451,13 +451,15 @@ namespace FluffyPaw_Application.ServiceImplements
                 var bookings = _unitOfWork.BookingRepository.Get(b => b.PetId == pet.Id,
                                                 orderBy: q => q.OrderByDescending(b => b.CreateDate),
                                                 includeProperties: "StoreService,StoreService.Store,StoreService.Service,Pet").ToList();
-                if (!bookings.Any())
-                {
-                    throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch nào.");
-                }
+                
 
                 var mappedBookings = _mapper.Map<List<BookingResponse>>(bookings);
                 bookingResponses.AddRange(mappedBookings);
+            }
+
+            if (!bookingResponses.Any())
+            {
+                throw new CustomException.DataNotFoundException("Không tìm thấy đặt lịch nào.");
             }
 
             return bookingResponses;
